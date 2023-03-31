@@ -1,0 +1,1820 @@
+<!--
+==========
+CHANGE LOG
+==========
+2022.4.19.2
+-Add CitrixA.Monitor.DbConnectionLost monitor.
+-->
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<Manifest>
+		<Identity>
+			<ID>CitrixA.Monitoring</ID>
+			<Version>2022.4.19.2</Version>
+		</Identity>
+		<Name>CitrixA.Monitoring</Name>
+		<References>
+			<Reference Alias="Windows">
+				<ID>Microsoft.Windows.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="System">
+				<ID>System.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="SystemCenter">
+				<ID>Microsoft.SystemCenter.Library</ID>
+				<Version>7.0.8433.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Health">
+				<ID>System.Health.Library</ID>
+				<Version>7.0.8433.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="MSIL">
+				<ID>Microsoft.SystemCenter.InstanceGroup.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+		</References>
+	</Manifest>
+	<TypeDefinitions>
+		<EntityTypes>
+			<ClassTypes>
+				<ClassType ID="CitrixA.Class.Seed" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false"/>
+				<ClassType ID="CitrixA.Class.LicenseServer" Accessibility="Public" Abstract="false" Base="CitrixA.Class.Seed" Hosted="true" Singleton="false" Extension="false"/>
+				<ClassType ID="CitrixA.Class.DeliveryController" Accessibility="Public" Abstract="false" Base="CitrixA.Class.Seed" Hosted="true" Singleton="false" Extension="false"/>
+				<ClassType ID="CitrixA.Class.StoreFrontServer" Accessibility="Public" Abstract="false" Base="CitrixA.Class.Seed" Hosted="true" Singleton="false" Extension="false"/>
+				<ClassType ID="CitrixA.Class.DirectorServer" Accessibility="Public" Abstract="false" Base="CitrixA.Class.Seed" Hosted="true" Singleton="false" Extension="false"/>
+				<ClassType ID="CitrixA.Class.SeedGroup" Accessibility="Public" Abstract="false" Base="MSIL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+			</ClassTypes>
+		</EntityTypes>
+	</TypeDefinitions>
+	<Monitoring>
+		<Discoveries>
+			<Discovery ID="CitrixA.Discovery.RoleGroup" Enabled="true" Target="CitrixA.Class.SeedGroup" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryRelationship TypeID="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
+				</DiscoveryTypes>
+				<DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+					<RuleId>$MPElement$</RuleId>
+					<GroupInstanceId>$MPElement[Name="CitrixA.Class.SeedGroup"]$</GroupInstanceId>
+					<MembershipRules>
+						<MembershipRule>
+							<MonitoringClass>$MPElement[Name="CitrixA.Class.Seed"]$</MonitoringClass>
+							<RelationshipClass>$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+						</MembershipRule>
+					</MembershipRules>
+				</DataSource>
+			</Discovery>
+			<Discovery ID="CitrixA.Discovery.SeedClass.Registry" Enabled="true" Target="Windows!Microsoft.Windows.Computer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="CitrixA.Class.Seed"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+					<ComputerName>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<RegistryAttributeDefinitions>
+						<RegistryAttributeDefinition>
+							<AttributeName>IsCitrix64Server</AttributeName>
+							<Path>SOFTWARE\Citrix</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+					</RegistryAttributeDefinitions>
+					<Frequency>86400</Frequency>
+					<ClassId>$MPElement[Name="CitrixA.Class.Seed"]$</ClassId>
+					<InstanceSettings>
+						<Settings>
+							<Setting>
+								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+								<Value>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+								<Value>$Target/Property[Type="System!System.Entity"]/DisplayName$</Value>
+							</Setting>
+						</Settings>
+					</InstanceSettings>
+					<Expression>
+						<SimpleExpression>
+							<ValueExpression>
+								<XPathQuery Type="String">Values/IsCitrix64Server</XPathQuery>
+							</ValueExpression>
+							<Operator>Equal</Operator>
+							<ValueExpression>
+								<Value Type="String">True</Value>
+							</ValueExpression>
+						</SimpleExpression>
+					</Expression>
+				</DataSource>
+			</Discovery>
+			<Discovery ID="CitrixA.Discovery.LicenseServerClass.Registry" Enabled="true" Target="CitrixA.Class.Seed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="CitrixA.Class.LicenseServer"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<RegistryAttributeDefinitions>
+						<RegistryAttributeDefinition>
+							<AttributeName>IsCitrixLicenseServer</AttributeName>
+							<Path>SOFTWARE\Wow6432Node\Citrix\LicenseServer\Install</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+					</RegistryAttributeDefinitions>
+					<Frequency>86400</Frequency>
+					<ClassId>$MPElement[Name="CitrixA.Class.LicenseServer"]$</ClassId>
+					<InstanceSettings>
+						<Settings>
+							<Setting>
+								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+						</Settings>
+					</InstanceSettings>
+					<Expression>
+						<SimpleExpression>
+							<ValueExpression>
+								<XPathQuery Type="String">Values/IsCitrixLicenseServer</XPathQuery>
+							</ValueExpression>
+							<Operator>Equal</Operator>
+							<ValueExpression>
+								<Value Type="String">True</Value>
+							</ValueExpression>
+						</SimpleExpression>
+					</Expression>
+				</DataSource>
+			</Discovery>
+			<Discovery ID="CitrixA.Discovery.DeliveryControllerClass.Registry" Enabled="true" Target="CitrixA.Class.Seed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="CitrixA.Class.DeliveryController"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<RegistryAttributeDefinitions>
+						<RegistryAttributeDefinition>
+							<AttributeName>IsCitrixDeliveryController</AttributeName>
+							<Path>SOFTWARE\Wow6432Node\Citrix\Citrix Desktop Delivery Controller</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+					</RegistryAttributeDefinitions>
+					<Frequency>86400</Frequency>
+					<ClassId>$MPElement[Name="CitrixA.Class.DeliveryController"]$</ClassId>
+					<InstanceSettings>
+						<Settings>
+							<Setting>
+								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+						</Settings>
+					</InstanceSettings>
+					<Expression>
+						<SimpleExpression>
+							<ValueExpression>
+								<XPathQuery Type="String">Values/IsCitrixDeliveryController</XPathQuery>
+							</ValueExpression>
+							<Operator>Equal</Operator>
+							<ValueExpression>
+								<Value Type="String">True</Value>
+							</ValueExpression>
+						</SimpleExpression>
+					</Expression>
+				</DataSource>
+			</Discovery>
+			<Discovery ID="CitrixA.Discovery.StoreFrontServerClass.Registry" Enabled="true" Target="CitrixA.Class.Seed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="CitrixA.Class.StoreFrontServer"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<RegistryAttributeDefinitions>
+						<RegistryAttributeDefinition>
+							<AttributeName>IsCitrixStoreFrontServer</AttributeName>
+							<Path>SOFTWARE\Citrix\DeliveryServices</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+					</RegistryAttributeDefinitions>
+					<Frequency>86400</Frequency>
+					<ClassId>$MPElement[Name="CitrixA.Class.StoreFrontServer"]$</ClassId>
+					<InstanceSettings>
+						<Settings>
+							<Setting>
+								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+						</Settings>
+					</InstanceSettings>
+					<Expression>
+						<SimpleExpression>
+							<ValueExpression>
+								<XPathQuery Type="String">Values/IsCitrixStoreFrontServer</XPathQuery>
+							</ValueExpression>
+							<Operator>Equal</Operator>
+							<ValueExpression>
+								<Value Type="String">True</Value>
+							</ValueExpression>
+						</SimpleExpression>
+					</Expression>
+				</DataSource>
+			</Discovery>
+			<Discovery ID="CitrixA.Discovery.DirectorServer.Registry" Enabled="true" Target="CitrixA.Class.Seed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="CitrixA.Class.DirectorServer"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<RegistryAttributeDefinitions>
+						<RegistryAttributeDefinition>
+							<AttributeName>IsCitrixDirectorServer</AttributeName>
+							<Path>SOFTWARE\Wow6432Node\Citrix\DesktopDirector</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+					</RegistryAttributeDefinitions>
+					<Frequency>86400</Frequency>
+					<ClassId>$MPElement[Name="CitrixA.Class.DirectorServer"]$</ClassId>
+					<InstanceSettings>
+						<Settings>
+							<Setting>
+								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+						</Settings>
+					</InstanceSettings>
+					<Expression>
+						<SimpleExpression>
+							<ValueExpression>
+								<XPathQuery Type="String">Values/IsCitrixDirectorServer</XPathQuery>
+							</ValueExpression>
+							<Operator>Equal</Operator>
+							<ValueExpression>
+								<Value Type="String">True</Value>
+							</ValueExpression>
+						</SimpleExpression>
+					</Expression>
+				</DataSource>
+			</Discovery>
+		</Discoveries>
+		<Monitors>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixSubscriptionsStore" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixSubscriptionsStore.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixSubscriptionsStore</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixServiceMonitor" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixServiceMonitor.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixServiceMonitor</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixPeerResolutionService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixPeerResolutionService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>Citrix Peer Resolution Service</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixDefaultDomainService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixDefaultDomainService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixDefaultDomainService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixCredentialWallet" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixCredentialWallet.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixCredentialWallet</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationReplication" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationReplication.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixConfigurationReplication</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CdfSvc" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CdfSvc.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CdfSvc</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixTrust" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixTrust.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixTrust</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixTelemetryService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixTelemetryService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixTelemetryService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixStorefront" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixStorefront.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixStorefront</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixPrivilegedService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixPrivilegedService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixPrivilegedService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.XaXdCloudProxy" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.XaXdCloudProxy.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>XaXdCloudProxy</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixOrchestration" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixOrchestration.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixOrchestration</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixMonitor" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixMonitor.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixMonitor</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixMachineCreationService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixMachineCreationService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixMachineCreationService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixHostService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixHostService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixHostService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixLicensing" Accessibility="Public" Enabled="true" Target="CitrixA.Class.LicenseServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixLicensing.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>Citrix Licensing</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CtxLSPortSvc" Accessibility="Public" Enabled="true" Target="CitrixA.Class.LicenseServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CtxLSPortSvc.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CtxLSPortSvc</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixWebServicesforLicensing" Accessibility="Public" Enabled="true" Target="CitrixA.Class.LicenseServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixWebServicesforLicensing.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixWebServicesforLicensing</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixADIdentityService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixADIdentityService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixADIdentityService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixAnalytics" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixAnalytics.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixAnalytics</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixAppLibrary" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixAppLibrary.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixAppLibrary</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixArokerService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixArokerService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixArokerService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixConfigSyncService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixConfigSyncService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixConfigSyncService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationLogging" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationLogging.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixConfigurationLogging</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixConfigurationService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixDelegatedAdmin" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixDelegatedAdmin.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixDelegatedAdmin</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixEnvTest" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixEnvTest.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixEnvTest</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.CheckWindowsService.CitrixHighAvailabilityService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsService.CitrixHighAvailabilityService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>CitrixHighAvailabilityService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="CitrixA.Monitor.DbConnectionLost" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.2SingleEventLog2StateMonitorType" ConfirmDelivery="true">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="CitrixA.Monitor.CheckWindowsEvent.DbConnectionLost.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Data/Context/EventDescription$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="OpsStateHealthy" MonitorTypeStateID="SecondEventRaised" HealthState="Success"/>
+					<OperationalState ID="OpsStateError" MonitorTypeStateID="FirstEventRaised" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<FirstComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</FirstComputerName>
+					<FirstLogName>Application</FirstLogName>
+					<FirstExpression>
+						<And>
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+									</ValueExpression>
+									<Operator>Equal</Operator>
+									<ValueExpression>
+										<Value Type="UnsignedInteger">1201</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<XPathQuery Type="String">PublisherName</XPathQuery>
+									</ValueExpression>
+									<Operator>Equal</Operator>
+									<ValueExpression>
+										<Value Type="String">Citrix Broker Service</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+						</And>
+					</FirstExpression>
+					<SecondComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</SecondComputerName>
+					<SecondLogName>Application</SecondLogName>
+					<SecondExpression>
+						<And>
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+									</ValueExpression>
+									<Operator>Equal</Operator>
+									<ValueExpression>
+										<Value Type="UnsignedInteger">1200</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<XPathQuery Type="String">PublisherName</XPathQuery>
+									</ValueExpression>
+									<Operator>Equal</Operator>
+									<ValueExpression>
+										<Value Type="String">Citrix Broker Service</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+						</And>
+					</SecondExpression>
+				</Configuration>
+			</UnitMonitor>
+		</Monitors>
+		<Recoveries>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixSubscriptionsStore" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixSubscriptionsStore" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixSubscriptionsStore"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixServiceMonitor" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixServiceMonitor" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixServiceMonitor"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixPeerResolutionService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixPeerResolutionService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "Citrix Peer Resolution Service"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixDefaultDomainService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixDefaultDomainService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixDefaultDomainService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixCredentialWallet" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixCredentialWallet" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixCredentialWallet"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixConfigurationReplication" Accessibility="Public" Enabled="true" Target="CitrixA.Class.StoreFrontServer" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationReplication" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixConfigurationReplication"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CdfSvc" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CdfSvc" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CdfSvc"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixTrust" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixTrust" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixTrust"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixTelemetryService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixTelemetryService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixTelemetryService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixStorefront" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixStorefront" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixStorefront"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixPrivilegedService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixPrivilegedService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixPrivilegedService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.XaXdCloudProxy" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.XaXdCloudProxy" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "XaXdCloudProxy"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixOrchestration" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixOrchestration" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixOrchestration"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixMonitor" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixMonitor" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixMonitor"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixMachineCreationService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixMachineCreationService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixMachineCreationService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixHostService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixHostService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixHostService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixLicensing" Accessibility="Public" Enabled="true" Target="CitrixA.Class.LicenseServer" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixLicensing" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "Citrix Licensing"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CtxLSPortSvc" Accessibility="Public" Enabled="true" Target="CitrixA.Class.LicenseServer" Monitor="CitrixA.Monitor.CheckWindowsService.CtxLSPortSvc" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CtxLSPortSvc"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixWebServicesforLicensing" Accessibility="Public" Enabled="true" Target="CitrixA.Class.LicenseServer" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixWebServicesforLicensing" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixWebServicesforLicensing"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixADIdentityService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixADIdentityService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixADIdentityService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixAnalytics" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixAnalytics" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixAnalytics"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixAppLibrary" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixAppLibrary" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixAppLibrary"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixArokerService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixArokerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixArokerService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixConfigSyncService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixConfigSyncService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixConfigSyncService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixConfigurationLogging" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationLogging" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixConfigurationLogging"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixConfigurationService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixConfigurationService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixDelegatedAdmin" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixDelegatedAdmin" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixDelegatedAdmin"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixEnvTest" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixEnvTest" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixEnvTest"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="CitrixA.Recovery.StartWindowsService.CitrixHighAvailabilityService" Accessibility="Public" Enabled="true" Target="CitrixA.Class.DeliveryController" Monitor="CitrixA.Monitor.CheckWindowsService.CitrixHighAvailabilityService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "CitrixHighAvailabilityService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+		</Recoveries>
+	</Monitoring>
+	<Presentation>
+		<StringResources>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixSubscriptionsStore.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixServiceMonitor.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixPeerResolutionService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixDefaultDomainService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixCredentialWallet.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationReplication.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CdfSvc.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixTrust.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixTelemetryService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixStorefront.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixPrivilegedService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.XaXdCloudProxy.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixOrchestration.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixMonitor.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixMachineCreationService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixHostService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixLicensing.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CtxLSPortSvc.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixWebServicesforLicensing.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixADIdentityService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixAnalytics.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixAppLibrary.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixArokerService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixConfigSyncService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationLogging.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixDelegatedAdmin.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixEnvTest.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsService.CitrixHighAvailabilityService.AlertMessage"/>
+			<StringResource ID="CitrixA.Monitor.CheckWindowsEvent.DbConnectionLost.AlertMessage"/>
+		</StringResources>
+	</Presentation>
+	<LanguagePacks>
+		<LanguagePack ID="ENU" IsDefault="false">
+			<DisplayStrings>
+				<DisplayString ElementID="CitrixA.Monitoring">
+					<Name>Citrix Monitoring</Name>
+					<Description>Monitors Citrix components. Leidos Monitoring and Automation team.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Class.Seed">
+					<Name>Citrix Seed</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Discovery.SeedClass.Registry">
+					<Name>Citrix Seed Discovery</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Class.LicenseServer">
+					<Name>Citrix License Server</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Discovery.LicenseServerClass.Registry">
+					<Name>Citrix License Server Discovery</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Class.DeliveryController">
+					<Name>Citrix Delivery Controller</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Discovery.DeliveryControllerClass.Registry">
+					<Name>Citrix Delivery Controller Discovery</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Class.StoreFrontServer">
+					<Name>Citrix StoreFront Server</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Discovery.StoreFrontServerClass.Registry">
+					<Name>Citrix StoreFront Server Discovery</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Class.DirectorServer">
+					<Name>Citrix Director Server</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Discovery.DirectorServer.Registry">
+					<Name>Citrix Director Server Discovery</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixLicensing">
+					<Name>Citrix Licensing</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixLicensing.AlertMessage">
+					<Name>Citrix Licensing service not running</Name>
+					<Description>The 'Citrix Licensing' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixLicensing" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixLicensing" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixLicensing">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CtxLSPortSvc">
+					<Name>Citrix Licensing Support Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CtxLSPortSvc.AlertMessage">
+					<Name>Citrix Licensing Support Service not running</Name>
+					<Description>The 'Citrix Licensing Support Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CtxLSPortSvc" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CtxLSPortSvc" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CtxLSPortSvc">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixWebServicesforLicensing">
+					<Name>Citrix Web Services for Licensing</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixWebServicesforLicensing.AlertMessage">
+					<Name>Citrix Web Services for Licensing service not running</Name>
+					<Description>The 'Citrix Web Services for Licensing' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixWebServicesforLicensing" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixWebServicesforLicensing" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixWebServicesforLicensing">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixADIdentityService">
+					<Name>Citrix AD Identity Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixADIdentityService.AlertMessage">
+					<Name>Citrix AD Identity Service not running</Name>
+					<Description>The 'Citrix AD Identity Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixADIdentityService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixADIdentityService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixADIdentityService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixAnalytics">
+					<Name>Citrix Analytics</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixAnalytics.AlertMessage">
+					<Name>Citrix Analytics service not running</Name>
+					<Description>The 'Citrix Analytics' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixAnalytics" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixAnalytics" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixAnalytics">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixAppLibrary">
+					<Name>Citrix App Library</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixAppLibrary.AlertMessage">
+					<Name>Citrix App Library service not running</Name>
+					<Description>The 'Citrix App Library' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixAppLibrary" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixAppLibrary" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixAppLibrary">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixArokerService">
+					<Name>Citrix Broker Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixArokerService.AlertMessage">
+					<Name>Citrix Broker Service not running</Name>
+					<Description>The 'Citrix Broker Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixArokerService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixArokerService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixArokerService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigSyncService">
+					<Name>Citrix Config Synchronizer Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigSyncService.AlertMessage">
+					<Name>Citrix Config Synchronizer Service service not running</Name>
+					<Description>The 'Citrix Config Synchronizer Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigSyncService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigSyncService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixConfigSyncService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationLogging">
+					<Name>Citrix Configuration Logging Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationLogging.AlertMessage">
+					<Name>Citrix Configuration Logging Service not running</Name>
+					<Description>The 'Citrix Configuration Logging Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationLogging" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationLogging" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixConfigurationLogging">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationService">
+					<Name>Citrix Configuration Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationService.AlertMessage">
+					<Name>Citrix Configuration Service not running</Name>
+					<Description>The 'Citrix Configuration Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixConfigurationService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixDelegatedAdmin">
+					<Name>Citrix Delegated Administration Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixDelegatedAdmin.AlertMessage">
+					<Name>Citrix Delegated Administration Service not running</Name>
+					<Description>The 'Citrix Delegated Administration Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixDelegatedAdmin" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixDelegatedAdmin" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixDelegatedAdmin">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixEnvTest">
+					<Name>Citrix Environment Test Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixEnvTest.AlertMessage">
+					<Name>Citrix Environment Test Service not running</Name>
+					<Description>The 'Citrix Environment Test Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixEnvTest" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixEnvTest" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixEnvTest">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixHighAvailabilityService">
+					<Name>Citrix High Availability Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixHighAvailabilityService.AlertMessage">
+					<Name>Citrix High Availability Service not running</Name>
+					<Description>The 'Citrix High Availability Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixHighAvailabilityService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixHighAvailabilityService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixHighAvailabilityService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixHostService">
+					<Name>Citrix Host Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixHostService.AlertMessage">
+					<Name>Citrix Host Service not running</Name>
+					<Description>The 'Citrix Host Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixHostService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixHostService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixHostService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixMachineCreationService">
+					<Name>Citrix Machine Creation Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixMachineCreationService.AlertMessage">
+					<Name>Citrix Machine Creation Service not running</Name>
+					<Description>The 'Citrix Machine Creation Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixMachineCreationService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixMachineCreationService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixMachineCreationService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixMonitor">
+					<Name>Citrix Monitor Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixMonitor.AlertMessage">
+					<Name>Citrix Monitor Service not running</Name>
+					<Description>The 'Citrix Monitor Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixMonitor" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixMonitor" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixMonitor">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixOrchestration">
+					<Name>Citrix Orchestration Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixOrchestration.AlertMessage">
+					<Name>Citrix Orchestration Service not running</Name>
+					<Description>The 'Citrix Orchestration Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixOrchestration" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixOrchestration" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixOrchestration">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.XaXdCloudProxy">
+					<Name>Citrix Remote Broker Provider</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.XaXdCloudProxy.AlertMessage">
+					<Name>Citrix Remote Broker Provider service not running</Name>
+					<Description>The 'Citrix Remote Broker Provider' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.XaXdCloudProxy" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.XaXdCloudProxy" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.XaXdCloudProxy">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixPrivilegedService">
+					<Name>Citrix Storefront Privileged Administration Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixPrivilegedService.AlertMessage">
+					<Name>Citrix Storefront Privileged Administration Service not running</Name>
+					<Description>The 'Citrix Storefront Privileged Administration Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixPrivilegedService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixPrivilegedService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixPrivilegedService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixStorefront">
+					<Name>Citrix Storefront Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixStorefront.AlertMessage">
+					<Name>Citrix Storefront Service not running</Name>
+					<Description>The 'Citrix Storefront Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixStorefront" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixStorefront" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixStorefront">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixTelemetryService">
+					<Name>Citrix Telemetry Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixTelemetryService.AlertMessage">
+					<Name>Citrix Telemetry Service not running</Name>
+					<Description>The 'Citrix Telemetry Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixTelemetryService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixTelemetryService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixTelemetryService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixTrust">
+					<Name>Citrix Trust Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixTrust.AlertMessage">
+					<Name>Citrix Trust Service not running</Name>
+					<Description>The 'Citrix Trust Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixTrust" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixTrust" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixTrust">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CdfSvc">
+					<Name>Citrix Diagnostic Facility COM Server</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CdfSvc.AlertMessage">
+					<Name>Citrix Diagnostic Facility COM Server service not running</Name>
+					<Description>The 'Citrix Diagnostic Facility COM Server' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CdfSvc" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CdfSvc" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CdfSvc">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationReplication">
+					<Name>Citrix Configuration Replication</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationReplication.AlertMessage">
+					<Name>Citrix Configuration Replication service not running</Name>
+					<Description>The 'Citrix Configuration Replication' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationReplication" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixConfigurationReplication" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixConfigurationReplication">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixCredentialWallet">
+					<Name>Citrix Credential Wallet</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixCredentialWallet.AlertMessage">
+					<Name>Citrix Credential Wallet service not running</Name>
+					<Description>The 'Citrix Credential Wallet' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixCredentialWallet" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixCredentialWallet" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixCredentialWallet">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixDefaultDomainService">
+					<Name>Citrix Default Domain Services</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixDefaultDomainService.AlertMessage">
+					<Name>Citrix Default Domain Services service not running</Name>
+					<Description>The 'Citrix Default Domain Services' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixDefaultDomainService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixDefaultDomainService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixDefaultDomainService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixPeerResolutionService">
+					<Name>Citrix Peer Resolution Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixPeerResolutionService.AlertMessage">
+					<Name>Citrix Peer Resolution Service not running</Name>
+					<Description>The 'Citrix Peer Resolution Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixPeerResolutionService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixPeerResolutionService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixPeerResolutionService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixServiceMonitor">
+					<Name>Citrix Service Monitor</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixServiceMonitor.AlertMessage">
+					<Name>Citrix Service Monitor service not running</Name>
+					<Description>The 'Citrix Service Monitor' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixServiceMonitor" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixServiceMonitor" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixServiceMonitor">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixSubscriptionsStore">
+					<Name>Citrix Subscriptions Store</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixSubscriptionsStore.AlertMessage">
+					<Name>Citrix Subscriptions Store service not running</Name>
+					<Description>The 'Citrix Subscriptions Store' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixSubscriptionsStore" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsService.CitrixSubscriptionsStore" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Recovery.StartWindowsService.CitrixSubscriptionsStore">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Class.SeedGroup">
+					<Name>Citrix Role Group</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Discovery.RoleGroup">
+					<Name>Citrix Role Group Discovery</Name>
+					<Description>Contains instances of the CitrixA.Class.Seed class.</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.DbConnectionLost">
+					<Name>Citrix Broker Db Connection Lost</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.CheckWindowsEvent.DbConnectionLost.AlertMessage">
+					<Name>Citrix Broker Service database connection lost</Name>
+					<Description>{0}</Description>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.DbConnectionLost" SubElementID="OpsStateHealthy">
+					<Name>Second Event Raised</Name>
+				</DisplayString>
+				<DisplayString ElementID="CitrixA.Monitor.DbConnectionLost" SubElementID="OpsStateError">
+					<Name>First Event Raised</Name>
+				</DisplayString>
+			</DisplayStrings>
+		</LanguagePack>
+	</LanguagePacks>
+</ManagementPack>

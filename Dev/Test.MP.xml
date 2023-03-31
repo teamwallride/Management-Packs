@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?><ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>Test.MP</ID>
+      <Version>1.0.0.0</Version>
+    </Identity>
+    <Name>Test.MP</Name>
+    <References>
+      <Reference Alias="SystemCenter1">
+        <ID>Microsoft.SystemCenter.2007</ID>
+        <Version>7.2.12324.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8448.6</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Cluster.Management.Library</ID>
+        <Version>10.1.0.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <Monitoring>
+    <Overrides>
+      <MonitorPropertyOverride ID="Aliasf0fcc92c38054de1b0bb14f35b300d06OverrideForMonitorMicrosoftSystemCenterHealthServiceComputerDownForContextMicrosoftSystemCenterHealthServiceWatcher" Context="SystemCenter!Microsoft.SystemCenter.HealthServiceWatcher" Enforced="false" Monitor="SystemCenter1!Microsoft.SystemCenter.HealthService.ComputerDown" Property="AlertSeverity">
+        <Value>Information</Value>
+      </MonitorPropertyOverride>
+      <MonitorPropertyOverride ID="Aliasbd30de8d983642d6adec177552375782OverrideForMonitorMicrosoftSystemCenterHealthServiceComputerDownForContextMicrosoftSystemCenterHealthServiceWatcher" Context="SystemCenter!Microsoft.SystemCenter.HealthServiceWatcher" Enforced="false" Monitor="SystemCenter1!Microsoft.SystemCenter.HealthService.ComputerDown" Property="GenerateAlert">
+        <Value>false</Value>
+      </MonitorPropertyOverride>
+      <RuleConfigurationOverride ID="Alias394c43c715b24d7aba58afe430862b15OverrideForRuleMicrosoftSystemCenterSCOMCertificateExpiryForContextMicrosoftWindowsClusterNode" Context="Windows!Microsoft.Windows.Cluster.Node" Enforced="false" Rule="SystemCenter1!Microsoft.SystemCenter.SCOM.Certificate.Expiry" Parameter="Severity" Module="GenerateAlert">
+        <Value>0</Value>
+      </RuleConfigurationOverride>
+    </Overrides>
+  </Monitoring>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="Test.MP">
+          <Name>Test.MP</Name>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>

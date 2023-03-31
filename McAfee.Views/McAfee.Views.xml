@@ -1,0 +1,298 @@
+<!--
+==========
+CHANGE LOG
+==========
+2022.4.20.0
+-Initial release.
+-->
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>McAfee.Views</ID>
+      <Version>2022.4.20.0</Version>
+    </Identity>
+    <Name>McAfee.Views</Name>
+    <References>
+      <Reference Alias="Monitoring">
+        <ID>McAfee.Monitoring</ID>
+        <Version>2022.4.20.0</Version>
+        <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8437.17</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <Presentation>
+    <Views>
+      <View ID="View_45d663d4e3d14245b41f5cb31a15287d" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.AlertViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <ResolutionState>
+            <StateRange Operator="NotEquals">255</StateRange>
+          </ResolutionState>
+          <AssignedTo>EUTS Endpoint Security Team</AssignedTo>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Severity</Name>
+            <Id>Severity</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="54" Grouped="false" Sorted="false" IsSortable="false" Visible="true" SortOrder="Ascending">
+            <Name>Icon</Name>
+            <Id>Icon</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>MonitoringObjectPath</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Source</Name>
+            <Id>MonitoringObjectDisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>MonitoringObjectInMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Resolution State</Name>
+            <Id>ResolutionState</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="0" Width="150" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>Created</Name>
+            <Id>TimeRaised</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Age</Name>
+            <Id>Age</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Type</Name>
+            <Id>Category</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Owner</Name>
+            <Id>Owner</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Priority</Name>
+            <Id>Priority</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Latency</Name>
+            <Id>Latency</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Description</Name>
+            <Id>Description</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Connector</Name>
+            <Id>ConnectorId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Forwarding Status</Name>
+            <Id>ConnectorStatus</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Class</Name>
+            <Id>Class</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="17" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Time in State</Name>
+            <Id>TimeInState</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 1</Name>
+            <Id>CustomField1</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 2</Name>
+            <Id>CustomField2</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="20" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 3</Name>
+            <Id>CustomField3</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 4</Name>
+            <Id>CustomField4</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 5</Name>
+            <Id>CustomField5</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 6</Name>
+            <Id>CustomField6</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="24" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 7</Name>
+            <Id>CustomField7</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="25" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 8</Name>
+            <Id>CustomField8</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="26" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 9</Name>
+            <Id>CustomField9</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="27" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 10</Name>
+            <Id>CustomField10</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="28" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Resolved By</Name>
+            <Id>ResolvedBy</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="29" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Time Resolved</Name>
+            <Id>TimeResolved</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="30" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Last State Change</Name>
+            <Id>TimeResolutionStateLastModified</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="31" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Last Modified</Name>
+            <Id>LastModified</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="32" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Last Modified By</Name>
+            <Id>LastModifiedBy</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="33" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Management Group</Name>
+            <Id>ManagementGroup</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="34" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Site</Name>
+            <Id>SiteName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="35" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Repeat Count</Name>
+            <Id>RepeatCount</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="36" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Ticket ID</Name>
+            <Id>TicketId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="37" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>TFS Work Item ID</Name>
+            <Id>TfsWorkItemId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="38" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>TFS Work Item Owner</Name>
+            <Id>TfsWorkItemOwner</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_f3beeadd8d724c54a28cf6277df94925" Accessibility="Public" Enabled="true" Target="Monitoring!McAfee.Class.Agent" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>McAfee.Class.Agent-*-371684e6-83f0-13a3-8f7e-4a5fc213888e-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Version</Name>
+            <Id>McAfee.Class.Agent/Version</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_a6f5598e42f4405689fa98c7be6ccb88" Accessibility="Public" Enabled="true" Target="Monitoring!McAfee.Class.ePolicyOrchestrator" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>McAfee.Class.ePolicyOrchestrator-*-65f5bf05-07ab-495d-c3ad-ce05c50eb5a1-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+    </Views>
+    <Folders>
+      <Folder ID="Folder_e5cc6d241425495fac1c37d8b009b141" Accessibility="Public" ParentFolder="SystemCenter!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
+    </Folders>
+    <FolderItems>
+      <FolderItem ElementID="View_45d663d4e3d14245b41f5cb31a15287d" ID="i093391854ad343eca530c893c509ae68" Folder="Folder_e5cc6d241425495fac1c37d8b009b141" />
+      <FolderItem ElementID="View_f3beeadd8d724c54a28cf6277df94925" ID="i0e2ed6da79d24761831405921925ccb0" Folder="Folder_e5cc6d241425495fac1c37d8b009b141" />
+      <FolderItem ElementID="View_a6f5598e42f4405689fa98c7be6ccb88" ID="i0e4db90b0fee40c281960a442d85eb7e" Folder="Folder_e5cc6d241425495fac1c37d8b009b141" />
+    </FolderItems>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="McAfee.Views">
+          <Name>McAfee Views</Name>
+          <Description>Console views for the McAfee.Monitoring management pack. Leidos Monitoring and Automation team.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Folder_e5cc6d241425495fac1c37d8b009b141">
+          <Name>McAfee</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_45d663d4e3d14245b41f5cb31a15287d">
+          <Name>Active Alerts</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_f3beeadd8d724c54a28cf6277df94925">
+          <Name>Agents</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_a6f5598e42f4405689fa98c7be6ccb88">
+          <Name>ePolicy Orchestrator</Name>
+          <Description />
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>

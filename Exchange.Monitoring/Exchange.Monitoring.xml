@@ -1,0 +1,2016 @@
+<!--
+==========
+CHANGE LOG
+==========
+2022.8.1.0
+-Increase threshold on all monitors to 200.
+2022.7.27.0
+-Add queue rules and monitors.
+2022.6.2.0
+-Disabled these
+A) Exchange.Monitor.CheckWindowsService.MSExchangePop3
+B) Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE
+C) Exchange.Recovery.CheckWindowsService.MSExchangePop3
+D) Exchange.Recovery.CheckWindowsService.MSExchangePOP3BE
+-->
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<Manifest>
+		<Identity>
+			<ID>Exchange.Monitoring</ID>
+			<Version>2022.8.1.0</Version>
+		</Identity>
+		<Name>Exchange.Monitoring</Name>
+		<References>
+			<Reference Alias="SCDW">
+				<ID>Microsoft.SystemCenter.DataWarehouse.Library</ID>
+				<Version>7.1.10226.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="SystemCenter">
+				<ID>Microsoft.SystemCenter.Library</ID>
+				<Version>7.0.8437.17</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="System">
+				<ID>System.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Performance">
+				<ID>System.Performance.Library</ID>
+				<Version>7.0.8433.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Windows">
+				<ID>Microsoft.Windows.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Exchange">
+				<ID>Microsoft.Exchange.15</ID>
+				<Version>15.0.669.22</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Health">
+				<ID>System.Health.Library</ID>
+				<Version>7.0.8437.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+		</References>
+	</Manifest>
+	<Monitoring>
+		<Rules>
+			<!-- SubmissionQueueLength -->
+			<Rule ID="Exchange.Rule.SubmissionQueueLength" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>Submission Queue Length</CounterName>
+						<ObjectName>MSExchangeTransport Queues</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
+			<!-- ExternalAggregateDeliveryQueueLength -->
+			<Rule ID="Exchange.Rule.ExternalAggregateDeliveryQueueLength" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>External Aggregate Delivery Queue Length (All External Queues)</CounterName>
+						<ObjectName>MSExchangeTransport Queues</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
+			<!-- ExternalRetryRemoteDeliveryQueueLength -->
+			<Rule ID="Exchange.Rule.ExternalRetryRemoteDeliveryQueueLength" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>External Retry Remote Delivery Queue Length</CounterName>
+						<ObjectName>MSExchangeTransport Queues</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
+			<!-- InternalAggregateDeliveryQueueLength -->
+			<Rule ID="Exchange.Rule.InternalAggregateDeliveryQueueLength" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>Internal Aggregate Delivery Queue Length (All Internal Queues)</CounterName>
+						<ObjectName>MSExchangeTransport Queues</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
+			<!-- InternalRetryRemoteDeliveryQueueLength -->
+			<Rule ID="Exchange.Rule.InternalRetryRemoteDeliveryQueueLength" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>Internal Retry Remote Delivery Queue Length</CounterName>
+						<ObjectName>MSExchangeTransport Queues</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
+			<!-- RetryNonSmtpDeliveryQueueLength -->
+			<Rule ID="Exchange.Rule.RetryNonSmtpDeliveryQueueLength" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>Retry Non-Smtp Delivery Queue Length</CounterName>
+						<ObjectName>MSExchangeTransport Queues</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
+			<!-- RetryMailboxDeliveryQueueLength -->
+			<Rule ID="Exchange.Rule.RetryMailboxDeliveryQueueLength" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>Retry Mailbox Delivery Queue Length</CounterName>
+						<ObjectName>MSExchangeTransport Queues</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
+			<!-- UnreachableQueueLength -->
+			<Rule ID="Exchange.Rule.UnreachableQueueLength" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>Unreachable Queue Length</CounterName>
+						<ObjectName>MSExchangeTransport Queues</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
+		</Rules>
+		<Monitors>
+			<!-- UnreachableQueueLength -->
+			<UnitMonitor ID="Exchange.Monitor.UnreachableQueueLength" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Performance!System.Performance.ConsecutiveSamplesThreshold" ConfirmDelivery="false">
+				<Category>PerformanceHealth</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.UnreachableQueueLength.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Warning</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+						<AlertParameter2>$Data/Context/SampleValue$</AlertParameter2>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="ConditionFalse" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="ConditionTrue" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<CounterName>Unreachable Queue Length</CounterName>
+					<ObjectName>MSExchangeTransport Queues</ObjectName>
+					<InstanceName>_Total</InstanceName>
+					<AllInstances>false</AllInstances>
+					<Frequency>60</Frequency>
+					<Threshold>200</Threshold>
+					<Direction>greater</Direction>
+					<NumSamples>2</NumSamples>
+				</Configuration>
+			</UnitMonitor>
+			<!-- RetryMailboxDeliveryQueueLength -->
+			<UnitMonitor ID="Exchange.Monitor.RetryMailboxDeliveryQueueLength" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Performance!System.Performance.ConsecutiveSamplesThreshold" ConfirmDelivery="false">
+				<Category>PerformanceHealth</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.RetryMailboxDeliveryQueueLength.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Warning</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+						<AlertParameter2>$Data/Context/SampleValue$</AlertParameter2>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="ConditionFalse" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="ConditionTrue" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<CounterName>Retry Mailbox Delivery Queue Length</CounterName>
+					<ObjectName>MSExchangeTransport Queues</ObjectName>
+					<InstanceName>_Total</InstanceName>
+					<AllInstances>false</AllInstances>
+					<Frequency>60</Frequency>
+					<Threshold>200</Threshold>
+					<Direction>greater</Direction>
+					<NumSamples>2</NumSamples>
+				</Configuration>
+			</UnitMonitor>
+			<!-- RetryNonSmtpDeliveryQueueLength -->
+			<UnitMonitor ID="Exchange.Monitor.RetryNonSmtpDeliveryQueueLength" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Performance!System.Performance.ConsecutiveSamplesThreshold" ConfirmDelivery="false">
+				<Category>PerformanceHealth</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.RetryNonSmtpDeliveryQueueLength.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Warning</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+						<AlertParameter2>$Data/Context/SampleValue$</AlertParameter2>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="ConditionFalse" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="ConditionTrue" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<CounterName>Retry Non-Smtp Delivery Queue Length</CounterName>
+					<ObjectName>MSExchangeTransport Queues</ObjectName>
+					<InstanceName>_Total</InstanceName>
+					<AllInstances>false</AllInstances>
+					<Frequency>60</Frequency>
+					<Threshold>200</Threshold>
+					<Direction>greater</Direction>
+					<NumSamples>2</NumSamples>
+				</Configuration>
+			</UnitMonitor>
+			<!-- InternalRetryRemoteDeliveryQueueLength -->
+			<UnitMonitor ID="Exchange.Monitor.InternalRetryRemoteDeliveryQueueLength" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Performance!System.Performance.ConsecutiveSamplesThreshold" ConfirmDelivery="false">
+				<Category>PerformanceHealth</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.InternalRetryRemoteDeliveryQueueLength.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Warning</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+						<AlertParameter2>$Data/Context/SampleValue$</AlertParameter2>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="ConditionFalse" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="ConditionTrue" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<CounterName>Internal Retry Remote Delivery Queue Length</CounterName>
+					<ObjectName>MSExchangeTransport Queues</ObjectName>
+					<InstanceName>_Total</InstanceName>
+					<AllInstances>false</AllInstances>
+					<Frequency>60</Frequency>
+					<Threshold>200</Threshold>
+					<Direction>greater</Direction>
+					<NumSamples>2</NumSamples>
+				</Configuration>
+			</UnitMonitor>
+			<!-- InternalAggregateDeliveryQueueLength -->
+			<UnitMonitor ID="Exchange.Monitor.InternalAggregateDeliveryQueueLength" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Performance!System.Performance.ConsecutiveSamplesThreshold" ConfirmDelivery="false">
+				<Category>PerformanceHealth</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.InternalAggregateDeliveryQueueLength.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Warning</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+						<AlertParameter2>$Data/Context/SampleValue$</AlertParameter2>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="ConditionFalse" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="ConditionTrue" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<CounterName>Internal Aggregate Delivery Queue Length (All Internal Queues)</CounterName>
+					<ObjectName>MSExchangeTransport Queues</ObjectName>
+					<InstanceName>_Total</InstanceName>
+					<AllInstances>false</AllInstances>
+					<Frequency>60</Frequency>
+					<Threshold>200</Threshold>
+					<Direction>greater</Direction>
+					<NumSamples>2</NumSamples>
+				</Configuration>
+			</UnitMonitor>
+			<!-- ExternalRetryRemoteDeliveryQueueLength -->
+			<UnitMonitor ID="Exchange.Monitor.ExternalRetryRemoteDeliveryQueueLength" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Performance!System.Performance.ConsecutiveSamplesThreshold" ConfirmDelivery="false">
+				<Category>PerformanceHealth</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.ExternalRetryRemoteDeliveryQueueLength.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Warning</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+						<AlertParameter2>$Data/Context/SampleValue$</AlertParameter2>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="ConditionFalse" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="ConditionTrue" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<CounterName>External Retry Remote Delivery Queue Length</CounterName>
+					<ObjectName>MSExchangeTransport Queues</ObjectName>
+					<InstanceName>_Total</InstanceName>
+					<AllInstances>false</AllInstances>
+					<Frequency>60</Frequency>
+					<Threshold>200</Threshold>
+					<Direction>greater</Direction>
+					<NumSamples>2</NumSamples>
+				</Configuration>
+			</UnitMonitor>
+			<!-- ExternalAggregateDeliveryQueueLength -->
+			<UnitMonitor ID="Exchange.Monitor.ExternalAggregateDeliveryQueueLength" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Performance!System.Performance.ConsecutiveSamplesThreshold" ConfirmDelivery="false">
+				<Category>PerformanceHealth</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.ExternalAggregateDeliveryQueueLength.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Warning</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+						<AlertParameter2>$Data/Context/SampleValue$</AlertParameter2>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="ConditionFalse" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="ConditionTrue" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<CounterName>External Aggregate Delivery Queue Length (All External Queues)</CounterName>
+					<ObjectName>MSExchangeTransport Queues</ObjectName>
+					<InstanceName>_Total</InstanceName>
+					<AllInstances>false</AllInstances>
+					<Frequency>60</Frequency>
+					<Threshold>200</Threshold>
+					<Direction>greater</Direction>
+					<NumSamples>2</NumSamples>
+				</Configuration>
+			</UnitMonitor>
+			<!-- SubmissionQueueLength -->
+			<UnitMonitor ID="Exchange.Monitor.SubmissionQueueLength" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Performance!System.Performance.ConsecutiveSamplesThreshold" ConfirmDelivery="false">
+				<Category>PerformanceHealth</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.SubmissionQueueLength.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Warning</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+						<AlertParameter2>$Data/Context/SampleValue$</AlertParameter2>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="ConditionFalse" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="ConditionTrue" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<CounterName>Submission Queue Length</CounterName>
+					<ObjectName>MSExchangeTransport Queues</ObjectName>
+					<InstanceName>_Total</InstanceName>
+					<AllInstances>false</AllInstances>
+					<Frequency>60</Frequency>
+					<Threshold>200</Threshold>
+					<Direction>greater</Direction>
+					<NumSamples>2</NumSamples>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeUMCR" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeUMCR.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeUMCR</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeUM" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeUM.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeUM</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeTransportLogSearch" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeTransportLogSearch.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeTransportLogSearch</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeTransport" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeTransport.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeTransport</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeThrottling" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeThrottling.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeThrottling</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeServiceHost" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeServiceHost.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeServiceHost</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.HostControllerService" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.HostControllerService.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>HostControllerService</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeFastSearch" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeFastSearch.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeFastSearch</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeRPC" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeRPC.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeRPC</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeRepl" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeRepl.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeRepl</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE" Accessibility="Public" Enabled="false" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangePOP3BE</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangePop3" Accessibility="Public" Enabled="false" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangePop3.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangePop3</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeSubmission" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeSubmission.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeSubmission</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxReplication" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxReplication.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeMailboxReplication</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxAssistants" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxAssistants.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeMailboxAssistants</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeIS" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeIS.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeIS</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeIMAP4BE" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeIMAP4BE.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeIMAP4BE</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeImap4" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeImap4.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeImap4</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeHMRecovery" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeHMRecovery.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeHMRecovery</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeHM" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeHM.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeHM</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeFrontEndTransport" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeFrontEndTransport.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeFrontEndTransport</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeEdgeSync" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeEdgeSync.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeEdgeSync</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeDiagnostics" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeDiagnostics.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeDiagnostics</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeDagMgmt" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeDagMgmt.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeDagMgmt</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeCompliance" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeCompliance.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeCompliance</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSComplianceAudit" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSComplianceAudit.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSComplianceAudit</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeAntispamUpdate" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeAntispamUpdate.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeAntispamUpdate</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Exchange.Monitor.CheckWindowsService.MSExchangeADTopology" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="Exchange.Monitor.CheckWindowsService.MSExchangeADTopology.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<ServiceName>MSExchangeADTopology</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+		</Monitors>
+		<Recoveries>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeUMCR" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeUMCR" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeUMCR"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeUM" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeUM" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeUM"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeTransportLogSearch" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeTransportLogSearch" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeTransportLogSearch"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeTransport" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeTransport" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeTransport"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeThrottling" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeThrottling" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeThrottling"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeServiceHost" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeServiceHost" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeServiceHost"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.HostControllerService" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.HostControllerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "HostControllerService"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeFastSearch" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeFastSearch" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeFastSearch"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeRPC" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeRPC" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeRPC"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeRepl" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeRepl" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeRepl"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangePOP3BE" Accessibility="Public" Enabled="false" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangePOP3BE"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangePop3" Accessibility="Public" Enabled="false" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangePop3" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangePop3"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeSubmission" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeSubmission" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeSubmission"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeMailboxReplication" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxReplication" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeMailboxReplication"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeMailboxAssistants" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxAssistants" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeMailboxAssistants"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeIS" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeIS" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeIS"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeIMAP4BE" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeIMAP4BE" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeIMAP4BE"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeImap4" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeImap4" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeImap4"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeHMRecovery" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeHMRecovery" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeHMRecovery"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeHM" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeHM" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeHM"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeFrontEndTransport" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeFrontEndTransport" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeFrontEndTransport"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeEdgeSync" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeEdgeSync" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeEdgeSync"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeDiagnostics" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeDiagnostics" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeDiagnostics"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeDagMgmt" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeDagMgmt" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeDagMgmt"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeCompliance" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeCompliance" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeCompliance"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSComplianceAudit" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSComplianceAudit" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSComplianceAudit"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeAntispamUpdate" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeAntispamUpdate" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeAntispamUpdate"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+			<Recovery ID="Exchange.Recovery.CheckWindowsService.MSExchangeADTopology" Accessibility="Public" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" Monitor="Exchange.Monitor.CheckWindowsService.MSExchangeADTopology" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start "MSExchangeADTopology"</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+		</Recoveries>
+	</Monitoring>
+	<Presentation>
+		<StringResources>
+			<StringResource ID="Exchange.Monitor.UnreachableQueueLength.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.RetryMailboxDeliveryQueueLength.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.RetryNonSmtpDeliveryQueueLength.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.InternalRetryRemoteDeliveryQueueLength.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.InternalAggregateDeliveryQueueLength.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.ExternalRetryRemoteDeliveryQueueLength.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.ExternalAggregateDeliveryQueueLength.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.SubmissionQueueLength.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeUMCR.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeUM.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeTransportLogSearch.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeTransport.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeThrottling.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeServiceHost.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.HostControllerService.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeFastSearch.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeRPC.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeRepl.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangePop3.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeSubmission.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxReplication.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxAssistants.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeIS.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeIMAP4BE.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeImap4.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeHMRecovery.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeHM.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeFrontEndTransport.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeEdgeSync.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeDiagnostics.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeDagMgmt.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeCompliance.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSComplianceAudit.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeAntispamUpdate.AlertMessage"/>
+			<StringResource ID="Exchange.Monitor.CheckWindowsService.MSExchangeADTopology.AlertMessage"/>
+		</StringResources>
+	</Presentation>
+	<LanguagePacks>
+		<LanguagePack ID="ENU" IsDefault="false">
+			<DisplayStrings>
+				<DisplayString ElementID="Exchange.Monitoring">
+					<Name>Exchange Monitoring</Name>
+					<Description>Monitors Exchange components.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeADTopology">
+					<Name>Microsoft Exchange Active Directory Topology</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeADTopology.AlertMessage">
+					<Name>Microsoft Exchange Active Directory Topology service not running</Name>
+					<Description>The 'Microsoft Exchange Active Directory Topology' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeADTopology" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeADTopology" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeADTopology">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeAntispamUpdate">
+					<Name>Microsoft Exchange Anti-spam Update</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeAntispamUpdate.AlertMessage">
+					<Name>Microsoft Exchange Anti-spam Update service not running</Name>
+					<Description>The 'Microsoft Exchange Anti-spam Update' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeAntispamUpdate" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeAntispamUpdate" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeAntispamUpdate">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSComplianceAudit">
+					<Name>Microsoft Exchange Compliance Audit</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSComplianceAudit.AlertMessage">
+					<Name>Microsoft Exchange Compliance Audit service not running</Name>
+					<Description>The 'Microsoft Exchange Compliance Audit' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSComplianceAudit" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSComplianceAudit" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSComplianceAudit">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeCompliance">
+					<Name>Microsoft Exchange Compliance Service</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeCompliance.AlertMessage">
+					<Name>Microsoft Exchange Compliance Service service not running</Name>
+					<Description>The 'Microsoft Exchange Compliance Service' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeCompliance" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeCompliance" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeCompliance">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeDagMgmt">
+					<Name>Microsoft Exchange DAG Management</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeDagMgmt.AlertMessage">
+					<Name>Microsoft Exchange DAG Management service not running</Name>
+					<Description>The 'Microsoft Exchange DAG Management' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeDagMgmt" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeDagMgmt" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeDagMgmt">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeDiagnostics">
+					<Name>Microsoft Exchange Diagnostics</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeDiagnostics.AlertMessage">
+					<Name>Microsoft Exchange Diagnostics service not running</Name>
+					<Description>The 'Microsoft Exchange Diagnostics' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeDiagnostics" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeDiagnostics" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeDiagnostics">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeEdgeSync">
+					<Name>Microsoft Exchange EdgeSync</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeEdgeSync.AlertMessage">
+					<Name>Microsoft Exchange EdgeSync service not running</Name>
+					<Description>The 'Microsoft Exchange EdgeSync' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeEdgeSync" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeEdgeSync" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeEdgeSync">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeFrontEndTransport">
+					<Name>Microsoft Exchange Frontend Transport</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeFrontEndTransport.AlertMessage">
+					<Name>Microsoft Exchange Frontend Transport service not running</Name>
+					<Description>The 'Microsoft Exchange Frontend Transport' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeFrontEndTransport" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeFrontEndTransport" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeFrontEndTransport">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeHM">
+					<Name>Microsoft Exchange Health Manager</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeHM.AlertMessage">
+					<Name>Microsoft Exchange Health Manager service not running</Name>
+					<Description>The 'Microsoft Exchange Health Manager' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeHM" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeHM" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeHM">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeHMRecovery">
+					<Name>Microsoft Exchange Health Manager Recovery</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeHMRecovery.AlertMessage">
+					<Name>Microsoft Exchange Health Manager Recovery service not running</Name>
+					<Description>The 'Microsoft Exchange Health Manager Recovery' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeHMRecovery" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeHMRecovery" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeHMRecovery">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeImap4">
+					<Name>Microsoft Exchange IMAP4</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeImap4.AlertMessage">
+					<Name>Microsoft Exchange IMAP4 service not running</Name>
+					<Description>The 'Microsoft Exchange IMAP4' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeImap4" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeImap4" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeImap4">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeIMAP4BE">
+					<Name>Microsoft Exchange IMAP4 Backend</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeIMAP4BE.AlertMessage">
+					<Name>Microsoft Exchange IMAP4 Backend service not running</Name>
+					<Description>The 'Microsoft Exchange IMAP4 Backend' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeIMAP4BE" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeIMAP4BE" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeIMAP4BE">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeIS">
+					<Name>Microsoft Exchange Information Store</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeIS.AlertMessage">
+					<Name>Microsoft Exchange Information Store service not running</Name>
+					<Description>The 'Microsoft Exchange Information Store' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeIS" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeIS" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeIS">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxAssistants">
+					<Name>Microsoft Exchange Mailbox Assistants</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxAssistants.AlertMessage">
+					<Name>Microsoft Exchange Mailbox Assistants service not running</Name>
+					<Description>The 'Microsoft Exchange Mailbox Assistants' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxAssistants" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxAssistants" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeMailboxAssistants">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxReplication">
+					<Name>Microsoft Exchange Mailbox Replication</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxReplication.AlertMessage">
+					<Name>Microsoft Exchange Mailbox Replication service not running</Name>
+					<Description>The 'Microsoft Exchange Mailbox Replication' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxReplication" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeMailboxReplication" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeMailboxReplication">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeSubmission">
+					<Name>Microsoft Exchange Mailbox Transport Submission</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeSubmission.AlertMessage">
+					<Name>Microsoft Exchange Mailbox Transport Submission service not running</Name>
+					<Description>The 'Microsoft Exchange Mailbox Transport Submission' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeSubmission" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeSubmission" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeSubmission">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangePop3">
+					<Name>Microsoft Exchange POP3</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangePop3.AlertMessage">
+					<Name>Microsoft Exchange POP3 service not running</Name>
+					<Description>The 'Microsoft Exchange POP3' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangePop3" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangePop3" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangePop3">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE">
+					<Name>Microsoft Exchange POP3 Backend</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE.AlertMessage">
+					<Name>Microsoft Exchange POP3 Backend service not running</Name>
+					<Description>The 'Microsoft Exchange POP3 Backend' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangePOP3BE">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeRepl">
+					<Name>Microsoft Exchange Replication</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeRepl.AlertMessage">
+					<Name>Microsoft Exchange Replication service not running</Name>
+					<Description>The 'Microsoft Exchange Replication' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeRepl" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeRepl" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeRepl">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeRPC">
+					<Name>Microsoft Exchange RPC Client Access</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeRPC.AlertMessage">
+					<Name>Microsoft Exchange RPC Client Access service not running</Name>
+					<Description>The 'Microsoft Exchange RPC Client Access' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeRPC" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeRPC" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeRPC">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeFastSearch">
+					<Name>Microsoft Exchange Search</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeFastSearch.AlertMessage">
+					<Name>Microsoft Exchange Search service not running</Name>
+					<Description>The 'Microsoft Exchange Search' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeFastSearch" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeFastSearch" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeFastSearch">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.HostControllerService">
+					<Name>Microsoft Exchange Search Host Controller</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.HostControllerService.AlertMessage">
+					<Name>Microsoft Exchange Search Host Controller service not running</Name>
+					<Description>The 'Microsoft Exchange Search Host Controller' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.HostControllerService" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.HostControllerService" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.HostControllerService">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeServiceHost">
+					<Name>Microsoft Exchange Service Host</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeServiceHost.AlertMessage">
+					<Name>Microsoft Exchange Service Host service not running</Name>
+					<Description>The 'Microsoft Exchange Service Host' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeServiceHost" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeServiceHost" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeServiceHost">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeThrottling">
+					<Name>Microsoft Exchange Throttling</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeThrottling.AlertMessage">
+					<Name>Microsoft Exchange Throttling service not running</Name>
+					<Description>The 'Microsoft Exchange Throttling' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeThrottling" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeThrottling" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeThrottling">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeTransport">
+					<Name>Microsoft Exchange Transport</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeTransport.AlertMessage">
+					<Name>Microsoft Exchange Transport service not running</Name>
+					<Description>The 'Microsoft Exchange Transport' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeTransport" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeTransport" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeTransport">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeTransportLogSearch">
+					<Name>Microsoft Exchange Transport Log Search</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeTransportLogSearch.AlertMessage">
+					<Name>Microsoft Exchange Transport Log Search service not running</Name>
+					<Description>The 'Microsoft Exchange Transport Log Search' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeTransportLogSearch" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeTransportLogSearch" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeTransportLogSearch">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeUM">
+					<Name>Microsoft Exchange Unified Messaging</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeUM.AlertMessage">
+					<Name>Microsoft Exchange Unified Messaging service not running</Name>
+					<Description>The 'Microsoft Exchange Unified Messaging' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeUM" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeUM" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeUM">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeUMCR">
+					<Name>Microsoft Exchange Unified Messaging Call Router</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeUMCR.AlertMessage">
+					<Name>Microsoft Exchange Unified Messaging Call Router service not running</Name>
+					<Description>The 'Microsoft Exchange Unified Messaging Call Router' service on {0} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeUMCR" SubElementID="Unhealthy">
+					<Name>Service not running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.CheckWindowsService.MSExchangeUMCR" SubElementID="Healthy">
+					<Name>Service running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Recovery.CheckWindowsService.MSExchangeUMCR">
+					<Name>Start service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.SubmissionQueueLength">
+					<Name>Exchange Submission Queue Length</Name>
+					<Description>Performance counter monitor</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.SubmissionQueueLength.AlertMessage">
+					<Name>Exchange Queue: Submission Queue Length is too high</Name>
+					<Description>The Exchange Submission Queue Length counter on {0} is {1}.
+					</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.SubmissionQueueLength" SubElementID="Healthy">
+					<Name>Under threshold</Name>
+					<!--<Description>Healthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.SubmissionQueueLength" SubElementID="Unhealthy">
+					<Name>Over threshold</Name>
+					<!--<Description>Unhealthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.ExternalAggregateDeliveryQueueLength">
+					<Name>External Aggregate Delivery Queue Length (All External Queues)</Name>
+					<Description>Performance counter monitor</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.ExternalAggregateDeliveryQueueLength.AlertMessage">
+					<Name>Exchange Queue: External Aggregate Delivery Queue Length is too high</Name>
+					<Description>The External Aggregate Delivery Queue Length counter on {0} is {1}.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.ExternalAggregateDeliveryQueueLength" SubElementID="Healthy">
+					<Name>Under threshold</Name>
+					<!--<Description>Healthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.ExternalAggregateDeliveryQueueLength" SubElementID="Unhealthy">
+					<Name>Over threshold</Name>
+					<!--<Description>Unhealthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.ExternalRetryRemoteDeliveryQueueLength">
+					<Name>External Retry Remote Delivery Queue Length</Name>
+					<Description>Performance counter monitor</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.ExternalRetryRemoteDeliveryQueueLength.AlertMessage">
+					<Name>Exchange Queue: External Retry Remote Delivery Queue Length is too high</Name>
+					<Description>The External Retry Remote Delivery Queue Length counter on {0} is {1}.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.ExternalRetryRemoteDeliveryQueueLength" SubElementID="Healthy">
+					<Name>Under threshold</Name>
+					<!--<Description>Healthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.ExternalRetryRemoteDeliveryQueueLength" SubElementID="Unhealthy">
+					<Name>Over threshold</Name>
+					<!--<Description>Unhealthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.InternalAggregateDeliveryQueueLength">
+					<Name>Internal Aggregate Delivery Queue Length (All Internal Queues)</Name>
+					<Description>Performance counter monitor</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.InternalAggregateDeliveryQueueLength.AlertMessage">
+					<Name>Exchange Queue: Internal Aggregate Delivery Queue Length is too high</Name>
+					<Description>The Internal Aggregate Delivery Queue Length counter on {0} is {1}.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.InternalAggregateDeliveryQueueLength" SubElementID="Healthy">
+					<Name>Under threshold</Name>
+					<!--<Description>Healthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.InternalAggregateDeliveryQueueLength" SubElementID="Unhealthy">
+					<Name>Over threshold</Name>
+					<!--<Description>Unhealthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.InternalRetryRemoteDeliveryQueueLength">
+					<Name>Internal Retry Remote Delivery Queue Length</Name>
+					<Description>Performance counter monitor</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.InternalRetryRemoteDeliveryQueueLength.AlertMessage">
+					<Name>Exchange Queue: Internal Retry Remote Delivery Queue Length is too high</Name>
+					<Description>The Internal Retry Remote Delivery Queue Length counter on {0} is {1}.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.InternalRetryRemoteDeliveryQueueLength" SubElementID="Healthy">
+					<Name>Under threshold</Name>
+					<!--<Description>Healthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.InternalRetryRemoteDeliveryQueueLength" SubElementID="Unhealthy">
+					<Name>Over threshold</Name>
+					<!--<Description>Unhealthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.RetryNonSmtpDeliveryQueueLength">
+					<Name>Retry Non-Smtp Delivery Queue Length</Name>
+					<Description>Performance counter monitor</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.RetryNonSmtpDeliveryQueueLength.AlertMessage">
+					<Name>Exchange Queue: Retry Non-Smtp Delivery Queue Length is too high</Name>
+					<Description>The Retry Non-Smtp Delivery Queue Length counter on {0} is {1}.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.RetryNonSmtpDeliveryQueueLength" SubElementID="Healthy">
+					<Name>Under threshold</Name>
+					<!--<Description>Healthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.RetryNonSmtpDeliveryQueueLength" SubElementID="Unhealthy">
+					<Name>Over threshold</Name>
+					<!--<Description>Unhealthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.RetryMailboxDeliveryQueueLength">
+					<Name>Retry Mailbox Delivery Queue Length</Name>
+					<Description>Performance counter monitor</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.RetryMailboxDeliveryQueueLength.AlertMessage">
+					<Name>Exchange Queue: Retry Mailbox Delivery Queue Length is too high</Name>
+					<Description>The Retry Mailbox Delivery Queue Length counter on {0} is {1}.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.RetryMailboxDeliveryQueueLength" SubElementID="Healthy">
+					<Name>Under threshold</Name>
+					<!--<Description>Healthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.RetryMailboxDeliveryQueueLength" SubElementID="Unhealthy">
+					<Name>Over threshold</Name>
+					<!--<Description>Unhealthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.UnreachableQueueLength">
+					<Name>Unreachable Queue Length</Name>
+					<Description>Performance counter monitor</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.UnreachableQueueLength.AlertMessage">
+					<Name>Exchange Queue: Unreachable Queue Length is too high</Name>
+					<Description>The Unreachable Queue Length counter on {0} is {1}.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.UnreachableQueueLength" SubElementID="Healthy">
+					<Name>Under threshold</Name>
+					<!--<Description>Healthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Monitor.UnreachableQueueLength" SubElementID="Unhealthy">
+					<Name>Over threshold</Name>
+					<!--<Description>Unhealthy</Description>-->
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.UnreachableQueueLength">
+					<Name>Unreachable Queue Length</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.RetryMailboxDeliveryQueueLength">
+					<Name>Retry Mailbox Delivery Queue Length</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.RetryNonSmtpDeliveryQueueLength">
+					<Name>Retry Non-Smtp Delivery Queue Length</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.InternalRetryRemoteDeliveryQueueLength">
+					<Name>Internal Retry Remote Delivery Queue Length</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.InternalAggregateDeliveryQueueLength">
+					<Name>Internal Aggregate Delivery Queue Length (All Internal Queues)</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.ExternalRetryRemoteDeliveryQueueLength">
+					<Name>External Retry Remote Delivery Queue Length</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.ExternalAggregateDeliveryQueueLength">
+					<Name>External Aggregate Delivery Queue Length (All External Queues)</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.SubmissionQueueLength">
+					<Name>Submission Queue Length</Name>
+				</DisplayString>
+			</DisplayStrings>
+		</LanguagePack>
+	</LanguagePacks>
+</ManagementPack>
