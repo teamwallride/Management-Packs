@@ -1,0 +1,1081 @@
+<!-- 
+==========
+CHANGE LOG
+==========
+2023.3.7.0
+-Did a search/replace on 'YourCompany' to remove company name so I can upload to GH.
+-This mp is mainly for reference purposes. It should still work if you import.
+-->
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<Manifest>
+		<Identity>
+			<ID>YourCompany.PKI</ID>
+			<Version>2023.3.7.0</Version>
+		</Identity>
+		<Name>YourCompany.PKI</Name>
+		<References>
+			<Reference Alias="Windows">
+				<ID>Microsoft.Windows.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="MSIGL">
+				<ID>Microsoft.SystemCenter.InstanceGroup.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="System">
+				<ID>System.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="SystemCenter">
+				<ID>Microsoft.SystemCenter.Library</ID>
+				<Version>7.0.8433.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Health">
+				<ID>System.Health.Library</ID>
+				<Version>7.0.8433.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+		</References>
+	</Manifest>
+	<TypeDefinitions>
+		<EntityTypes>
+			<ClassTypes>
+				<ClassType ID="YourCompany.PKI.Class.CertificateAuthority" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+					<Property ID="CAName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+				</ClassType>
+				<ClassType ID="YourCompany.PKI.Class.Certificate" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.ApplicationComponent" Hosted="true" Singleton="false" Extension="false">
+					<Property ID="CAName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+					<Property ID="RequestId" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+					<Property ID="CommonName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+					<Property ID="IssueDate" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+					<Property ID="ExpiryDate" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+					<Property ID="CertificateTemplate" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+					<Property ID="RequesterName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+					<Property ID="Status" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+					<Property ID="RevokeDate" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+					<Property ID="RevokeReason" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+				</ClassType>
+				<ClassType ID="YourCompany.PKI.Group.IssuedCertificate" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+				<ClassType ID="YourCompany.PKI.Group.RevokedCertificate" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+			</ClassTypes>
+			<RelationshipTypes>
+				<RelationshipType ID="YourCompany.PKI.Relationship.CAHostsCertificate" Accessibility="Public" Abstract="false" Base="System!System.Hosting">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="YourCompany.PKI.Class.CertificateAuthority" />
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="YourCompany.PKI.Class.Certificate" />
+				</RelationshipType>
+			</RelationshipTypes>
+		</EntityTypes>
+		<ModuleTypes>
+			<DataSourceModuleType ID="YourCompany.PKI.DSM.CertificateState" Accessibility="Internal" Batching="false">
+				<Configuration>
+					<xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+					<xsd:element name="RequestId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+				</Configuration>
+				<ModuleImplementation Isolation="Any">
+					<Composite>
+						<MemberModules>
+							<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedScript.PropertyBagProvider">
+								<IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+								<SyncTime />
+								<ScriptName>CertificateExpiry.vbs</ScriptName>
+								<Arguments />
+								<ScriptBody>
+									<![CDATA[
+On Error Resume Next
+Dim vSeverity, oAPI, vCATypeName, vBadCertCount
+Const HKEY_LOCAL_MACHINE = &H80000002
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\default:StdRegProv")
+Set oCAView = CreateObject("CertificateAuthority.View.1")
+Set oAPI = CreateObject("MOM.ScriptAPI")
+vEventID = 2613
+vSeverity = 0
+vBadCertCount = 0
+vBody = "Start Time: " & Now & VBCRLF
+vEventName = "Monitor Name"
+vEventValue = "YourCompany.PKI.Monitor.CertificateExpiry" & VBCRLF & "Script Name : CertificateExpiry.vbs" & VBCRLF & "Management Pack : YourCompany.PKI 1.0.0.0"
+vCompKey = "SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName"
+vCompName = "ComputerName"
+vCAKey = "SYSTEM\CurrentControlSet\Services\CertSvc\Configuration"
+vCAName = "Active"
+CAType = "CAType"
+objReg.GetStringValue HKEY_LOCAL_MACHINE, vCompKey, vCompName, vComputerName
+objReg.GetStringValue HKEY_LOCAL_MACHINE, vCAKey, vCAName, vCertificateAuthorityName
+objReg.GetDWORDValue HKEY_LOCAL_MACHINE, vCAKey & "\" & vCertificateAuthorityName, CAType, vCAType
+fGetCAType
+CAName = vComputerName & "\" & vCertificateAuthorityName
+oCAView.OpenConnection (CAName)
+fConnectToCACheck
+vBody = vBody & "Connect to CA: " & CAName & ": Pass" & VBCRLF & "CA Type: " & vCATypeName & VBCRLF & "<RequestId><CommonName><DaysRemaining><ErrorOutput>" & VBCRLF
+oCAView.SetResultColumnCount(5) 
+Index0 = oCAView.GetColumnIndex(False, "RequestID") 
+Index1 = oCAView.GetColumnIndex(False, "CommonName")
+Index2 = oCAView.GetColumnIndex(False, "NotAfter") 
+Index3 = oCAView.GetColumnIndex(False, "Request.Disposition")
+Index4 = oCAView.GetColumnIndex(False, "EnrollmentFlags")
+oCAView.SetResultColumn (Index0) 
+oCAView.SetResultColumn (Index1) 
+oCAView.SetResultColumn (Index2) 
+oCAView.SetResultColumn (Index3) 
+oCAView.SetResultColumn (Index4)
+oCAView.SetRestriction Index2,16,0,Now 'certificate expiry date is greater than monitor runtime
+oCAView.SetRestriction Index3,1,0,20 'this will get issued (20) certs only
+'EnrollmentFlags don't exist on stand alone CAs so we need to add this.
+If vCAType = 1 Then
+	oCAView.SetRestriction Index4,1,0,0 'certs that need to be manually updated (no autoenroll)
+'These are the CA types. You can get them with certutil: certutil -getreg ca\CAType
+'0 — Enterprise Root CA
+'1 — Enterprise Subordinate CA
+'3 — Standalone Root CA
+'4 — Standalone Subordinate CA
+'5 — Unknown CA type.
+End If
+Set RowObj= oCAView.OpenView
+	Do Until RowObj.Next = -1
+		Set ColObj = RowObj.EnumCertViewColumn()
+		Do Until ColObj.Next = -1
+			Select Case ColObj.GetName
+				Case "RequestID" vRequestId = ColObj.GetValue(x)
+				Case "CommonName" vCommonName  = ColObj.GetValue(x)
+				Case "NotAfter" vExpiryDate = ColObj.GetValue(x)
+			End Select
+		Loop
+			If Len(vRequestId) = 0 Or Len(vCommonName) = 0 Or Len(vExpiryDate) = 0 Or Not IsDate(vExpiryDate) Then
+				vBadCertCount = vBadCertCount +1
+				vBody = vBody & "*" & vRequestId & "," & vCommonName & "," & vDaysToExpire & "," & Err.Number & "," & Err.Description & "," & Err.Source & VBCRLF
+			Else	
+				Set oBag= oAPI.CreatePropertyBag() 
+				vConvertExpiryDate = DateAdd("h", 10, vExpiryDate)
+				vFormatExpiryDate = FormatDateTime(vConvertExpiryDate, vbGeneralDate)
+				vDaysToExpire = DateDiff("d", Now, vFormatExpiryDate)
+				Call oBag.AddValue("RequestId", vRequestId)
+				Call oBag.AddValue("Days", vDaysToExpire)
+				Call oAPI.AddItem (oBag)
+				vBody = vBody & vRequestId & ", " & vCommonName & ", " & vDaysToExpire & VBCRLF
+			End If
+	Loop
+fCertCheck
+'Get CA Type funtion
+Function fGetCAType
+	Select Case vCAType
+		Case 0 vCATypeName = "Enterprise Root CA"
+		Case 1 vCATypeName = "Enterprise Subordinate CA"
+		Case 3 vCATypeName = "Standalone Root CA"
+		Case 4 vCATypeName = "Standalone Subordinate CA"
+		Case 5 vCATypeName = "Unknown CA type"
+		Case Else vCATypeName = "Unknown CA type"
+	End Select
+End Function
+'Certificate check function
+Function fCertCheck
+	If vBadCertCount > 0 Then 
+		vSeverity = 2
+	End If
+	fLogEvent
+End Function
+'Connect to CA function
+Function fConnectToCACheck
+	If Err.Number <> 0 Then
+		vBody = vBody &  "Connect to CA: Fail (" & Err.Number & ", " & Err.Description & ", " & Err.Source & ")" & VBCRLF
+		vSeverity = 2
+		fLogEvent
+	End If
+End Function
+'Log event function
+Function fLogEvent
+	Call oAPI.LogScriptEvent(vEventName, vEventID, vSeverity, vEventValue & VBCRLF & vBody & "End Time: " & Now)
+	Call oAPI.ReturnItems()
+	WScript.Quit(0)
+End Function
+]]>
+								</ScriptBody>
+								<TimeoutSeconds>60</TimeoutSeconds>
+							</DataSource>
+							<ConditionDetection ID="Filter" TypeID="System!System.ExpressionFilter">
+								<Expression>
+									<SimpleExpression>
+										<ValueExpression>
+											<XPathQuery Type="String">Property[@Name='RequestId']</XPathQuery>
+										</ValueExpression>
+										<Operator>Equal</Operator>
+										<ValueExpression>
+											<Value Type="String">$Config/RequestId$</Value>
+										</ValueExpression>
+									</SimpleExpression>
+								</Expression>
+							</ConditionDetection>
+						</MemberModules>
+						<Composition>
+							<Node ID="Filter">
+								<Node ID="DS" />
+							</Node>
+						</Composition>
+					</Composite>
+				</ModuleImplementation>
+				<OutputType>System!System.PropertyBagData</OutputType>
+			</DataSourceModuleType>
+		</ModuleTypes>
+		<MonitorTypes>
+			<UnitMonitorType ID="YourCompany.PKI.UMT.CertificateState" Accessibility="Internal">
+				<MonitorTypeStates>
+					<MonitorTypeState ID="HealthyState" NoDetection="false" />
+					<MonitorTypeState ID="WarningState" NoDetection="false" />
+					<MonitorTypeState ID="CriticalState" NoDetection="false" />
+				</MonitorTypeStates>
+				<Configuration>
+					<xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+					<xsd:element name="WarningThreshold" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+					<xsd:element name="CriticalThreshold" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+					<xsd:element name="RequestId" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+				</Configuration>
+				<OverrideableParameters>
+					<OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+				</OverrideableParameters>
+				<MonitorImplementation>
+					<MemberModules>
+						<DataSource ID="Script" TypeID="YourCompany.PKI.DSM.CertificateState">
+							<IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+							<RequestId>$Config/RequestId$</RequestId>
+						</DataSource>
+						<ConditionDetection ID="HealthyFilter" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<XPathQuery Type="Double">Property[@Name='Days']</XPathQuery>
+									</ValueExpression>
+									<Operator>GreaterEqual</Operator>
+									<ValueExpression>
+										<Value Type="Double">$Config/WarningThreshold$</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+						</ConditionDetection>
+						<ConditionDetection ID="WarningFilter" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<And>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="Double">Property[@Name='Days']</XPathQuery>
+											</ValueExpression>
+											<Operator>Less</Operator>
+											<ValueExpression>
+												<Value Type="Double">$Config/WarningThreshold$</Value>
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="Double">Property[@Name='Days']</XPathQuery>
+											</ValueExpression>
+											<Operator>GreaterEqual</Operator>
+											<ValueExpression>
+												<Value Type="Double">$Config/CriticalThreshold$</Value>
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+								</And>
+							</Expression>
+						</ConditionDetection>
+						<ConditionDetection ID="CriticalFilter" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<XPathQuery Type="Double">Property[@Name='Days']</XPathQuery>
+									</ValueExpression>
+									<Operator>Less</Operator>
+									<ValueExpression>
+										<Value Type="Double">$Config/CriticalThreshold$</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+						</ConditionDetection>
+					</MemberModules>
+					<RegularDetections>
+						<RegularDetection MonitorTypeStateID="HealthyState">
+							<Node ID="HealthyFilter">
+								<Node ID="Script" />
+							</Node>
+						</RegularDetection>
+						<RegularDetection MonitorTypeStateID="WarningState">
+							<Node ID="WarningFilter">
+								<Node ID="Script" />
+							</Node>
+						</RegularDetection>
+						<RegularDetection MonitorTypeStateID="CriticalState">
+							<Node ID="CriticalFilter">
+								<Node ID="Script" />
+							</Node>
+						</RegularDetection>
+					</RegularDetections>
+				</MonitorImplementation>
+			</UnitMonitorType>
+		</MonitorTypes>
+	</TypeDefinitions>
+	<Monitoring>
+		<Discoveries>
+			<!--CA Discovery-->
+			<Discovery ID="YourCompany.PKI.Discovery.CertificateAuthority" Enabled="false" Target="Windows!Microsoft.Windows.Computer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="YourCompany.PKI.Class.CertificateAuthority" />
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+					<ComputerName>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<RegistryAttributeDefinitions>
+						<RegistryAttributeDefinition>
+							<AttributeName>AppExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\CertSvc\Configuration</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<RegistryAttributeDefinition>
+							<AttributeName>CAName</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\CertSvc\Configuration\Active</Path>
+							<PathType>1</PathType>
+							<AttributeType>1</AttributeType>
+						</RegistryAttributeDefinition>
+					</RegistryAttributeDefinitions>
+					<Frequency>86400</Frequency>
+					<ClassId>$MPElement[Name="YourCompany.PKI.Class.CertificateAuthority"]$</ClassId>
+					<InstanceSettings>
+						<Settings>
+							<Setting>
+								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+								<Value>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="YourCompany.PKI.Class.CertificateAuthority"]/CAName$</Name>
+								<Value>$Data/Values/CAName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+								<Value>$Data/Values/CAName$</Value>
+							</Setting>
+						</Settings>
+					</InstanceSettings>
+					<Expression>
+						<SimpleExpression>
+							<ValueExpression>
+								<XPathQuery Type="String">Values/AppExists</XPathQuery>
+							</ValueExpression>
+							<Operator>Equal</Operator>
+							<ValueExpression>
+								<Value Type="String">true</Value>
+							</ValueExpression>
+						</SimpleExpression>
+					</Expression>
+				</DataSource>
+			</Discovery>
+			<!--Certificate Discovery-->
+			<Discovery ID="YourCompany.PKI.Discovery.Certificate" Enabled="false" Target="YourCompany.PKI.Class.CertificateAuthority" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="YourCompany.PKI.Class.Certificate" />
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedScript.DiscoveryProvider">
+					<IntervalSeconds>28800</IntervalSeconds>
+					<SyncTime />
+					<ScriptName>DiscoverCertificate.vbs</ScriptName>
+					<Arguments>$MPElement$ $Target/Id$ $Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Arguments>
+					<ScriptBody>
+						<![CDATA[
+On Error Resume Next
+Dim oArgs, SourceID, ManagedEntityId, TargetComputer, vSeverity, oAPI, oDiscoveryData, oInst
+Const HKEY_LOCAL_MACHINE = &H80000002
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\default:StdRegProv")
+Set oCAView = CreateObject("CertificateAuthority.View.1")
+Set oArgs = WScript.Arguments
+Set oAPI = CreateObject("MOM.ScriptAPI")
+SourceId = oArgs(0)
+ManagedEntityId = oArgs(1)
+TargetComputer = oArgs(2)
+Set oDiscoveryData = oAPI.CreateDiscoveryData(0, SourceId, ManagedEntityId)
+vEventID = 2612
+vIssuedCertCount = 0
+vRevokedCertCount = 0
+vBadCertCount = 0
+vBody = "Start Time: " & Now & VBCRLF
+vDiscoveryName = "Discovery Name"
+vDiscoveryValue = "YourCompany.PKI.Discovery.Certificate" & VBCRLF & "Script Name : DiscoverCertificate.vbs" & VBCRLF & "Management Pack : YourCompany.PKI 1.0.0.0"
+vCompKey = "SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName"
+vCompName = "ComputerName"
+vCAKey = "SYSTEM\CurrentControlSet\Services\CertSvc\Configuration"
+vCAName = "Active"
+objReg.GetStringValue HKEY_LOCAL_MACHINE, vCompKey, vCompName, vComputerName
+objReg.GetStringValue HKEY_LOCAL_MACHINE, vCAKey, vCAName, vCertificateAuthorityName
+CAName = vComputerName & "\" & vCertificateAuthorityName
+oCAView.OpenConnection (CAName)
+fConnectToCACheck
+vBody = vBody & "Connect to CA: " & CAName & ": Pass" & VBCRLF
+oCAView.SetResultColumnCount(10) 
+Index0 = oCAView.GetColumnIndex(False, "RequestID") 
+Index1 = oCAView.GetColumnIndex(False, "CommonName")
+Index2 = oCAView.GetColumnIndex(False, "NotBefore")
+Index3 = oCAView.GetColumnIndex(False, "NotAfter") 
+Index4 = oCAView.GetColumnIndex(False, "CertificateTemplate")
+Index5 = oCAView.GetColumnIndex(False, "Request.RequesterName")
+Index6 = oCAView.GetColumnIndex(False, "Request.Disposition")
+Index7 = oCAView.GetColumnIndex(False, "EnrollmentFlags")
+Index8 = oCAView.GetColumnIndex(False, "Request.RevokedWhen")
+Index9 = oCAView.GetColumnIndex(False, "Request.RevokedReason")
+oCAView.SetResultColumn (Index0) 
+oCAView.SetResultColumn (Index1) 
+oCAView.SetResultColumn (Index2) 
+oCAView.SetResultColumn (Index3) 
+oCAView.SetResultColumn (Index4)
+oCAView.SetResultColumn (Index5)
+oCAView.SetResultColumn (Index6)
+oCAView.SetResultColumn (Index7)
+oCAView.SetResultColumn (Index8)
+oCAView.SetResultColumn (Index9)
+oCAView.SetRestriction Index3,16,0,DateAdd("d",-30,Now) 'certs that expired within last 30 days or expire in the future
+oCAView.SetRestriction Index6,16,0,19 'this will get issued (20), revoked (21), request failed (30), request denied  (31)
+oCAView.SetRestriction Index7,1,0,0 'certs that need to be manually updated (no autoenroll)
+Set RowObj= oCAView.OpenView
+Do Until RowObj.Next = -1
+	Set ColObj = RowObj.EnumCertViewColumn()
+	Do Until ColObj.Next = -1
+		Select Case ColObj.GetName
+			Case "RequestID" vRequestId = ColObj.GetValue(x)
+			Case "CommonName" vCommonName  = ColObj.GetValue(x)
+			Case "NotBefore" vIssueDate = ColObj.GetValue(x)
+			Case "NotAfter" vExpiryDate = ColObj.GetValue(x)
+			Case "CertificateTemplate" vCertificateTemplate = ColObj.GetValue(x)
+				Select Case vCertificateTemplate
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.14733543.9346101" vCertificateTemplate = "Web Server 1.0"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.13094187.9454734" vCertificateTemplate = "Computer 1.0"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.1893500.13780095" vCertificateTemplate = "ConfigMgr 2012 Web Server 1.0"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.15254635.9520700" vCertificateTemplate = "ConfigMgr 2012 Distribution Point 1.0"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.12473441.15110404" vCertificateTemplate = "Domain Controller Authentication 1.0"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.8488589.8397592" vCertificateTemplate = "SCOM Agent 1.0"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.8958845.9685542" vCertificateTemplate = "Server Authentication 1.0"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.6130784.16349782" vCertificateTemplate = "YourCompany ClientServer Authentication"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.13663671.818042" vCertificateTemplate = "YourCompany ClientServer Authentication (Offline request)"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.11781179.10216298" vCertificateTemplate = "YourCompany ConfigMgr 2012 Client"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.5418761.11698900" vCertificateTemplate = "YourCompany ConfigMgr 2012 Client (Offline request)"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.4256215.8997217" vCertificateTemplate = "YourCompany ConfigMgr 2012 Distribution Point"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.12513168.5068132" vCertificateTemplate = "YourCompany ConfigMgr 2012 Web Server"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.4089569.565271" vCertificateTemplate = "YourCompany Domain Controller Authentication"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.16341552.3395751" vCertificateTemplate = "YourCompany Domain Controller Authentication (Offline request)"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.1787920.3978909" vCertificateTemplate = "YourCompany SCOM Agent"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.37963.9523854" vCertificateTemplate = "YourCompany SCOM Agent (Offline request)"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.9461324.7807159" vCertificateTemplate = "YourCompany Server Authentication"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.4875771.3255965" vCertificateTemplate = "YourCompany Server Authentication (Offline request)"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.11892272.72025" vCertificateTemplate = "YourCompany VMware (Offline request)"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.1762845.6336758" vCertificateTemplate = "YourCompany Web Server"					
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.2744788.4623160" vCertificateTemplate = "YourCompany Web Server (Offline request)"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.4146411.10730980" vCertificateTemplate = "ConfigMgr 2012 Client 1.0"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.7512486.14922709" vCertificateTemplate = "YourCompany ConfigMgr 2012 Client (Offline request)"
+					Case "1.3.6.1.4.1.311.21.8.1514955.3894345.1655726.13772617.15879923.237.7294459.15344964" vCertificateTemplate = "YourCompany RAS and IAS server"
+					Case "1.3.6.1.4.1.311.21.8.1514955.3894345.1655726.13772617.15879923.237.7565439.7240907" vCertificateTemplate = "YourCompany NetScaler"
+					Case "1.3.6.1.4.1.311.21.8.1514955.3894345.1655726.13772617.15879923.237.3651397.15138156" vCertificateTemplate = "YourCompany DirectAccess NLS"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.7933175.8020930" vCertificateTemplate = "YourCompany Web Server (Offline SHA256)"
+					Case "1.3.6.1.4.1.311.21.8.14722105.6756856.16075182.9062989.3027586.33.10697013.11111759" vCertificateTemplate = "YourCompany VMware (Offline SHA256)"					
+				End Select
+			Case "Request.RequesterName" vRequestor = ColObj.GetValue(x)
+			Case "Request.Disposition" vDisposition = ColObj.GetValue(x)
+			Case "Request.RevokedWhen" vRevokeDate = ColObj.GetValue(x)
+			Case "Request.RevokedReason" vRevokeReason = ColObj.GetValue(x)
+				Select Case vRevokeReason
+					Case "0" vRevokeReason = "Unspecified"
+					Case "1" vRevokeReason = "Key Compromise"
+					Case "2" vRevokeReason = "CA Compromise"
+					Case "3" vRevokeReason = "Change of Affiliation"
+					Case "4" vRevokeReason = "Superseded"
+					Case "5" vRevokeReason = "Cease of Operation"
+					Case "6" vRevokeReason = "Certificate Hold"
+				End Select
+			End Select
+	Loop
+	If IsNumeric(vRequestId) = True Then
+		If vDisposition = "20" Then
+			vIssuedCertCount = vIssuedCertCount +1
+			vStatus = "Issued"
+			vFormatRevokeDate = "N/A"
+			vRevokeReason = "N/A"
+			fAddInstance
+		ElseIf vDisposition = "21" Then
+			vRevokedCertCount = vRevokedCertCount +1
+			vStatus = "Revoked"
+			vConvertRevokeDate = DateAdd("h", 10, vRevokeDate)
+			vFormatRevokeDate = FormatDateTime(vConvertRevokeDate, vbGeneralDate)
+			fAddInstance
+		End If
+	Else
+		vBadCertCount = vBadCertCount +1
+		vBody = vBody & "*" & vRequestId & "," & vCommonName & " invalid" & VBCRLF
+	End If
+Loop
+fCertCheck
+Function fAddInstance
+	vConvertIssueDate = DateAdd("h", 10, vIssueDate)
+	vFormatIssueDate = FormatDateTime(vConvertIssueDate, vbGeneralDate)
+	vConvertExpiryDate = DateAdd("h", 10, vExpiryDate)
+	vFormatExpiryDate = FormatDateTime(vConvertExpiryDate, vbGeneralDate)
+	Set oInst = oDiscoveryData.CreateClassInstance("$MPElement[Name='YourCompany.PKI.Class.Certificate']$")
+	Call oInst.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", TargetComputer) 'you need to include the principal name or discovery fails.
+	Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/RequestId$", vRequestId)
+	Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/CommonName$", vCommonName)
+	Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/IssueDate$", vFormatIssueDate)
+	Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/ExpiryDate$", vFormatExpiryDate)
+	Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/CertificateTemplate$", vCertificateTemplate)
+	Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/RequesterName$", vRequestor)
+	Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/Status$", vStatus)
+	Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/RevokeDate$", vFormatRevokeDate)
+	Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/RevokeReason$", vRevokeReason)
+	Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/CAName$", vCertificateAuthorityName)
+	Call oInst.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", vRequestId)
+	Call oDiscoveryData.AddInstance(oInst)
+End Function
+Function fCertCheck
+If vIssuedCertCount = 0 Then 
+	vBody = vBody & "*No issued certificates found. Error output (" & Err.Number & ", " & Err.Description & ", " & Err.Source & ")" & VBCRLF
+	vSeverity = 2
+ElseIf vBadCertCount > 0 Then
+	vSeverity = 2
+Else
+	vSeverity = 0
+	vBody = vBody & "Issued: " & vIssuedCertCount & ", Revoked: " & vRevokedCertCount & VBCRLF
+End If
+fLogEvent
+End Function
+Function fConnectToCACheck
+	If Err.Number <> 0 Then
+		vBody = vBody &  "Connect to CA: Fail (" & Err.Number & ", " & Err.Description & ", " & Err.Source & ")" & VBCRLF
+		vSeverity = 2
+		oDiscoveryData.IsSnapshot = false
+		fLogEvent
+	End If
+End Function
+Function fLogEvent
+	Call oAPI.LogScriptEvent(vDiscoveryName, vEventID, vSeverity, vDiscoveryValue & VBCRLF & vBody & "End Time: " & Now)
+	Call oAPI.Return (oDiscoveryData)
+	WScript.Quit(0)
+End Function
+]]>
+					</ScriptBody>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--Certificate Discovery for Stand Alone CAs-->
+			<Discovery ID="YourCompany.PKI.Discovery.CertificateStandAloneCA" Enabled="false" Target="YourCompany.PKI.Class.CertificateAuthority" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="YourCompany.PKI.Class.Certificate" />
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedScript.DiscoveryProvider">
+					<IntervalSeconds>28800</IntervalSeconds>
+					<SyncTime />
+					<ScriptName>DiscoverSACertificate.vbs</ScriptName>
+					<Arguments>$MPElement$ $Target/Id$ $Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Arguments>
+					<ScriptBody>
+						<![CDATA[
+On Error Resume Next
+Dim oArgs, SourceID, ManagedEntityId, TargetComputer, vSeverity, oAPI, oDiscoveryData, oInst
+Const HKEY_LOCAL_MACHINE = &H80000002
+Set objReg=GetObject("winmgmts:{impersonationLevel=impersonate}!\\.\root\default:StdRegProv")
+Set oCAView = CreateObject("CertificateAuthority.View.1")
+Set oArgs = WScript.Arguments
+Set oAPI = CreateObject("MOM.ScriptAPI")
+SourceId = oArgs(0)
+ManagedEntityId = oArgs(1)
+TargetComputer = oArgs(2)
+Set oDiscoveryData = oAPI.CreateDiscoveryData(0, SourceId, ManagedEntityId)
+vEventID = 2612
+vIssuedCertCount = 0
+vRevokedCertCount = 0
+vBadCertCount = 0
+vBody = "Start Time: " & Now & VBCRLF
+vDiscoveryName = "Discovery Name"
+vDiscoveryValue = "YourCompany.PKI.Discovery.CertificateStandAloneCA" & VBCRLF & "Script Name : DiscoverSACertificate.vbs" & VBCRLF & "Management Pack : YourCompany.PKI 1.0.0.0"
+vCompKey = "SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName"
+vCompName = "ComputerName"
+vCAKey = "SYSTEM\CurrentControlSet\Services\CertSvc\Configuration"
+vCAName = "Active"
+objReg.GetStringValue HKEY_LOCAL_MACHINE, vCompKey, vCompName, vComputerName
+objReg.GetStringValue HKEY_LOCAL_MACHINE, vCAKey, vCAName, vCertificateAuthorityName
+CAName = vComputerName & "\" & vCertificateAuthorityName
+oCAView.OpenConnection (CAName)
+fConnectToCACheck
+vBody = vBody & "Connect to CA: " & CAName & ": Pass" & VBCRLF
+oCAView.SetResultColumnCount(8) 
+Index0 = oCAView.GetColumnIndex(False, "RequestID") 
+Index1 = oCAView.GetColumnIndex(False, "CommonName")
+Index2 = oCAView.GetColumnIndex(False, "NotBefore")
+Index3 = oCAView.GetColumnIndex(False, "NotAfter") 
+Index4 = oCAView.GetColumnIndex(False, "Request.RequesterName")
+Index5 = oCAView.GetColumnIndex(False, "Request.Disposition")
+Index6 = oCAView.GetColumnIndex(False, "Request.RevokedWhen")
+Index7 = oCAView.GetColumnIndex(False, "Request.RevokedReason")
+oCAView.SetResultColumn (Index0) 
+oCAView.SetResultColumn (Index1) 
+oCAView.SetResultColumn (Index2) 
+oCAView.SetResultColumn (Index3) 
+oCAView.SetResultColumn (Index4)
+oCAView.SetResultColumn (Index5)
+oCAView.SetResultColumn (Index6)
+oCAView.SetResultColumn (Index7)
+oCAView.SetRestriction Index3,16,0,DateAdd("d",-30,Now) 'certs that expired within last 30 days or expire in the future
+oCAView.SetRestriction Index5,16,0,19 'this will get issued (20), revoked (21), request failed (30), request denied  (31)
+Set RowObj= oCAView.OpenView
+Do Until RowObj.Next = -1
+	Set ColObj = RowObj.EnumCertViewColumn()
+	Do Until ColObj.Next = -1
+		Select Case ColObj.GetName
+			Case "RequestID" vRequestId = ColObj.GetValue(x)
+			Case "CommonName" vCommonName  = ColObj.GetValue(x)
+			Case "NotBefore" vIssueDate = ColObj.GetValue(x)
+			Case "NotAfter" vExpiryDate = ColObj.GetValue(x)
+			Case "Request.RequesterName" vRequestor = ColObj.GetValue(x)
+			Case "Request.Disposition" vDisposition = ColObj.GetValue(x)
+			Case "Request.RevokedWhen" vRevokeDate = ColObj.GetValue(x)
+			Case "Request.RevokedReason" vRevokeReason = ColObj.GetValue(x)
+				Select Case vRevokeReason
+					Case "0" vRevokeReason = "Unspecified"
+					Case "1" vRevokeReason = "Key Compromise"
+					Case "2" vRevokeReason = "CA Compromise"
+					Case "3" vRevokeReason = "Change of Affiliation"
+					Case "4" vRevokeReason = "Superseded"
+					Case "5" vRevokeReason = "Cease of Operation"
+					Case "6" vRevokeReason = "Certificate Hold"
+				End Select
+			End Select
+	Loop
+	If IsNumeric(vRequestId) = True Then
+		If vDisposition = "20" Then
+			vIssuedCertCount = vIssuedCertCount +1
+			vStatus = "Issued"
+			vFormatRevokeDate = "N/A"
+			vRevokeReason = "N/A"
+			fAddInstance
+		ElseIf vDisposition = "21" Then
+			vRevokedCertCount = vRevokedCertCount +1
+			vStatus = "Revoked"
+			vConvertRevokeDate = DateAdd("h", 10, vRevokeDate)
+			vFormatRevokeDate = FormatDateTime(vConvertRevokeDate, vbGeneralDate)
+			fAddInstance
+		End If
+	Else
+		vBadCertCount = vBadCertCount +1
+		vBody = vBody & "*" & vRequestId & "," & vCommonName & " invalid" & VBCRLF
+	End If
+Loop
+fCertCheck
+Function fAddInstance
+		vConvertIssueDate = DateAdd("h", 10, vIssueDate)
+		vFormatIssueDate = FormatDateTime(vConvertIssueDate, vbGeneralDate)
+		vConvertExpiryDate = DateAdd("h", 10, vExpiryDate)
+		vFormatExpiryDate = FormatDateTime(vConvertExpiryDate, vbGeneralDate)
+		Set oInst = oDiscoveryData.CreateClassInstance("$MPElement[Name='YourCompany.PKI.Class.Certificate']$")
+		Call oInst.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", TargetComputer) 'you need to include the principal name or discovery fails.
+		Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/RequestId$", vRequestId)
+		Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/CommonName$", vCommonName)
+		Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/IssueDate$", vFormatIssueDate)
+		Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/ExpiryDate$", vFormatExpiryDate)
+		Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/CertificateTemplate$", "N/A")
+		Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/RequesterName$", vRequestor)
+		Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/Status$", vStatus)
+		Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/RevokeDate$", vFormatRevokeDate)
+		Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/RevokeReason$", vRevokeReason)
+		Call oInst.AddProperty("$MPElement[Name='YourCompany.PKI.Class.Certificate']/CAName$", vCertificateAuthorityName)
+		Call oInst.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", vRequestId)
+		Call oDiscoveryData.AddInstance(oInst)
+End Function
+Function fCertCheck
+If vIssuedCertCount = 0 Then 
+	vBody = vBody & "*No issued certificates found. Error output (" & Err.Number & ", " & Err.Description & ", " & Err.Source & ")" & VBCRLF
+	vSeverity = 2
+ElseIf vBadCertCount > 0 Then
+	vSeverity = 2
+Else
+	vSeverity = 0
+	vBody = vBody & "Issued: " & vIssuedCertCount & ", Revoked: " & vRevokedCertCount & VBCRLF
+End If
+fLogEvent
+End Function
+Function fConnectToCACheck
+	If Err.Number <> 0 Then
+		vBody = vBody &  "Connect to CA: Fail (" & Err.Number & ", " & Err.Description & ", " & Err.Source & ")" & VBCRLF
+		vSeverity = 2
+		oDiscoveryData.IsSnapshot = false
+		fLogEvent
+	End If
+End Function
+Function fLogEvent
+	Call oAPI.LogScriptEvent(vDiscoveryName, vEventID, vSeverity, vDiscoveryValue & VBCRLF & vBody & "End Time: " & Now)
+	Call oAPI.Return (oDiscoveryData)
+	WScript.Quit(0)
+End Function
+]]>
+					</ScriptBody>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--Group Discovery Issued Certs-->
+			<Discovery ID="YourCompany.PKI.Discovery.IssuedCertificateGroup" Enabled="true" Target="YourCompany.PKI.Group.IssuedCertificate" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+				</DiscoveryTypes>
+				<DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+					<RuleId>$MPElement$</RuleId>
+					<GroupInstanceId>$MPElement[Name="YourCompany.PKI.Group.IssuedCertificate"]$</GroupInstanceId>
+					<MembershipRules>
+						<MembershipRule>
+							<MonitoringClass>$MPElement[Name="YourCompany.PKI.Class.Certificate"]$</MonitoringClass>
+							<RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<Property>$MPElement[Name="YourCompany.PKI.Class.Certificate"]/Status$</Property>
+									</ValueExpression>
+									<Operator>Equal</Operator>
+									<ValueExpression>
+										<Value>Issued</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+						</MembershipRule>
+					</MembershipRules>
+				</DataSource>
+			</Discovery>
+			<Discovery ID="YourCompany.PKI.Discovery.RevokedCertificateGroup" Enabled="true" Target="YourCompany.PKI.Group.RevokedCertificate" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+				</DiscoveryTypes>
+				<DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+					<RuleId>$MPElement$</RuleId>
+					<GroupInstanceId>$MPElement[Name="YourCompany.PKI.Group.RevokedCertificate"]$</GroupInstanceId>
+					<MembershipRules>
+						<MembershipRule>
+							<MonitoringClass>$MPElement[Name="YourCompany.PKI.Class.Certificate"]$</MonitoringClass>
+							<RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<Property>$MPElement[Name="YourCompany.PKI.Class.Certificate"]/Status$</Property>
+									</ValueExpression>
+									<Operator>Equal</Operator>
+									<ValueExpression>
+										<Value>Revoked</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+						</MembershipRule>
+					</MembershipRules>
+				</DataSource>
+			</Discovery>
+		</Discoveries>
+		<Rules>
+			<Rule ID="YourCompany.PKI.Rule.CertificateDiscoveryProblem" Enabled="false" Target="YourCompany.PKI.Class.CertificateAuthority" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>Alert</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+						<LogName>Operations Manager</LogName>
+						<Expression>
+							<And>
+								<Expression>
+									<SimpleExpression>
+										<ValueExpression>
+											<XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+										</ValueExpression>
+										<Operator>Equal</Operator>
+										<ValueExpression>
+											<Value Type="UnsignedInteger">2612</Value>
+										</ValueExpression>
+									</SimpleExpression>
+								</Expression>
+								<Expression>
+									<SimpleExpression>
+										<ValueExpression>
+											<XPathQuery Type="String">PublisherName</XPathQuery>
+										</ValueExpression>
+										<Operator>Equal</Operator>
+										<ValueExpression>
+											<Value Type="String">Health Service Script</Value>
+										</ValueExpression>
+									</SimpleExpression>
+								</Expression>
+								<Expression>
+									<SimpleExpression>
+										<ValueExpression>
+											<XPathQuery Type="Integer">EventLevel</XPathQuery>
+										</ValueExpression>
+										<Operator>Equal</Operator>
+										<ValueExpression>
+											<Value Type="Integer">2</Value>
+										</ValueExpression>
+									</SimpleExpression>
+								</Expression>
+							</And>
+						</Expression>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+						<Priority>2</Priority>
+						<Severity>0</Severity>
+						<AlertName />
+						<AlertDescription />
+						<AlertOwner />
+						<AlertMessageId>$MPElement[Name="YourCompany.PKI.Rule.CertificateDiscoveryProblem.AlertMessage"]$</AlertMessageId>
+						<AlertParameters>
+							<AlertParameter1>$Data/EventDescription$</AlertParameter1>
+						</AlertParameters>
+						<Suppression>
+							<SuppressionValue>$Data/EventDisplayNumber$</SuppressionValue>
+							<SuppressionValue>$Data/Channel$</SuppressionValue>
+							<SuppressionValue>$Data/PublisherName$</SuppressionValue>
+							<SuppressionValue>$Data/LoggingComputer$</SuppressionValue>
+						</Suppression>
+						<Custom1 />
+						<Custom2 />
+						<Custom3 />
+						<Custom4 />
+						<Custom5 />
+						<Custom6 />
+						<Custom7 />
+						<Custom8 />
+						<Custom9 />
+						<Custom10 />
+					</WriteAction>
+				</WriteActions>
+			</Rule>
+			<Rule ID="YourCompany.PKI.Rule.CertificateMonitorProblem" Enabled="false" Target="YourCompany.PKI.Class.CertificateAuthority" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>Alert</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+						<LogName>Operations Manager</LogName>
+						<Expression>
+							<And>
+								<Expression>
+									<SimpleExpression>
+										<ValueExpression>
+											<XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+										</ValueExpression>
+										<Operator>Equal</Operator>
+										<ValueExpression>
+											<Value Type="UnsignedInteger">2613</Value>
+										</ValueExpression>
+									</SimpleExpression>
+								</Expression>
+								<Expression>
+									<SimpleExpression>
+										<ValueExpression>
+											<XPathQuery Type="String">PublisherName</XPathQuery>
+										</ValueExpression>
+										<Operator>Equal</Operator>
+										<ValueExpression>
+											<Value Type="String">Health Service Script</Value>
+										</ValueExpression>
+									</SimpleExpression>
+								</Expression>
+								<Expression>
+									<SimpleExpression>
+										<ValueExpression>
+											<XPathQuery Type="Integer">EventLevel</XPathQuery>
+										</ValueExpression>
+										<Operator>Equal</Operator>
+										<ValueExpression>
+											<Value Type="Integer">2</Value>
+										</ValueExpression>
+									</SimpleExpression>
+								</Expression>
+							</And>
+						</Expression>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+						<Priority>2</Priority>
+						<Severity>0</Severity>
+						<AlertName />
+						<AlertDescription />
+						<AlertOwner />
+						<AlertMessageId>$MPElement[Name="YourCompany.PKI.Rule.CertificateMonitorProblem.AlertMessage"]$</AlertMessageId>
+						<AlertParameters>
+							<AlertParameter1>$Data/EventDescription$</AlertParameter1>
+						</AlertParameters>
+						<Suppression>
+							<SuppressionValue>$Data/EventDisplayNumber$</SuppressionValue>
+							<SuppressionValue>$Data/Channel$</SuppressionValue>
+							<SuppressionValue>$Data/PublisherName$</SuppressionValue>
+							<SuppressionValue>$Data/LoggingComputer$</SuppressionValue>
+						</Suppression>
+						<Custom1 />
+						<Custom2 />
+						<Custom3 />
+						<Custom4 />
+						<Custom5 />
+						<Custom6 />
+						<Custom7 />
+						<Custom8 />
+						<Custom9 />
+						<Custom10 />
+					</WriteAction>
+				</WriteActions>
+			</Rule>
+		</Rules>
+		<Monitors>
+			<UnitMonitor ID="YourCompany.PKI.Monitor.CertificateExpiry" Accessibility="Public" Enabled="false" Target="YourCompany.PKI.Class.Certificate" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="YourCompany.PKI.UMT.CertificateState" ConfirmDelivery="false">
+				<Category>ConfigurationHealth</Category>
+				<AlertSettings AlertMessage="YourCompany.PKI.Monitor.CertificateExpiry.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Low</AlertPriority>
+					<AlertSeverity>MatchMonitorHealth</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>Certificate '$Target/Property[Type="YourCompany.PKI.Class.Certificate"]/CommonName$' expires on $Target/Property[Type="YourCompany.PKI.Class.Certificate"]/ExpiryDate$.</AlertParameter1>
+						<AlertParameter2>Certificate information:</AlertParameter2>
+						<AlertParameter3>Issuing CA: $Target/Host/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$\$Target/Property[Type="YourCompany.PKI.Class.Certificate"]/CAName$</AlertParameter3>
+						<AlertParameter4>Common Name: $Target/Property[Type="YourCompany.PKI.Class.Certificate"]/CommonName$</AlertParameter4>
+						<AlertParameter5>Template: $Target/Property[Type="YourCompany.PKI.Class.Certificate"]/CertificateTemplate$</AlertParameter5>
+						<AlertParameter6>Request Id: $Target/Property[Type="YourCompany.PKI.Class.Certificate"]/RequestId$</AlertParameter6>
+						<AlertParameter7>Requester: $Target/Property[Type="YourCompany.PKI.Class.Certificate"]/RequesterName$</AlertParameter7>
+						<AlertParameter8>Issue Date: $Target/Property[Type="YourCompany.PKI.Class.Certificate"]/IssueDate$</AlertParameter8>
+						<AlertParameter9>Expiry Date: $Target/Property[Type="YourCompany.PKI.Class.Certificate"]/ExpiryDate$</AlertParameter9>
+						<AlertParameter10>Status: $Target/Property[Type="YourCompany.PKI.Class.Certificate"]/Status$</AlertParameter10>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="HealthyState" MonitorTypeStateID="HealthyState" HealthState="Success" />
+					<OperationalState ID="WarningState" MonitorTypeStateID="WarningState" HealthState="Warning" />
+					<OperationalState ID="CriticalState" MonitorTypeStateID="CriticalState" HealthState="Error" />
+				</OperationalStates>
+				<Configuration>
+					<IntervalSeconds>21600</IntervalSeconds><!--6 hours-->
+					<WarningThreshold>31</WarningThreshold>
+					<CriticalThreshold>8</CriticalThreshold>
+					<RequestId>$Target/Property[Type="YourCompany.PKI.Class.Certificate"]/RequestId$</RequestId>
+				</Configuration>
+			</UnitMonitor>
+		</Monitors>
+	</Monitoring>
+	<Presentation>
+		<StringResources>
+			<StringResource ID="YourCompany.PKI.Monitor.CertificateExpiry.AlertMessage" />
+			<StringResource ID="YourCompany.PKI.Rule.CertificateDiscoveryProblem.AlertMessage" />
+			<StringResource ID="YourCompany.PKI.Rule.CertificateMonitorProblem.AlertMessage" />
+		</StringResources>
+	</Presentation>
+	<LanguagePacks>
+		<LanguagePack ID="ENU" IsDefault="false">
+			<DisplayStrings>
+				<DisplayString ElementID="YourCompany.PKI">
+					<Name>YourCompany PKI</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.CertificateAuthority">
+					<Name>YourCompany Certificate Authority</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.CertificateAuthority" SubElementID="CAName">
+					<Name>CA Name</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate">
+					<Name>YourCompany Certificate</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate" SubElementID="CAName">
+					<Name>CA Name</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate" SubElementID="RequestId">
+					<Name>Request Id</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate" SubElementID="CommonName">
+					<Name>Common Name</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate" SubElementID="IssueDate">
+					<Name>Issue Date</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate" SubElementID="ExpiryDate">
+					<Name>Expiry Date</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate" SubElementID="CertificateTemplate">
+					<Name>Template</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate" SubElementID="RequesterName">
+					<Name>Requester</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate" SubElementID="Status">
+					<Name>Status</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate" SubElementID="RevokeDate">
+					<Name>Revoke Date</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Class.Certificate" SubElementID="RevokeReason">
+					<Name>Revoke Reason</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Discovery.CertificateAuthority">
+					<Name>YourCompany Certificate Authority Discovery</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Discovery.Certificate">
+					<Name>YourCompany Certificate Discovery</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Discovery.CertificateStandAloneCA">
+					<Name>YourCompany Certificate Stand Alone Discovery</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Monitor.CertificateExpiry">
+					<Name>YourCompany Certificate Expiry</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Monitor.CertificateExpiry.AlertMessage">
+					<Name>Certificate Expiring</Name>
+					<Description>{0}
+
+{1}
+
+{2}
+{3}
+{4}
+{5}
+{6}
+{7}
+{8}
+{9}</Description>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Monitor.CertificateExpiry" SubElementID="HealthyState">
+					<Name>Healthy</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Monitor.CertificateExpiry" SubElementID="WarningState">
+					<Name>Warning</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Monitor.CertificateExpiry" SubElementID="CriticalState">
+					<Name>Critical</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Group.IssuedCertificate">
+					<Name>YourCompany PKI Issued Certificate Group</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Discovery.IssuedCertificateGroup">
+					<Name>Populate YourCompany.PKI.Group.IssuedCertificate</Name>
+					<Description>This discovery rule populates the group 'YourCompany.PKI.Group.IssuedCertificate'</Description>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Group.RevokedCertificate">
+					<Name>YourCompany PKI Revoked Certificate Group</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Discovery.RevokedCertificateGroup">
+					<Name>Populate YourCompany.PKI.Group.RevokedCertificate</Name>
+					<Description>This discovery rule populates the group 'YourCompany.PKI.Group.RevokedCertificate'</Description>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Rule.CertificateDiscoveryProblem">
+					<Name>YourCompany Certificate Discovery Problem</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Rule.CertificateDiscoveryProblem.AlertMessage">
+					<Name>Certificate Discovery Problem</Name>
+					<Description>{0}</Description>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Rule.CertificateMonitorProblem">
+					<Name>YourCompany Certificate Monitor Problem</Name>
+				</DisplayString>
+				<DisplayString ElementID="YourCompany.PKI.Rule.CertificateMonitorProblem.AlertMessage">
+					<Name>Certificate Monitor Problem</Name>
+					<Description>{0}</Description>
+				</DisplayString>
+			</DisplayStrings>
+		</LanguagePack>
+	</LanguagePacks>
+</ManagementPack>

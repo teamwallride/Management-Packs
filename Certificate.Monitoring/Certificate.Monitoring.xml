@@ -1,0 +1,526 @@
+<!--
+==========
+CHANGE LOG
+==========
+2023.3.22.0
+-Initial release.
+-->
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>Certificate.Monitoring</ID>
+      <Version>2023.3.22.0</Version>
+    </Identity>
+    <Name>Certificate.Monitoring</Name>
+    <References>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="Certificate.Class.WindowsCertificate" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="IssuedTo" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="NotBefore" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="NotAfter" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <!-- Thumbprint is the key property because it's unique and we want to return all certs. The IssuedTo property can have duplicates (but different thumbprints) so the discovery will filter them out making it unviable. -->
+          <Property ID="Thumbprint" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+        </ClassType>
+      </ClassTypes>
+    </EntityTypes>
+    <ModuleTypes>
+      <DataSourceModuleType ID="Certificate.DataSourceModule.GetWindowsCertificate" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="TimeoutSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+                <ScriptName>CertificateDiscovery.ps1</ScriptName>
+                <ScriptBody>
+<![CDATA[
+  # Need this line to pass params in properly.
+  Param ($SourceId, $ManagedEntityId, $ComputerName)
+  Function Write-Log {
+      Param($ScriptState)
+      Switch ($ScriptState) {
+          "Information" {
+              $EventId = 17623
+              $EventLevel = 0 # 0=Info, 1=Error, 2=Warning
+          }
+          "Warning" {
+              $EventId = 17624
+              $EventLevel = 2 # 0=Info, 1=Error, 2=Warning
+          }
+          "Error" {
+              $EventId = 17625
+              $EventLevel = 1 # 0=Info, 1=Error, 2=Warning
+          }
+      }
+      $End = Get-Date
+      $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+      $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`n$Message")
+  }
+  Function Set-TerminatingError {
+      $ScriptState = "Error"
+      $Message += "A terminating error occurred. Error output: (" + $_.Exception.Message + ").`n"
+      Write-Log -ScriptState $ScriptState
+  }
+  Function Get-CertificateDiscovery {
+      try {
+          <# FOR TESTING
+          $SourceId='{00000000-0000-0000-0000-000000000000}'
+          $ManagedEntityId='{00000000-0000-0000-0000-000000000000}'
+          $ComputerName='agent.scomtest.local'
+          #>
+          $PSVersion = $PSVersionTable.PSVersion
+          [string]$PSMajor = $PSVersion.Major
+          [string]$PSMinor = $PSVersion.Minor
+          $PSVersion = $PSMajor + "." + $PSMinor
+          $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+          $CertStore = "Cert:\LocalMachine\My\"
+		  # There can be duplicates certificates (even at thumbprint level) and we only want unique certificates. 
+          $Certificates = Get-ChildItem -Path $CertStore | Sort-Object -Unique
+          $CertCount = $Certificates.Count
+          foreach ($Certificate in $Certificates) {
+              [DateTime]$NotAfter = $Certificate.NotAfter
+              [int]$CountCerts = $CountCerts + 1
+              $Thumbprint = $Certificate.Thumbprint
+              [DateTime]$NotBefore = $Certificate.NotBefore
+              # $True maps to IssuedBy column, $False maps to IssuedTo column in the Certificates mmc console.
+              $IssuedTo = $Certificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
+              $FormatNotBefore = $NotBefore.ToString("yyyy/MM/dd HH:mm:ss")
+              $FormatNotAfter = $NotAfter.ToString("yyyy/MM/dd HH:mm:ss")
+              $Instance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Certificate.Class.WindowsCertificate']$")
+              $Instance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $ComputerName)
+              $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/IssuedTo$", $IssuedTo)
+              $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/NotBefore$", $FormatNotBefore)
+              $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/NotAfter$", $FormatNotAfter)
+              $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/Thumbprint$", $Thumbprint)
+              $DiscoveryData.AddInstance($Instance)
+          }
+          <# FOR TESTING
+          $MomApi.Return($DiscoveryData)
+          #>
+          # Submit discovery data back to Operations Manager and complete the script.
+          $DiscoveryData
+          <#
+          Can add functionality here to set warning state but there is no need in this script.
+          #>
+          $Message += "Certificates: $CertCount"
+          $ScriptState = "Information"
+          Write-Log -ScriptState $ScriptState
+      }
+      Catch {
+          Set-TerminatingError
+      }
+  }
+  # Declare all constants used by the script
+  $MomApi = New-Object -comObject 'MOM.ScriptAPI' # MOMScriptAPI object.
+  $ScriptName = "CertificateDiscovery.ps1"
+  $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+  $WorkflowName = "Certificates.Discovery.WindowsCertificate"
+  $MPName = "Certificate.Monitoring"
+  $MpVersion = "2023.3.22.0"
+  $CountCerts = 0
+  $StartTime = Get-Date
+  Get-CertificateDiscovery -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName # Need this to pass params in properly.
+    ]]>
+</ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>SourceId</Name>
+                    <Value>$MPElement$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ManagedEntityId</Name>
+                    <Value>$Target/Id$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ComputerName</Name>
+                    <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </DataSource>
+            </MemberModules>
+            <Composition>
+              <Node ID="DS" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.Discovery.Data</OutputType>
+      </DataSourceModuleType>
+      <DataSourceModuleType ID="Certificate.Monitor.CheckExpiry.DS" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                <Scheduler>
+                  <SimpleReccuringSchedule>
+                    <Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+                    <SyncTime>$Config/SyncTime$</SyncTime>
+                  </SimpleReccuringSchedule>
+                  <ExcludeDates />
+                </Scheduler>
+              </DataSource>
+              <ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>CertificateExpiry.ps1</ScriptName>
+                <ScriptBody>
+<![CDATA[       
+  Function Write-Log {
+    Param($ScriptState)
+    Switch ($ScriptState) {
+        "Information" {
+            $EventId=17623
+            $EventLevel=0 # 0=Info, 1=Error, 2=Warning
+        }
+        "Warning" {
+            $EventId=17624
+            $EventLevel=2 # 0=Info, 1=Error, 2=Warning
+        }
+        "Error" {
+            $EventId=17625
+            $EventLevel=1 # 0=Info, 1=Error, 2=Warning
+        }
+    }
+    $End=Get-Date
+    $TimeCount=(New-TimeSpan -Start $StartTime -End $End)
+    $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`n$Message")
+}
+Function Set-TerminatingError {
+    $ScriptState="Error"
+    $Message+="A terminating error occurred. Error output: (" + $_.Exception.Message + ").`n"
+    Write-Log -ScriptState $ScriptState
+}
+Function Get-CertificateExpiry {
+    Try {
+        $PSVersion=$PSVersionTable.PSVersion
+        [string]$PSMajor=$PSVersion.Major
+        [string]$PSMinor=$PSVersion.Minor
+        $PSVersion=$PSMajor + "." + $PSMinor
+        $MomApi=New-Object -comObject "MOM.ScriptAPI"
+        $CertStore="Cert:\LocalMachine\My\"
+		# There can be duplicates certificates (even at thumbprint level) and we only want unique certificates. 
+        $Certificates=Get-ChildItem -Path $CertStore | Sort-Object -Unique
+        $CertCount=$Certificates.Count
+        # The certificate threshold to generate a warning alert is deliberatley placed in the script. If this is done as an overridable parameter it will break cookdown.
+        $WarningThreshold=$StartTime.AddDays(31)
+        foreach ($Certificate in $Certificates) {
+            $Bag=$MomApi.CreatePropertyBag()
+            $IssuedTo=$Certificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
+            $Thumbprint=$Certificate.Thumbprint
+            [DateTime]$NotBefore=$Certificate.NotBefore
+            [DateTime]$NotAfter=$Certificate.NotAfter
+            $FormatNotBefore=$NotBefore.ToString("dd/MM/yyyy HH:mm:ss")
+            $FormatNotAfter=$NotAfter.ToString("dd/MM/yyyy HH:mm:ss")
+            # Add general info to bag
+            $Bag.AddValue('CertStore', $CertStore)
+            $Bag.AddValue('IssuedTo', $IssuedTo)
+            $Bag.AddValue('Thumbprint', $Thumbprint)
+            $Bag.AddValue('NotBefore', $FormatNotBefore)
+            $Bag.AddValue('NotAfter', $FormatNotAfter)
+                If ($NotAfter -lt $StartTime) {
+                    $Bag.AddValue('CertificateExpiry', 'CertificateExpiryCritical')
+                }
+                ElseIf ($NotAfter -gt $StartTime -and $NotAfter -lt $WarningThreshold) {
+                    $Bag.AddValue('CertificateExpiry', 'CertificateExpiryWarning')
+                }
+                Else {
+                    $Bag.AddValue('CertificateExpiry', 'CertificateExpiryOK')
+                }
+            <# FOR TESTING
+            $MomApi.Return($Bag)
+            #>
+            # This needs to be in the loop because we're adding multiple property bags that need to be checked.
+            $Bag
+        }
+        <#
+        Can add functionality here to set warning state but there is no need in this script.
+        #>
+        $Message+="Certificates: $CertCount"
+        $ScriptState="Information"
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        Set-TerminatingError
+    }
+}
+# Declare all constants used by the script
+$MomApi=New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName="CertificateExpiry.ps1"
+$Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$WorkflowName="Certificates.Monitor.CertificateExpiry"
+$MPName="Certificate.Monitoring"
+$MpVersion="2023.3.22.0"
+[datetime]$StartTime=Get-Date
+Get-CertificateExpiry
+]]>
+</ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PA">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+    </ModuleTypes>
+    <MonitorTypes>
+      <UnitMonitorType ID="Certificate.MonitorType" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="CertificateExpiryOK" NoDetection="false" />
+          <MonitorTypeState ID="CertificateExpiryWarning" NoDetection="false" />
+          <MonitorTypeState ID="CertificateExpiryCritical" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:string" name="Thumbprint" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="Certificate.Monitor.CheckExpiry.DS">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </DataSource>
+            <ConditionDetection ID="CookDownFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Thumbprint']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">$Config/Thumbprint$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="HealthyFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='CertificateExpiry']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">CertificateExpiryOK</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="WarningFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='CertificateExpiry']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">CertificateExpiryWarning</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CriticalFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='CertificateExpiry']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">CertificateExpiryCritical</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="CertificateExpiryOK">
+              <Node ID="HealthyFilter">
+                <Node ID="CookDownFilter">
+                  <Node ID="DS" />
+                </Node>
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="CertificateExpiryWarning">
+              <Node ID="WarningFilter">
+                <Node ID="CookDownFilter">
+                  <Node ID="DS" />
+                </Node>
+              </Node>
+            </RegularDetection>
+
+            <RegularDetection MonitorTypeStateID="CertificateExpiryCritical">
+              <Node ID="CriticalFilter">
+                <Node ID="CookDownFilter">
+                  <Node ID="DS" />
+                </Node>
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Discoveries>
+      <Discovery ID="Certificate.Discovery.WindowsCertificate" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="Certificate.Class.WindowsCertificate">
+            <Property PropertyID="IssuedTo" />
+            <Property PropertyID="NotBefore" />
+            <Property PropertyID="NotAfter" />
+            <Property PropertyID="Thumbprint" />
+          </DiscoveryClass>
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Certificate.DataSourceModule.GetWindowsCertificate">
+        <!-- The discovery clears out old alerts by removing the discovered object. -->
+          <IntervalSeconds>86400</IntervalSeconds>
+          <SyncTime />
+          <TimeoutSeconds>60</TimeoutSeconds>
+        </DataSource>
+      </Discovery>
+    </Discoveries>
+    <Monitors>
+      <UnitMonitor ID="Certificate.Monitor.CheckExpiry" Accessibility="Public" Enabled="true" Target="Certificate.Class.WindowsCertificate" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Certificate.MonitorType" ConfirmDelivery="true">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="Certificate.Monitor.CheckExpiry.AlertMessage">
+          <AlertOnState>Warning</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+            <AlertParameter2>$Data/Context/Property[@Name='CertStore']$</AlertParameter2>
+            <AlertParameter3>$Data/Context/Property[@Name='IssuedTo']$</AlertParameter3>
+            <AlertParameter4>$Data/Context/Property[@Name='NotBefore']$</AlertParameter4>
+            <AlertParameter5>$Data/Context/Property[@Name='NotAfter']$</AlertParameter5>
+            <AlertParameter6>$Data/Context/Property[@Name='Thumbprint']$</AlertParameter6>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="CertificateExpiryOK" MonitorTypeStateID="CertificateExpiryOK" HealthState="Success" />
+          <OperationalState ID="CertificateExpiryWarning" MonitorTypeStateID="CertificateExpiryWarning" HealthState="Warning" />
+          <OperationalState ID="CertificateExpiryCritical" MonitorTypeStateID="CertificateExpiryCritical" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+        <!-- There's no need to run this frequently as it will never change to a healthy state (the certificate will get replaced with a new one) so run once a day. -->
+          <IntervalSeconds>86400</IntervalSeconds>
+          <SyncTime />
+          <TimeoutSeconds>120</TimeoutSeconds>
+          <Thumbprint>$Target/Property[Type="Certificate.Class.WindowsCertificate"]/Thumbprint$</Thumbprint>
+        </Configuration>
+      </UnitMonitor>
+    </Monitors>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="Certificate.Monitor.CheckExpiry.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="Certificate.Monitoring">
+          <Name>Certificate Monitoring</Name>
+          <Description>Custom monitoring for Windows certificates.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Class.WindowsCertificate">
+          <Name>Windows Certificate</Name>
+          <Description>Certificates from the local computer store.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="IssuedTo">
+          <Name>Issued To</Name>
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="NotBefore">
+          <Name>Issued On (YMDT)</Name>
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="NotAfter">
+          <Name>Expires On (YMDT)</Name>
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="Thumbprint">
+          <Name>Thumbprint</Name>
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Monitor.CheckExpiry">
+          <Name>Certificate expiry</Name>
+          <Description />
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Monitor.CheckExpiry" SubElementID="CertificateExpiryOK">
+          <Name>Certificate expiry OK</Name>
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Monitor.CheckExpiry" SubElementID="CertificateExpiryWarning">
+          <Name>Certificate expires soon</Name>
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Monitor.CheckExpiry" SubElementID="CertificateExpiryCritical">
+          <Name>Certificate expired</Name>
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Monitor.CheckExpiry.AlertMessage">
+          <Name>Certificate Expiration</Name>
+          <Description>The following certificate will expire soon or has already expired.
+
+Computer: {0}
+Certificate Store: {1}
+Issued To: {2}
+Issued On: {3}
+Expires On: {4}
+Thumbprint: {5}
+</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>

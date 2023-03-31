@@ -1,0 +1,100 @@
+Example of how to have a rule use a runas account.
+
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+<Manifest>
+<Identity>
+<ID>Sample.Rule</ID>
+<Version>1.0.0.4</Version>
+</Identity>
+<Name>Sample.Rule</Name>
+<References>
+<Reference Alias="SCDW">
+<ID>Microsoft.SystemCenter.DataWarehouse.Library</ID>
+<Version>7.2.11719.0</Version>
+<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+</Reference>
+<Reference Alias="Windows">
+<ID>Microsoft.Windows.Library</ID>
+<Version>7.5.8501.0</Version>
+<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+</Reference>
+<Reference Alias="System">
+<ID>System.Library</ID>
+<Version>7.5.8501.0</Version>
+<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+</Reference>
+<Reference Alias="SystemCenter">
+<ID>Microsoft.SystemCenter.Library</ID>
+<Version>7.0.8437.0</Version>
+<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+</Reference>
+</References>
+</Manifest>
+<TypeDefinitions>
+<SecureReferences>
+<SecureReference ID="Sample.RunAsProfile" Accessibility="Public" Context="System!System.Entity" />
+</SecureReferences>
+</TypeDefinitions>
+<Monitoring>
+<Rules>
+<Rule ID="Sample.Rule.GetPendingAgents" Enabled="false" Target="Windows!Microsoft.Windows.Computer" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+<Category>PerformanceCollection</Category>
+<DataSources>
+<DataSource ID="DS" RunAs="Sample.RunAsProfile" <- add this so the rule executes using the credentials in .....
+TypeID="Windows!Microsoft.Windows.TimedScript.PerformanceProvider">
+<IntervalSeconds>300</IntervalSeconds>
+<SyncTime />
+<ScriptName>Sample.Script.vbs</ScriptName>
+<Arguments />
+<ScriptBody>
+<![CDATA[
+Const adOpenStatic = 3
+Const adLockOptimistic = 3
+Dim oAPI, oBag, objRecordSet
+Set oAPI = CreateObject("MOM.ScriptAPI")
+Set objConnection = WScript.CreateObject("ADODB.Connection")
+Set objRecordSet = WScript.CreateObject("ADODB.RecordSet")
+Set oBag = oAPI.CreatePropertyBag()
+SCOMdb = "Driver={SQL Server}; Server=SqlServer\Instance; Database=OperationsManager;"
+objConnection.Open = SCOMdb
+objRecordSet.Open "SELECT COUNT(AgentPendingActionId) as AgentCount from AgentPendingAction", objConnection, adOpenStatic, adLockOptimistic
+vPendingAgents = objRecordSet.Fields.Item("AgentCount")
+Call oBag.AddValue("PendingAgents", vPendingAgents)
+Call oAPI.AddItem (oBag)
+'WScript.Echo vPendingAgents
+objRecordset.Close
+objConnection.Close
+Call oAPI.Return(oBag)
+]]>
+</ScriptBody>
+<TimeoutSeconds>60</TimeoutSeconds>
+<ObjectName>SampleObject</ObjectName>
+<CounterName>SampleCounter</CounterName>
+<InstanceName>SampleInstance</InstanceName>
+<Value>$Data/Property[@Name='PendingAgents']$</Value>
+</DataSource>
+</DataSources>
+<WriteActions>
+<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData" />
+<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+</WriteActions>
+</Rule>
+</Rules>
+</Monitoring>
+<LanguagePacks>
+<LanguagePack ID="ENU" IsDefault="false">
+<DisplayStrings>
+<DisplayString ElementID="Sample.Rule">
+<Name>Sample Rule</Name>
+<Description>This management pack contains a rule called 'Sample Rule Get Pending Agents'. The rule demonstrates how to execute a SQL query using the credentials of a domain account that has been granted access to a database. After importing the management pack you need to do the following: 1) Create a Windows Run As account using a domain account that has access to the database. 2) Distribute the account to the server that will run the query. 3) Open the Run As profile 'Sample Rule RunAs Profile' and add the Run As account created in step 1. 4) Configure an override to enable the rule to run on the server configured in step 2.</Description>
+</DisplayString>
+<DisplayString ElementID="Sample.Rule.GetPendingAgents">
+<Name>Sample Rule Get Pending Agents</Name>
+</DisplayString>
+<DisplayString ElementID="Sample.RunAsProfile">
+<Name>Sample Rule RunAs Profile</Name>
+</DisplayString>
+</DisplayStrings>
+</LanguagePack>
+</LanguagePacks>
+</ManagementPack>

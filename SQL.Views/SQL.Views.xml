@@ -1,0 +1,85 @@
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>SQL.Views</ID>
+      <Version>2022.9.27.0</Version>
+    </Identity>
+    <Name>SQL.Views</Name>
+    <References>
+      <Reference Alias="SQLServer">
+        <ID>Microsoft.SQLServer.Windows.Discovery</ID>
+        <Version>7.0.36.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SQLCore">
+        <ID>Microsoft.SQLServer.Core.Views</ID>
+        <Version>7.0.36.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8437.17</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <Presentation>
+    <Views>
+      <View ID="View_146203d65ed8466f87a8d54587771e30" Accessibility="Public" Enabled="true" Target="SQLServer!Microsoft.SQLServer.Windows.AvailabilityDatabaseHealth" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Microsoft.SQLServer.Windows.AvailabilityDatabaseHealth-*-c9467f4d-68db-ab54-5f99-a291a06d5a0c-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Database Name</Name>
+            <Id>Microsoft.SQLServer.Core.AvailabilityDatabaseHealth/DatabaseName</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target>7fc10115-1ea7-2d8d-01e4-14e45314eb76</Target>
+      </View>
+    </Views>
+    <FolderItems>
+      <FolderItem ElementID="View_146203d65ed8466f87a8d54587771e30" ID="ia64fbb200afa4fe2b5edb2353e5e24a3" Folder="SQLCore!Microsoft.SQLServer.Core.Folder.RootAlwaysOn" />
+    </FolderItems>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="SQL.Views">
+          <Name>SQL Views</Name>
+          <Description>Console views stored under sealed SQL management pack views.</Description>
+        </DisplayString>
+        <DisplayString ElementID="View_146203d65ed8466f87a8d54587771e30">
+          <Name>Primary Database Replicas</Name>
+          <Description />
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
