@@ -1,0 +1,379 @@
+<!--
+There are 2 MPs in here. Note: I'm not sure these even work, just capturing as a backup.
+-->
+<ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1">
+   <Manifest>
+      <Identity>
+         <ID>Sample.OleDb</ID>
+         <Version>1.0.0.23</Version>
+      </Identity>
+      <Name>Sample.OleDb</Name>
+      <References>
+         <Reference Alias="SystemCenter">
+            <ID>Microsoft.SystemCenter.Library</ID>
+            <Version>7.0.8437.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+         <Reference Alias="Windows">
+            <ID>Microsoft.Windows.Library</ID>
+            <Version>7.5.8501.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+         <Reference Alias="System">
+            <ID>System.Library</ID>
+            <Version>7.5.8501.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+         <Reference Alias="Health">
+            <ID>System.Health.Library</ID>
+            <Version>7.0.8437.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+      </References>
+   </Manifest>
+   <TypeDefinitions>
+      <SecureReferences>
+         <SecureReference ID="Sample.SQL.Probe.RunAsProfile" Accessibility="Public" Context="System!System.Entity" />
+      </SecureReferences>
+ 
+<!--DATA SOURCE MODULE-->
+      <ModuleTypes>
+         <DataSourceModuleType ID="DataSourceModule" Accessibility="Public" RunAs="Sample.SQL.Probe.RunAsProfile" Batching="false">
+            <Configuration />
+            <ModuleImplementation Isolation="Any">
+               <Composite>
+                  <MemberModules>
+                     <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                        <Scheduler>
+                           <SimpleReccuringSchedule>
+                              <Interval Unit="Seconds">3600</Interval>
+                           </SimpleReccuringSchedule>
+                           <ExcludeDates />
+                        </Scheduler>
+                     </DataSource>
+                     <ProbeAction ID="Probe" TypeID="System!System.OleDbProbe">
+                        <ConnectionString>Provider=SQLOLEDB;Integrated Security=SSPI</ConnectionString>
+      <Query>SELECT COUNT(AgentPendingActionId) as AgentCount from AgentPendingAction</Query>
+                        <GetValue>true</GetValue>
+      <DatabaseNameRegLocation>SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup\DatabaseName</DatabaseNameRegLocation>
+      <DatabaseServerNameRegLocation>SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup\DatabaseServerName</DatabaseServerNameRegLocation>
+                        <QueryTimeout>60</QueryTimeout>
+                        <GetFetchTime>true</GetFetchTime>
+                     </ProbeAction>
+                  </MemberModules>
+                  <Composition>
+                     <Node ID="Probe">
+                        <Node ID="Scheduler" />
+                     </Node>
+                  </Composition>
+               </Composite>
+            </ModuleImplementation>
+            <OutputType>System!System.OleDbData</OutputType>
+         </DataSourceModuleType>
+      </ModuleTypes>
+ 
+<!--MONITOR TYPE-->
+      <MonitorTypes>
+         <UnitMonitorType ID="UnitMonitorType" Accessibility="Public">
+            <MonitorTypeStates>
+               <MonitorTypeState ID="PendingAgents" NoDetection="false" />
+               <MonitorTypeState ID="NoPendingAgents" NoDetection="false" />
+            </MonitorTypeStates>
+            <Configuration />
+            <MonitorImplementation>
+               <MemberModules>
+                  <DataSource ID="DS" TypeID="DataSourceModule" />
+                  <ConditionDetection ID="CDPendingAgents" TypeID="System!System.ExpressionFilter">
+                     <Expression>
+                        <SimpleExpression>
+                           <ValueExpression>
+                              <XPathQuery Type="Integer">Columns[1]/Column[1]</XPathQuery>
+                           </ValueExpression>
+                           <Operator>Greater</Operator>
+                           <ValueExpression>
+                              <Value Type="Integer">0</Value>
+                           </ValueExpression>
+                        </SimpleExpression>
+                     </Expression>
+                  </ConditionDetection>
+                  <ConditionDetection ID="CDNoPendingAgents" TypeID="System!System.ExpressionFilter">
+                     <Expression>
+                        <SimpleExpression>
+                           <ValueExpression>
+                              <XPathQuery Type="Integer">Columns[1]/Column[1]</XPathQuery>
+                           </ValueExpression>
+                           <Operator>Less</Operator>
+                           <ValueExpression>
+                              <Value Type="Integer">1</Value>
+                           </ValueExpression>
+                        </SimpleExpression>
+                     </Expression>
+                  </ConditionDetection>
+               </MemberModules>
+               <RegularDetections>
+                  <RegularDetection MonitorTypeStateID="PendingAgents">
+                     <Node ID="CDPendingAgents">
+                        <Node ID="DS" />
+                     </Node>
+                  </RegularDetection>
+                  <RegularDetection MonitorTypeStateID="NoPendingAgents">
+                     <Node ID="CDNoPendingAgents">
+                        <Node ID="DS" />
+                     </Node>
+                  </RegularDetection>
+               </RegularDetections>
+            </MonitorImplementation>
+         </UnitMonitorType>
+      </MonitorTypes>
+ 
+   </TypeDefinitions>
+   <Monitoring>
+ 
+<!--MONITOR-->
+  <Monitors>
+         <UnitMonitor ID="Sample.OleDb.Monitor.PendingAgents" Accessibility="Public" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RunAs="Sample.SQL.Probe.RunAsProfile" TypeID="UnitMonitorType" ConfirmDelivery="false">
+            <Category>AvailabilityHealth</Category>
+            <AlertSettings AlertMessage="Sample.OleDb.Monitor.PendingAgents.AlertMessage">
+               <AlertOnState>Warning</AlertOnState>
+               <AutoResolve>true</AutoResolve>
+               <AlertPriority>Low</AlertPriority>
+               <AlertSeverity>Information</AlertSeverity>
+               <AlertParameters>
+                  <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+      <AlertParameter2>$Data/Context/Columns[1]/Column[1]$</AlertParameter2>
+               </AlertParameters>
+            </AlertSettings>
+            <OperationalStates>
+               <OperationalState ID="OK" MonitorTypeStateID="NoPendingAgents" HealthState="Success" />
+               <OperationalState ID="Warning" MonitorTypeStateID="PendingAgents" HealthState="Warning" />
+            </OperationalStates>
+            <Configuration />
+         </UnitMonitor>
+  
+      </Monitors>
+   </Monitoring>
+   <Presentation>
+      <StringResources>
+         <StringResource ID="Sample.OleDb.Monitor.PendingAgents.AlertMessage" />
+      </StringResources>
+   </Presentation>
+   <LanguagePacks>
+      <LanguagePack ID="ENU" IsDefault="false">
+         <DisplayStrings>
+            <DisplayString ElementID="Sample.OleDb">
+               <Name>Sample.OleDb</Name>
+            </DisplayString>
+            <DisplayString ElementID="Sample.OleDb.Monitor.PendingAgents">
+               <Name>Sample Agents Pending</Name>
+               <Description />
+            </DisplayString>
+            <DisplayString ElementID="Sample.OleDb.Monitor.PendingAgents.AlertMessage">
+               <Name>Pending Agents</Name>
+               <Description>There are {1} agent(s) in the pending queue. This alert was generated from {0}. MP version 1.0.0.23.</Description>
+            </DisplayString>
+            <DisplayString ElementID="Sample.OleDb.Monitor.PendingAgents" SubElementID="OK">
+               <Name>No pending agents</Name>
+            </DisplayString>
+            <DisplayString ElementID="Sample.OleDb.Monitor.PendingAgents" SubElementID="Warning">
+               <Name>Pending agents</Name>
+            </DisplayString>
+         </DisplayStrings>
+      </LanguagePack>
+   </LanguagePacks>
+</ManagementPack>
+
+This is the same thing but I've used a $Config$ variable for the sql query (in a bid to try and learn this stuff)
+
+<ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1">
+   <Manifest>
+      <Identity>
+         <ID>Sample.OleDbTwo</ID>
+         <Version>1.0.0.1</Version>
+      </Identity>
+      <Name>Sample.OleDbTwo</Name>
+      <References>
+         <Reference Alias="SystemCenter">
+            <ID>Microsoft.SystemCenter.Library</ID>
+            <Version>7.0.8437.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+         <Reference Alias="Windows">
+            <ID>Microsoft.Windows.Library</ID>
+            <Version>7.5.8501.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+         <Reference Alias="System">
+            <ID>System.Library</ID>
+            <Version>7.5.8501.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+         <Reference Alias="Health">
+            <ID>System.Health.Library</ID>
+            <Version>7.0.8437.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+      </References>
+   </Manifest>
+   <TypeDefinitions>
+
+   <SecureReferences>
+         <SecureReference ID="Sample.OleDbTwo.RunAsProfile" Accessibility="Public" Context="System!System.Entity" />
+      </SecureReferences>
+ 
+<!--DATA SOURCE MODULE-->
+      <ModuleTypes>
+         <DataSourceModuleType ID="DataSourceModule" Accessibility="Public" RunAs="Sample.OleDbTwo.RunAsProfile" Batching="false">
+   <Configuration>
+     <xsd:element minOccurs="1" name="Query" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+   </Configuration>
+            <ModuleImplementation Isolation="Any">
+               <Composite>
+                  <MemberModules>
+                     <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                        <Scheduler>
+                           <SimpleReccuringSchedule>
+                              <Interval Unit="Seconds">60</Interval>
+                           </SimpleReccuringSchedule>
+                           <ExcludeDates />
+                        </Scheduler>
+                     </DataSource>
+                     <ProbeAction ID="Probe" TypeID="System!System.OleDbProbe">
+                        <ConnectionString>Provider=SQLOLEDB;Integrated Security=SSPI</ConnectionString>
+      <Query>$Config/Query$</Query>
+                        <GetValue>true</GetValue>
+      <DatabaseNameRegLocation>SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup\DatabaseName</DatabaseNameRegLocation>
+      <DatabaseServerNameRegLocation>SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup\DatabaseServerName</DatabaseServerNameRegLocation>
+                        <QueryTimeout>60</QueryTimeout>
+                        <GetFetchTime>true</GetFetchTime>
+                     </ProbeAction>
+                  </MemberModules>
+                  <Composition>
+                     <Node ID="Probe">
+                        <Node ID="Scheduler" />
+                     </Node>
+                  </Composition>
+               </Composite>
+            </ModuleImplementation>
+            <OutputType>System!System.OleDbData</OutputType>
+         </DataSourceModuleType>
+      </ModuleTypes>
+ 
+<!--MONITOR TYPE-->
+      <MonitorTypes>
+         <UnitMonitorType ID="UnitMonitorType" Accessibility="Public">
+            <MonitorTypeStates>
+               <MonitorTypeState ID="PendingAgents" NoDetection="false" />
+               <MonitorTypeState ID="NoPendingAgents" NoDetection="false" />
+            </MonitorTypeStates>
+   <Configuration>
+     <xsd:element minOccurs="1" name="Query" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+   </Configuration>
+            <MonitorImplementation>
+               <MemberModules>
+                  <DataSource ID="DS" TypeID="DataSourceModule">
+                 <Query>$Config/Query$</Query>
+      </DataSource>
+                  <ConditionDetection ID="CDPendingAgents" TypeID="System!System.ExpressionFilter">
+                     <Expression>
+                        <SimpleExpression>
+                           <ValueExpression>
+                              <XPathQuery Type="Integer">Columns[1]/Column[1]</XPathQuery>
+                           </ValueExpression>
+                           <Operator>Greater</Operator>
+                           <ValueExpression>
+                              <Value Type="Integer">0</Value>
+                           </ValueExpression>
+                        </SimpleExpression>
+                     </Expression>
+                  </ConditionDetection>
+                  <ConditionDetection ID="CDNoPendingAgents" TypeID="System!System.ExpressionFilter">
+                     <Expression>
+                        <SimpleExpression>
+                           <ValueExpression>
+                              <XPathQuery Type="Integer">Columns[1]/Column[1]</XPathQuery>
+                           </ValueExpression>
+                           <Operator>Less</Operator>
+                           <ValueExpression>
+                              <Value Type="Integer">1</Value>
+                           </ValueExpression>
+                        </SimpleExpression>
+                     </Expression>
+                  </ConditionDetection>
+               </MemberModules>
+               <RegularDetections>
+                  <RegularDetection MonitorTypeStateID="PendingAgents">
+                     <Node ID="CDPendingAgents">
+                        <Node ID="DS" />
+                     </Node>
+                  </RegularDetection>
+                  <RegularDetection MonitorTypeStateID="NoPendingAgents">
+                     <Node ID="CDNoPendingAgents">
+                        <Node ID="DS" />
+                     </Node>
+                  </RegularDetection>
+               </RegularDetections>
+            </MonitorImplementation>
+         </UnitMonitorType>
+      </MonitorTypes>
+ 
+   </TypeDefinitions>
+   <Monitoring>
+ 
+<!--MONITOR-->
+  <Monitors>
+         <UnitMonitor ID="Sample.OleDbTwo.Monitor.PendingAgents" Accessibility="Public" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RunAs="Sample.OleDbTwo.RunAsProfile" TypeID="UnitMonitorType" ConfirmDelivery="false">
+            <Category>AvailabilityHealth</Category>
+            <AlertSettings AlertMessage="Sample.OleDbTwo.Monitor.PendingAgents.AlertMessage">
+               <AlertOnState>Warning</AlertOnState>
+               <AutoResolve>true</AutoResolve>
+               <AlertPriority>Low</AlertPriority>
+               <AlertSeverity>Information</AlertSeverity>
+               <AlertParameters>
+                  <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+      <AlertParameter2>$Data/Context/Columns[1]/Column[1]$</AlertParameter2>
+               </AlertParameters>
+            </AlertSettings>
+            <OperationalStates>
+               <OperationalState ID="OK" MonitorTypeStateID="NoPendingAgents" HealthState="Success" />
+               <OperationalState ID="Warning" MonitorTypeStateID="PendingAgents" HealthState="Warning" />
+            </OperationalStates>
+   <Configuration>
+     <Query>SELECT COUNT(AgentPendingActionId) as AgentCount from AgentPendingAction</Query>
+   </Configuration>
+         </UnitMonitor>
+  
+      </Monitors>
+   </Monitoring>
+   <Presentation>
+      <StringResources>
+         <StringResource ID="Sample.OleDbTwo.Monitor.PendingAgents.AlertMessage" />
+      </StringResources>
+   </Presentation>
+   <LanguagePacks>
+      <LanguagePack ID="ENU" IsDefault="false">
+         <DisplayStrings>
+            <DisplayString ElementID="Sample.OleDbTwo">
+               <Name>Sample.OleDbTwo</Name>
+            </DisplayString>
+            <DisplayString ElementID="Sample.OleDbTwo.Monitor.PendingAgents">
+               <Name>Sample Agents Pending</Name>
+               <Description />
+            </DisplayString>
+            <DisplayString ElementID="Sample.OleDbTwo.RunAsProfile">
+               <Name>Sample.OleDbTwo.RunAsProfile</Name>
+               <Description />
+            </DisplayString>
+            <DisplayString ElementID="Sample.OleDbTwo.Monitor.PendingAgents.AlertMessage">
+               <Name>Pending Agents</Name>
+               <Description>There are {1} agent(s) in the pending queue. This alert was generated from {0}. MP version 1.0.0.1.</Description>
+            </DisplayString>
+            <DisplayString ElementID="Sample.OleDbTwo.Monitor.PendingAgents" SubElementID="OK">
+               <Name>No pending agents</Name>
+            </DisplayString>
+            <DisplayString ElementID="Sample.OleDbTwo.Monitor.PendingAgents" SubElementID="Warning">
+               <Name>Pending agents</Name>
+            </DisplayString>
+         </DisplayStrings>
+      </LanguagePack>
+   </LanguagePacks>
+</ManagementPack>
