@@ -2,9 +2,13 @@
 ==========
 CHANGE LOG
 ==========
+2023.5.16.0
+-Add Trellix.Monitoring to switch statement in SCOM.AlertManagement.ps1.
+2023.4.3.1
+-Rename "EUTS AD Management" to "EUTS AD Management Team"
 2023.3.21.0
 -Add Certificate.Monitoring to switch statement in SCOM.AlertManagement.ps1.
--Add "CompanyName AD Management" support team.
+-Add "EUTS AD Management" support team.
 -Add custom ADFS certificate alerts category.
 2023.2.16.1
 -Add $AlertName switch statement to SCOM.AlertManagement.ps1.
@@ -104,7 +108,7 @@ ENHANCEMENTS
 <Manifest>
 <Identity>
 <ID>SCOM.UpdateRollup</ID>
-<Version>2023.3.21.0</Version>
+<Version>2023.5.16.0</Version>
 </Identity>
 <Name>SCOM.UpdateRollup</Name>
 <References>
@@ -252,7 +256,7 @@ $EventId=17610
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.WindowsInventory.ps1", $EventId, $EventLevel, "Windows inventory discovery script executed.`nWorkflow Name: SCOM.Discovery.WindowsComputer`nManagement Pack: SCOM.UpdateRollup (2023.3.21.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.WindowsInventory.ps1", $EventId, $EventLevel, "Windows inventory discovery script executed.`nWorkflow Name: SCOM.Discovery.WindowsComputer`nManagement Pack: SCOM.UpdateRollup (2023.5.16.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -1690,7 +1694,7 @@ $EventId=17619 # success
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: SCOM.UpdateRollup (2023.3.21.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: SCOM.UpdateRollup (2023.5.16.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError
@@ -2099,7 +2103,7 @@ $EventId=17617 # success
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.AlertManagement.ps1", $EventId, $EventLevel, "Alert Management script executed.`nWorkflow Name: SCOM.Rule.AlertManagement`nManagement Pack: SCOM.UpdateRollup (2023.3.21.0)`nPowerShell Version: $PSVersion`nAlerts: $CountAlerts`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.AlertManagement.ps1", $EventId, $EventLevel, "Alert Management script executed.`nWorkflow Name: SCOM.Rule.AlertManagement`nManagement Pack: SCOM.UpdateRollup (2023.5.16.0)`nPowerShell Version: $PSVersion`nAlerts: $CountAlerts`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError
@@ -2135,14 +2139,14 @@ $PSVersion=$PSMajor + "." + $PSMinor
 Set common variables.
 #>
 $CodeSection="3"
-$CompanyNameServerTeam="CompanyName Server Team"
-$CompanyNameMonitoringTeam="CompanyName Monitoring Team"
-$CompanyNameSccmTeam="CompanyName SCCM Team"
-$CompanyNameSharePointTeam="CompanyName SharePoint Team"
-$CompanyNameCitrixTeam="CompanyName Citrix Team"
-$CompanyNameEndpointSecurityTeam="CompanyName Endpoint Security Team"
-$CompanyNameBackupStorageTeam="CompanyName Backup and Storage Team"
-$CompanyNameADManagement="CompanyName AD Management"
+$EutsServerTeam="EUTS Server Team"
+$EutsMonitoringTeam="EUTS Monitoring Team"
+$EutsSccmTeam="EUTS SCCM Team"
+$EutsSharePointTeam="EUTS SharePoint Team"
+$EutsCitrixTeam="EUTS Citrix Team"
+$EutsEndpointSecurityTeam="EUTS Endpoint Security Team"
+$EutsBackupStorageTeam="EUTS Backup and Storage Team"
+$EutsADTeam="EUTS AD Management Team"
 $Unknown="Unknown"
 <# CODE_SECTION_4
 Load SCOM module.
@@ -2176,76 +2180,76 @@ $MpName=$Workflow.GetManagementPack().name
 # This assigns alerts based on the mgmt pack it came from.
 switch -wildcard ($MpName) {
 # Active Directory
-"Microsoft.Windows.Server.AD.*" {$category="Active Directory"; $owner=$CompanyNameADManagement; BREAK}
-"ActiveDirectory.Monitoring" {$category="Active Directory"; $owner=$CompanyNameADManagement; BREAK}
+"Microsoft.Windows.Server.AD.*" {$category="Active Directory"; $owner=$EutsADTeam; BREAK}
+"ActiveDirectory.Monitoring" {$category="Active Directory"; $owner=$EutsADTeam; BREAK}
 # ADFS
-"Microsoft.ActiveDirectoryFederationServices.2012.R2" {$category="ADFS"; $owner=$CompanyNameServerTeam; BREAK}
+"Microsoft.ActiveDirectoryFederationServices.2012.R2" {$category="ADFS"; $owner=$EutsServerTeam; BREAK}
 # Citrix
-"CitrixA.Monitoring" {$category="Citrix"; $owner=$CompanyNameCitrixTeam; BREAK}
+"CitrixA.Monitoring" {$category="Citrix"; $owner=$EutsCitrixTeam; BREAK}
 # Cmdb
-"SCOM.Cmdb" {$category="Cmdb"; $owner=$CompanyNameMonitoringTeam; BREAK}
+"SCOM.Cmdb" {$category="Cmdb"; $owner=$EutsMonitoringTeam; BREAK}
 # Commvault
-"Commvault.Monitoring" {$category="Commvault"; $owner=$CompanyNameBackupStorageTeam; BREAK}
+"Commvault.Monitoring" {$category="Commvault"; $owner=$EutsBackupStorageTeam; BREAK}
 # DHCP
-"Microsoft.Windows.DHCPServer.*" {$category="DHCP"; $owner=$CompanyNameServerTeam; BREAK}
+"Microsoft.Windows.DHCPServer.*" {$category="DHCP"; $owner=$EutsServerTeam; BREAK}
 # DNS
-"*.DNS*" {$category="DNS"; $owner=$CompanyNameServerTeam; BREAK}
+"*.DNS*" {$category="DNS"; $owner=$EutsServerTeam; BREAK}
 # Exchange
-"*Exchange.*" {$category="Exchange"; $owner=$CompanyNameServerTeam; BREAK}
+"*Exchange.*" {$category="Exchange"; $owner=$EutsServerTeam; BREAK}
 # IIS
-"Microsoft.Windows.InternetInformationServices.*" {$category="IIS"; $owner=$CompanyNameServerTeam; BREAK}
-# McAfee
-"McAfee.Monitoring" {$category="McAfee"; $owner=$CompanyNameEndpointSecurityTeam; BREAK}
+"Microsoft.Windows.InternetInformationServices.*" {$category="IIS"; $owner=$EutsServerTeam; BREAK}
 # Network
 "System.NetworkManagement.Monitoring" {$category="Network"; $owner=$Unknown; BREAK}
 # SCOM
-"Microsoft.SystemCenter.*" {$category="SCOM"; $owner=$CompanyNameMonitoringTeam; BREAK}
-"SCOM.UpdateRollup" {$category="SCOM"; $owner=$CompanyNameMonitoringTeam; BREAK}
+"Microsoft.SystemCenter.*" {$category="SCOM"; $owner=$EutsMonitoringTeam; BREAK}
+"SCOM.UpdateRollup" {$category="SCOM"; $owner=$EutsMonitoringTeam; BREAK}
 # SCCM
-"Microsoft.SystemCenter2012.ConfigurationManager.*" {$category="SCCM"; $owner=$CompanyNameSccmTeam; BREAK}
+"Microsoft.SystemCenter2012.ConfigurationManager.*" {$category="SCCM"; $owner=$EutsSccmTeam; BREAK}
 # SharePoint
-"Microsoft.SharePoint.*" {$category="SharePoint"; $owner=$CompanyNameSharePointTeam; BREAK}
+"Microsoft.SharePoint.*" {$category="SharePoint"; $owner=$EutsSharePointTeam; BREAK}
 # SQL
-"Microsoft.SQLServer.*" {$category="SQL"; $owner=$CompanyNameServerTeam; BREAK}
+"Microsoft.SQLServer.*" {$category="SQL"; $owner=$EutsServerTeam; BREAK}
+# Trellix
+"Trellix.Monitoring" {$category="Trellix"; $owner=$EutsEndpointSecurityTeam; BREAK}
 # UNIX / Linux
-"Microsoft.Linux.*" {$category="Linux Server"; $owner=$CompanyNameServerTeam; BREAK}
-"Microsoft.Unix.*" {$category="UNIX Server"; $owner=$CompanyNameServerTeam; BREAK}
+"Microsoft.Linux.*" {$category="Linux Server"; $owner=$EutsServerTeam; BREAK}
+"Microsoft.Unix.*" {$category="UNIX Server"; $owner=$EutsServerTeam; BREAK}
 # VMware Carbon Black
-"VMware.CarbonBlack.Monitoring" {$category="Carbon Black"; $owner=$CompanyNameServerTeam; BREAK}
+"VMware.CarbonBlack.Monitoring" {$category="Carbon Black"; $owner=$EutsServerTeam; BREAK}
 # VMware Workspace One
-"VMware.WorkspaceOne.Monitoring" {$category="VMware Workspace ONE"; $owner=$CompanyNameServerTeam; BREAK}
+"VMware.WorkspaceOne.Monitoring" {$category="VMware Workspace ONE"; $owner=$EutsServerTeam; BREAK}
 # Windows certificates
-"Certificate.Monitoring" {$category="Certificate"; $owner=$CompanyNameServerTeam; BREAK}
+"Certificate.Monitoring" {$category="Certificate"; $owner=$EutsServerTeam; BREAK}
 # Windows clusters
-"*.Cluster.*" {$category="Windows Cluster"; $owner=$CompanyNameServerTeam; BREAK}
-"Microsoft.Windows.Server.ClusterSharedVolumeMonitoring" {$category="Windows Cluster"; $owner=$CompanyNameServerTeam; BREAK}
+"*.Cluster.*" {$category="Windows Cluster"; $owner=$EutsServerTeam; BREAK}
+"Microsoft.Windows.Server.ClusterSharedVolumeMonitoring" {$category="Windows Cluster"; $owner=$EutsServerTeam; BREAK}
 # Windows server
-"Microsoft.Windows.Server.*" {$category="Windows Server"; $owner=$CompanyNameServerTeam; BREAK}
+"Microsoft.Windows.Server.*" {$category="Windows Server"; $owner=$EutsServerTeam; BREAK}
 # Client
-"*Client*" {$category="Client"; $owner=$CompanyNameMonitoringTeam; BREAK}
+"*Client*" {$category="Client"; $owner=$EutsMonitoringTeam; BREAK}
 default {
 $Script:CountError+=1
 $Script:Message+="[CODE_SECTION_$CodeSection] MP missing in switch statement for alert '$Alert'`n"
-$category="Unknown"; $owner=$CompanyNameMonitoringTeam
+$category="Unknown"; $owner=$EutsMonitoringTeam
 }
 } # end switch
 # This assigns alerts based on the monitor/rule name. Put workflow dot name in switch statement.
 switch -wildcard ($WorkflowName) {
 <#
 25/3/2022 - Monitoring team now manage agent health.
-"Microsoft.SystemCenter.HealthService.Heartbeat" {$owner=$CompanyNameServerTeam; $category="Windows Server"; BREAK} 
+"Microsoft.SystemCenter.HealthService.Heartbeat" {$owner=$EutsServerTeam; $category="Windows Server"; BREAK} 
 #>
-"Microsoft.SystemCenter.HealthService.ComputerDown" {$owner=$CompanyNameServerTeam; $category="Windows Server"; BREAK} 
+"Microsoft.SystemCenter.HealthService.ComputerDown" {$owner=$EutsServerTeam; $category="Windows Server"; BREAK} 
 "Microsoft.Windows.Server.*.LogicalDisk.FreeSpace" {$ObjectName=$Alert.MonitoringObjectPath; BREAK} 
-"Microsoft.Unix.LogFileModuleErrors.Alert" {$owner=$CompanyNameMonitoringTeam; $category="SCOM"; BREAK} 
-"ActiveDirectory.Monitor.TimeDriftScriptError" {$owner=$CompanyNameMonitoringTeam; $category="SCOM"; BREAK}
+"Microsoft.Unix.LogFileModuleErrors.Alert" {$owner=$EutsMonitoringTeam; $category="SCOM"; BREAK} 
+"ActiveDirectory.Monitor.TimeDriftScriptError" {$owner=$EutsMonitoringTeam; $category="SCOM"; BREAK}
 # This is so we can see ADFS certificate alerts in the Certificates > Active Alerts view.
 "Microsoft.ActiveDirectoryFederationServices2012R2.FederationServerTrustsHaveExpiredCertsWarningMonitor" {$category="Certificate"; BREAK}
 }
 # This assigns alerts based on the alert name.
 switch ($AlertName) {
-"Web Application Unavailable: Hitachi Management portal" {$owner=$CompanyNameBackupStorageTeam; $category="Hitachi"; BREAK} 
-"Web Application Unavailable: NetApp Management portal" {$owner=$CompanyNameBackupStorageTeam; $category="NetApp"; BREAK} 
+"Web Application Unavailable: Hitachi Management portal" {$owner=$EutsBackupStorageTeam; $category="Hitachi"; BREAK} 
+"Web Application Unavailable: NetApp Management portal" {$owner=$EutsBackupStorageTeam; $category="NetApp"; BREAK} 
 }
 # Update alert properties and move to next.
 Set-SCOMAlert -Alert $Alert -Owner $owner -CustomField1 $Category -CustomField2 $ObjectName -ResolutionState 1
@@ -2316,7 +2320,7 @@ $EventId=17612
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: SCOM.UpdateRollup (2023.3.21.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: SCOM.UpdateRollup (2023.5.16.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -2444,7 +2448,7 @@ $EventId=17614
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: SCOM.UpdateRollup (2023.3.21.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: SCOM.UpdateRollup (2023.5.16.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -3214,7 +3218,7 @@ Write-Host
 $EventId=17616
 $EventLevel=0 # 0=Information, 1=Error, 2=Warning
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: SCOM.UpdateRollup (2023.3.21.0)")
+$ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: SCOM.UpdateRollup (2023.5.16.0)")
 Write-Host Information event ID 17616 successfully written to the Operations Manager log.
 Write-Host
 } catch {
