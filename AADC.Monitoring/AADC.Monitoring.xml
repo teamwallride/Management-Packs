@@ -1,0 +1,352 @@
+<!--
+==========
+CHANGE LOG
+==========
+2023.6.15.0
+-Initial release.
+-->
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>AADC.Monitoring</ID>
+      <Version>2023.6.15.0</Version>
+    </Identity>
+    <Name>AADC.Monitoring</Name>
+    <References>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8437.17</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8437.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="AADC.Class.AADCServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="HealthAgentVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="InstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+        </ClassType>
+      </ClassTypes>
+    </EntityTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Discoveries>
+	<!-- Disabled by default because it runs on a small number of servers. -->
+      <Discovery ID="AADC.Discovery.AADCServerRegistry" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="AADC.Class.AADCServer" />
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>IsAADCServer</AttributeName>
+              <Path>SOFTWARE\Microsoft\ADHealthAgent\Sync</Path>
+              <PathType>0</PathType>
+              <AttributeType>0</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>Version</AttributeName>
+              <Path>SOFTWARE\Microsoft\ADHealthAgent\Sync\AadConnectVersion</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>HealthAgentVersion</AttributeName>
+              <Path>SOFTWARE\Microsoft\ADHealthAgent\Sync\Version</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>InstallFolder</AttributeName>
+              <Path>SOFTWARE\Microsoft\ADHealthAgent\Sync\InstallationPath</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <!-- Change to 86400 for prod import -->
+		  <Frequency>86400</Frequency>
+          <ClassId>$MPElement[Name="AADC.Class.AADCServer"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="AADC.Class.AADCServer"]/Version$</Name>
+                <Value>$Data/Values/Version$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="AADC.Class.AADCServer"]/HealthAgentVersion$</Name>
+                <Value>$Data/Values/HealthAgentVersion$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="AADC.Class.AADCServer"]/InstallFolder$</Name>
+                <Value>$Data/Values/InstallFolder$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="System!System.Entity"]/DisplayName$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Values/IsAADCServer</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">True</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+    </Discoveries>
+    <Monitors>
+      <UnitMonitor ID="AADC.Monitor.ADSyncService" Accessibility="Public" Enabled="true" Target="AADC.Class.AADCServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="AADC.Monitor.ADSyncService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Data/Context/Property[@Name='Name']$</AlertParameter1>
+            <AlertParameter2>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Running" MonitorTypeStateID="Running" HealthState="Success" />
+          <OperationalState ID="NotRunning" MonitorTypeStateID="NotRunning" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <ComputerName />
+          <ServiceName>ADSync</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+      <UnitMonitor ID="AADC.Monitor.DirectorySync" Accessibility="Public" Enabled="true" Target="AADC.Class.AADCServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.SingleEventLogManualReset2StateMonitorType" ConfirmDelivery="true">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="AADC.Monitor.DirectorySync.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Data/Context/EventDisplayNumber$</AlertParameter1>
+            <AlertParameter2>$Data/Context/EventDescription$</AlertParameter2>
+            <AlertParameter3>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter3>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="ManualResetEventRaised" HealthState="Success" />
+          <OperationalState ID="NotHealthy" MonitorTypeStateID="EventRaised" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <LogName>Application</LogName>
+          <Expression>
+            <And>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">PublisherName</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Directory Synchronization</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Integer">EventLevel</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="Integer">1</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <Or>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="UnsignedInteger">106</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                  <Expression>
+                    <SimpleExpression>
+                      <ValueExpression>
+                        <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+                      </ValueExpression>
+                      <Operator>Equal</Operator>
+                      <ValueExpression>
+                        <Value Type="UnsignedInteger">109</Value>
+                      </ValueExpression>
+                    </SimpleExpression>
+                  </Expression>
+                </Or>
+              </Expression>
+            </And>
+          </Expression>
+        </Configuration>
+      </UnitMonitor>
+    </Monitors>
+    <Recoveries>
+      <Recovery ID="AADC.Recovery.StartWindowsService" Accessibility="Public" Enabled="true" Target="AADC.Class.AADCServer" Monitor="AADC.Monitor.ADSyncService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory />
+          <CommandLine>start "ADSync"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+    </Recoveries>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="AADC.Monitor.ADSyncService.AlertMessage" />
+      <StringResource ID="AADC.Monitor.DirectorySync.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+	  <!-- Management pack -->
+        <DisplayString ElementID="AADC.Monitoring">
+          <Name>Azure AD Connect Monitoring</Name>
+          <Description>Custom monitoring for Azure AD Connect.</Description>
+        </DisplayString>
+		<!-- Classes -->
+        <DisplayString ElementID="AADC.Class.AADCServer">
+          <Name>Azure AD Connect Server</Name>
+        </DisplayString>
+        <DisplayString ElementID="AADC.Class.AADCServer" SubElementID="Version">
+          <Name>Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="AADC.Class.AADCServer" SubElementID="HealthAgentVersion">
+          <Name>Health Agent Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="AADC.Class.AADCServer" SubElementID="InstallFolder">
+          <Name>Install Folder</Name>
+        </DisplayString>
+		<!-- Discoveries -->
+        <DisplayString ElementID="AADC.Discovery.AADCServerRegistry">
+          <Name>Azure AD Connect Server Registry Discovery</Name>
+        </DisplayString>
+		<!-- Monitors -->
+        <DisplayString ElementID="AADC.Monitor.ADSyncService">
+          <Name>Microsoft Azure AD Sync Service</Name>
+        </DisplayString>
+        <DisplayString ElementID="AADC.Monitor.ADSyncService" SubElementID="Running">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="AADC.Monitor.ADSyncService" SubElementID="NotRunning">
+          <Name>Not Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="AADC.Monitor.ADSyncService.AlertMessage">
+          <Name>Microsoft Azure AD Sync Service Not Running</Name>
+          <Description>The '{0}' service on {1} is not running.
+					
+		  To learn how this monitor works see the knowledge section below.</Description>
+        </DisplayString>
+        <DisplayString ElementID="AADC.Monitor.DirectorySync">
+          <Name>Directory Synchronization Failed</Name>
+          <Description />
+        </DisplayString>
+        <DisplayString ElementID="AADC.Monitor.DirectorySync.AlertMessage">
+          <Name>Directory Synchronization Failed</Name>
+          <Description>{1}
+		  
+		  To learn how this monitor works see the knowledge section below.</Description>
+        </DisplayString>
+        <DisplayString ElementID="AADC.Monitor.DirectorySync" SubElementID="NotHealthy">
+          <Name>Event Raised</Name>
+        </DisplayString>
+        <DisplayString ElementID="AADC.Monitor.DirectorySync" SubElementID="Healthy">
+          <Name>Manual Reset</Name>
+        </DisplayString>
+		<!-- Recoveries -->
+        <DisplayString ElementID="AADC.Recovery.StartWindowsService">
+          <Name>AADC Start Windows Service Recovery</Name>
+        </DisplayString>
+      </DisplayStrings>
+      <KnowledgeArticles>
+        <KnowledgeArticle ElementID="AADC.Monitor.ADSyncService" Visible="true">
+          <MamlContent>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>This monitor checks the status of the Microsoft Azure AD Sync service.</maml:para>
+            </maml:section>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Causes</maml:title>
+              <maml:para>If a service with automatic start type is not running an alert is generated.</maml:para>
+            </maml:section>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Resolutions</maml:title>
+              <maml:para>The monitor has a recovery task that will automatically try and start the service. If the service starts the alert will close, otherwise further investigation is required.</maml:para>
+            </maml:section>
+          </MamlContent>
+        </KnowledgeArticle>
+        <KnowledgeArticle ElementID="AADC.Monitor.DirectorySync" Visible="true">
+          <MamlContent>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>This monitor checks the application log for events matching the following criteria:</maml:para>
+				<maml:list>
+					<maml:listItem>
+						<maml:para>Source: Directory Synchronization</maml:para>
+					</maml:listItem>
+					<maml:listItem>
+						<maml:para>Event ID: 106 or 109</maml:para>
+					</maml:listItem>
+					<maml:listItem>
+						<maml:para>Level: Error</maml:para>
+					</maml:listItem>
+				</maml:list>
+            </maml:section>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Causes</maml:title>
+              <maml:para>If an event is detected matching the criteria an alert is generated.</maml:para>
+            </maml:section>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Resolutions</maml:title>
+              <maml:para>There is no healthy event for this monitor. Confirm directory synchronization is working then reset the monitor manually.</maml:para>
+            </maml:section>
+          </MamlContent>
+        </KnowledgeArticle>
+      </KnowledgeArticles>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
