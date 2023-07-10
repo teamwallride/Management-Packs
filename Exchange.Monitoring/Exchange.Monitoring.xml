@@ -2,22 +2,29 @@
 ==========
 CHANGE LOG
 ==========
+2023.7.10.0
+-Fix typo in Exchange.Rule.MSExchangeISStoreRPCRequests.
+2023.7.5.0
+-Add new rules:
+Exchange.Rule.MSExchangeISStoreRPCRequests
+Exchange.Rule.MSExchangeISStoreRPCAverageLatency
+Exchange.Rule.MSExchangeISClientTypeRPCAverageLatency
 2022.8.1.0
 -Increase threshold on all monitors to 200.
 2022.7.27.0
 -Add queue rules and monitors.
 2022.6.2.0
--Disabled these
-A) Exchange.Monitor.CheckWindowsService.MSExchangePop3
-B) Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE
-C) Exchange.Recovery.CheckWindowsService.MSExchangePop3
-D) Exchange.Recovery.CheckWindowsService.MSExchangePOP3BE
+-Disabled these:
+Exchange.Monitor.CheckWindowsService.MSExchangePop3
+Exchange.Monitor.CheckWindowsService.MSExchangePOP3BE
+Exchange.Recovery.CheckWindowsService.MSExchangePop3
+Exchange.Recovery.CheckWindowsService.MSExchangePOP3BE
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<Manifest>
 		<Identity>
 			<ID>Exchange.Monitoring</ID>
-			<Version>2022.8.1.0</Version>
+			<Version>2023.7.10.0</Version>
 		</Identity>
 		<Name>Exchange.Monitoring</Name>
 		<References>
@@ -60,6 +67,69 @@ D) Exchange.Recovery.CheckWindowsService.MSExchangePOP3BE
 	</Manifest>
 	<Monitoring>
 		<Rules>
+			<!-- MSExchangeISStoreRPCRequests -->
+			<Rule ID="Exchange.Rule.MSExchangeISStoreRPCRequests" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>RPC Requests</CounterName>
+						<ObjectName>MSExchangeIS Store</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
+			<!-- MSExchangeISStoreRPCAverageLatency -->
+			<Rule ID="Exchange.Rule.MSExchangeISStoreRPCAverageLatency" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>RPC Average Latency</CounterName>
+						<ObjectName>MSExchangeIS Store</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
+			<!-- MSExchangeISClientTypeRPCAverageLatency -->
+			<Rule ID="Exchange.Rule.MSExchangeISClientTypeRPCAverageLatency" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+				<Category>PerformanceCollection</Category>
+				<DataSources>
+					<DataSource ID="DS" TypeID="Performance!System.Performance.OptimizedDataProvider">
+						<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+						<CounterName>RPC Average Latency</CounterName>
+						<ObjectName>MSExchangeIS Client Type</ObjectName>
+						<InstanceName>_Total</InstanceName>
+						<AllInstances>false</AllInstances>
+						<Frequency>900</Frequency>
+						<Tolerance>0</Tolerance>
+						<ToleranceType>Absolute</ToleranceType>
+						<MaximumSampleSeparation>1</MaximumSampleSeparation>
+					</DataSource>
+				</DataSources>
+				<WriteActions>
+					<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData"/>
+					<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData"/>
+				</WriteActions>
+			</Rule>
 			<!-- SubmissionQueueLength -->
 			<Rule ID="Exchange.Rule.SubmissionQueueLength" Enabled="true" Target="Exchange!Microsoft.Exchange.15.Server" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
 				<Category>PerformanceCollection</Category>
@@ -2009,6 +2079,15 @@ D) Exchange.Recovery.CheckWindowsService.MSExchangePOP3BE
 				</DisplayString>
 				<DisplayString ElementID="Exchange.Rule.SubmissionQueueLength">
 					<Name>Submission Queue Length</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.MSExchangeISStoreRPCRequests">
+					<Name>MSExchangeIS Store RPC Requests</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.MSExchangeISStoreRPCAverageLatency">
+					<Name>MSExchangeIS Store RPC Average Latency</Name>
+				</DisplayString>
+				<DisplayString ElementID="Exchange.Rule.MSExchangeISClientTypeRPCAverageLatency">
+					<Name>MSExchangeIS Client Type RPC Average Latency</Name>
 				</DisplayString>
 			</DisplayStrings>
 		</LanguagePack>
