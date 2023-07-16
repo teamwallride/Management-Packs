@@ -2,6 +2,8 @@
 ==========
 CHANGE LOG
 ==========
+2023.7.17.0
+-Add dashboard view for 'Information Store' counters.
 2023.7.10.1
 -Add 'Information Store' folder and counter views.
 2023.7.10.0
@@ -13,7 +15,7 @@ Initial release.
   <Manifest>
     <Identity>
       <ID>Exchange.Views</ID>
-      <Version>2023.7.10.1</Version>
+      <Version>2023.7.17.0</Version>
     </Identity>
     <Name>Exchange.Views</Name>
     <References>
@@ -698,6 +700,14 @@ Initial release.
         </Presentation>
         <Target />
       </View>
+      <View ID="View_2a3fa90bd86a4b5b984b650cf3391161" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.DashboardViewType" Visible="true">
+        <Category>Operations</Category>
+        <PanelConfiguration Columns="1" Rows="3">
+          <Cell Column="1" Row="1" ViewID="View_e441e37d1bf34f8db35f895919ef2a0a" />
+          <Cell Row="2" Column="1" ViewID="View_b0ab8f462f5345f292fd85fb41e6070f" />
+          <Cell Row="3" Column="1" ViewID="View_45415f70fa69499a9f4c5c65d6f8f0d8" />
+        </PanelConfiguration>
+      </View>
     </Views>
     <Folders>
       <Folder ID="Folder_1f111297a3b845e3a7b00ba3e789ba38" Accessibility="Public" ParentFolder="SystemCenter!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
@@ -717,6 +727,7 @@ Initial release.
       <FolderItem ElementID="View_45415f70fa69499a9f4c5c65d6f8f0d8" ID="ic952293c727d4feebc3e323ead963a58" Folder="Folder_15b2a4508ab449959dc607894c6a8d88" />
       <FolderItem ElementID="View_b0ab8f462f5345f292fd85fb41e6070f" ID="i41f98e2dec2b4eaea287907aefa01587" Folder="Folder_15b2a4508ab449959dc607894c6a8d88" />
       <FolderItem ElementID="View_e441e37d1bf34f8db35f895919ef2a0a" ID="i373273f1680a4288b76a59b756f0c756" Folder="Folder_15b2a4508ab449959dc607894c6a8d88" />
+      <FolderItem ElementID="View_2a3fa90bd86a4b5b984b650cf3391161" ID="ifcf14f5904f54bf4902459f66ccbcc9d" Folder="Folder_15b2a4508ab449959dc607894c6a8d88" />
     </FolderItems>
   </Presentation>
   <LanguagePacks>
@@ -757,7 +768,7 @@ Initial release.
           <Name>Unreachable</Name>
         </DisplayString>
         <DisplayString ElementID="View_cfb5518df79d4115b7ab878f40e05c6a">
-          <Name>Exchange Queues</Name>
+          <Name>Dashboard</Name>
         </DisplayString>
         <DisplayString ElementID="Folder_15b2a4508ab449959dc607894c6a8d88">
           <Name>Information Store</Name>
@@ -770,7 +781,9 @@ Initial release.
         </DisplayString>
         <DisplayString ElementID="View_e441e37d1bf34f8db35f895919ef2a0a">
           <Name>MSExchangeIS Client Type\RPC Avg Latency</Name>
-          <Description />
+        </DisplayString>
+        <DisplayString ElementID="View_2a3fa90bd86a4b5b984b650cf3391161">
+          <Name>Dashboard</Name>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
