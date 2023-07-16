@@ -2,6 +2,8 @@
 ==========
 CHANGE LOG
 ==========
+2023.7.17.0
+-Remove {1} from Commvault.Monitor.AllServices.AlertMessage because it shows up in the notification.
 2023.2.20.1
 -Add CommServe and MediaAgent groups
 2023.2.16.0
@@ -11,7 +13,7 @@ CHANGE LOG
   <Manifest>
     <Identity>
       <ID>Commvault.Monitoring</ID>
-      <Version>2023.2.20.1</Version>
+      <Version>2023.7.17.0</Version>
     </Identity>
     <Name>Commvault.Monitoring</Name>
     <References>
@@ -347,13 +349,12 @@ CHANGE LOG
           <Name>Not Running</Name>
         </DisplayString>
         <DisplayString ElementID="Commvault.Monitor.AllServices.AlertMessage">
-          <Name>{1} service not running</Name>
+          <Name>Commvault Service Not Running</Name>
           <Description>The '{1}' service on {2} is not running.</Description>
         </DisplayString>
         <DisplayString ElementID="Commvault.Recovery.StartWindowsService">
           <Name>Commvault Start Windows Service Recovery</Name>
         </DisplayString>
-<!--> New groups bit. -->
         <DisplayString ElementID="Commvault.Group.CommServes">
           <Name>Commvault CommServe Servers</Name>
           <Description>This group is not used for monitoring, it is used by views in Commvault.Views mp.</Description>
