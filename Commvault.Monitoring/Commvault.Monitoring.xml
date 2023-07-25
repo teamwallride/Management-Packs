@@ -2,6 +2,8 @@
 ==========
 CHANGE LOG
 ==========
+2023.7.24.5
+-Add Commvault.Monitor.BackupStatus monitor.
 2023.7.17.0
 -Remove {1} from Commvault.Monitor.AllServices.AlertMessage because it shows up in the notification.
 2023.2.20.1
@@ -10,368 +12,668 @@ CHANGE LOG
 -Initial release.
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-  <Manifest>
-    <Identity>
-      <ID>Commvault.Monitoring</ID>
-      <Version>2023.7.17.0</Version>
-    </Identity>
-    <Name>Commvault.Monitoring</Name>
-    <References>
-      <Reference Alias="Windows">
-        <ID>Microsoft.Windows.Library</ID>
-        <Version>7.5.8501.0</Version>
-        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-      </Reference>
-      <Reference Alias="System">
-        <ID>System.Library</ID>
-        <Version>7.5.8501.0</Version>
-        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-      </Reference>
-      <Reference Alias="SystemCenter">
-        <ID>Microsoft.SystemCenter.Library</ID>
-        <Version>7.0.8437.17</Version>
-        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-      </Reference>
-      <Reference Alias="Health">
-        <ID>System.Health.Library</ID>
-        <Version>7.0.8437.0</Version>
-        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-      </Reference>
+	<Manifest>
+		<Identity>
+			<ID>Commvault.Monitoring</ID>
+			<Version>2023.7.24.5</Version>
+		</Identity>
+		<Name>Commvault.Monitoring</Name>
+		<References>
+			<Reference Alias="Windows">
+				<ID>Microsoft.Windows.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="System">
+				<ID>System.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="SystemCenter">
+				<ID>Microsoft.SystemCenter.Library</ID>
+				<Version>7.0.8437.17</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Health">
+				<ID>System.Health.Library</ID>
+				<Version>7.0.8437.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
 			<Reference Alias="MSIL">
 				<ID>Microsoft.SystemCenter.InstanceGroup.Library</ID>
 				<Version>7.5.8501.0</Version>
 				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
 			</Reference>
-    </References>
-  </Manifest>
-  <TypeDefinitions>
-    <EntityTypes>
-      <ClassTypes>
-        <ClassType ID="Commvault.Class.Service" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
-          <Property ID="ServiceName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
-          <Property ID="ServiceDisplayName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
-          <Property ID="StartMode" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
-        </ClassType>
-        <ClassType ID="Commvault.Group.CommServes" Accessibility="Public" Abstract="false" Base="MSIL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-        <ClassType ID="Commvault.Group.MediaAgents" Accessibility="Public" Abstract="false" Base="MSIL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-      </ClassTypes>
-    </EntityTypes>
-    <MonitorTypes>
-      <UnitMonitorType ID="Commvault.MonitorType.ServiceState" Accessibility="Internal">
-        <MonitorTypeStates>
-          <MonitorTypeState ID="Running" NoDetection="false" />
-          <MonitorTypeState ID="NotRunning" NoDetection="false" />
-        </MonitorTypeStates>
-        <Configuration>
-          <xsd:element name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="ServiceName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-          <xsd:element name="Samples" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-        </Configuration>
-        <OverrideableParameters>
-          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
-          <OverrideableParameter ID="Samples" Selector="$Config/Samples$" ParameterType="int" />
-        </OverrideableParameters>
-        <MonitorImplementation>
-          <MemberModules>
-            <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.Win32ServiceInformationProvider">
-              <ComputerName>$Config/ComputerName$</ComputerName>
-              <ServiceName>$Config/ServiceName$</ServiceName>
-              <Frequency>$Config/IntervalSeconds$</Frequency>
-              <DisableCaching>true</DisableCaching>
-              <CheckStartupType>true</CheckStartupType>
-            </DataSource>
-            <ProbeAction ID="Probe" TypeID="Windows!Microsoft.Windows.Win32ServiceInformationProbe">
-              <ComputerName>$Config/ComputerName$</ComputerName>
-              <ServiceName>$Config/ServiceName$</ServiceName>
-            </ProbeAction>
-            <ConditionDetection ID="ServiceRunning" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <Or>
-                  <Expression>
-                    <SimpleExpression>
-                      <ValueExpression>
-                        <XPathQuery Type="Integer">Property[@Name='StartMode']</XPathQuery>
-                      </ValueExpression>
-                      <Operator>Equal</Operator>
-                      <ValueExpression>
-                        <Value Type="Integer">4</Value>
-                        <!-- 0=BootStart 1=SystemStart 2=Automatic 3=Manual 4=Disabled -->
-                      </ValueExpression>
-                    </SimpleExpression>
-                  </Expression>
-                  <Expression>
-                    <SimpleExpression>
-                      <ValueExpression>
-                        <XPathQuery Type="Integer">Property[@Name='State']</XPathQuery>
-                      </ValueExpression>
-                      <Operator>Equal</Operator>
-                      <ValueExpression>
-                        <Value Type="Integer">4</Value>
-                        <!-- 0=Unknown 1=Stopped 2=StartPending 3=StopPending 4=Running 5=ContinuePending 6=PausePending 7=Paused 8=ServiceNotFound 9=ServerNotFound -->
-                      </ValueExpression>
-                    </SimpleExpression>
-                  </Expression>
-                </Or>
-              </Expression>
-            </ConditionDetection>
-            <ConditionDetection ID="ServiceNotRunning" TypeID="System!System.ExpressionFilter">
-              <Expression>
-                <And>
-                  <Expression>
-                    <SimpleExpression>
-                      <ValueExpression>
-                        <XPathQuery Type="Integer">Property[@Name='StartMode']</XPathQuery>
-                      </ValueExpression>
-                      <Operator>Equal</Operator>
-                      <!-- OG value NotEqual-->
-                      <ValueExpression>
-                        <Value Type="Integer">2</Value>
-                        <!-- 0=BootStart 1=SystemStart 2=Automatic 3=Manual 4=Disabled -->
-                      </ValueExpression>
-                    </SimpleExpression>
-                  </Expression>
-                  <Expression>
-                    <SimpleExpression>
-                      <ValueExpression>
-                        <XPathQuery Type="Integer">Property[@Name='State']</XPathQuery>
-                      </ValueExpression>
-                      <Operator>NotEqual</Operator>
-                      <ValueExpression>
-                        <Value Type="Integer">4</Value>
-                        <!-- 0=Unknown 1=Stopped 2=StartPending 3=StopPending 4=Running 5=ContinuePending 6=PausePending 7=Paused 8=ServiceNotFound 9=ServerNotFound -->
-                      </ValueExpression>
-                    </SimpleExpression>
-                  </Expression>
-                </And>
-              </Expression>
-              <SuppressionSettings>
-                <MatchCount>$Config/Samples$</MatchCount>
-              </SuppressionSettings>
-            </ConditionDetection>
-          </MemberModules>
-          <RegularDetections>
-            <RegularDetection MonitorTypeStateID="Running">
-              <Node ID="ServiceRunning">
-                <Node ID="DS" />
-              </Node>
-            </RegularDetection>
-            <RegularDetection MonitorTypeStateID="NotRunning">
-              <Node ID="ServiceNotRunning">
-                <Node ID="DS" />
-              </Node>
-            </RegularDetection>
-          </RegularDetections>
-          <OnDemandDetections>
-            <OnDemandDetection MonitorTypeStateID="Running">
-              <Node ID="ServiceRunning">
-                <Node ID="Probe" />
-              </Node>
-            </OnDemandDetection>
-            <OnDemandDetection MonitorTypeStateID="NotRunning">
-              <Node ID="ServiceNotRunning">
-                <Node ID="Probe" />
-              </Node>
-            </OnDemandDetection>
-          </OnDemandDetections>
-        </MonitorImplementation>
-      </UnitMonitorType>
-    </MonitorTypes>
-  </TypeDefinitions>
-  <Monitoring>
-    <Discoveries>
-      <Discovery ID="Commvault.Discovery.AllServices" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
-        <Category>Discovery</Category>
-        <DiscoveryTypes>
-          <DiscoveryClass TypeID="Commvault.Class.Service">
-            <Property PropertyID="ServiceName" />
-            <Property PropertyID="ServiceDisplayName" />
-            <Property PropertyID="StartMode" />
-          </DiscoveryClass>
-        </DiscoveryTypes>
-        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.WmiProviderWithClassSnapshotDataMapper">
-          <NameSpace>root\cimv2</NameSpace>
-          <Query>SELECT * FROM Win32_Service WHERE Name LIKE 'Gx%' and startmode="auto"</Query>
-          <Frequency>86400</Frequency>
-          <ClassId>$MPElement[Name="Commvault.Class.Service"]$</ClassId>
-          <InstanceSettings>
-            <Settings>
-              <Setting>
-                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
-                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
-              </Setting>
-              <Setting>
-                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
-                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
-              </Setting>
-              <Setting>
-                <Name>$MPElement[Name="Commvault.Class.Service"]/ServiceName$</Name>
-                <Value>$Data/Property[@Name='Name']$</Value>
-              </Setting>
-              <Setting>
-                <Name>$MPElement[Name="Commvault.Class.Service"]/ServiceDisplayName$</Name>
-                <Value>$Data/Property[@Name='DisplayName']$</Value>
-              </Setting>
-              <Setting>
-                <Name>$MPElement[Name="Commvault.Class.Service"]/StartMode$</Name>
-                <Value>$Data/Property[@Name='StartMode']$</Value>
-              </Setting>
-              <!-- If you have additional class properties you want to provide values from WMI add them here as additional instance settings. -->
-            </Settings>
-          </InstanceSettings>
-        </DataSource>
-      </Discovery>
-<!-- New groups discovery -->      
-      <Discovery ID="Commvault.Discovery.CommServes" Enabled="true" Target="Commvault.Group.CommServes" ConfirmDelivery="false" Remotable="true" Priority="Normal">
-        <Category>Discovery</Category>
-        <DiscoveryTypes>
-          <DiscoveryRelationship TypeID="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
-        </DiscoveryTypes>
-        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
-          <RuleId>$MPElement$</RuleId>
-          <GroupInstanceId>$MPElement[Name="Commvault.Group.CommServes"]$</GroupInstanceId>
-          <MembershipRules>
-            <MembershipRule>
-              <MonitoringClass>$MPElement[Name="Windows!Microsoft.Windows.Computer"]$</MonitoringClass>
-              <RelationshipClass>$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
-              <Expression>
-                <RegExExpression>
-                  <ValueExpression>
-                    <Property>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Property>
-                  </ValueExpression>
-                  <Operator>MatchesRegularExpression</Operator>
-                  <Pattern>(?i:^comvmgt)</Pattern>
-                </RegExExpression>
-              </Expression>
-            </MembershipRule>
-          </MembershipRules>
-        </DataSource>
-      </Discovery>
-      <Discovery ID="Commvault.Discovery.MediaAgents" Enabled="true" Target="Commvault.Group.MediaAgents" ConfirmDelivery="false" Remotable="true" Priority="Normal">
-        <Category>Discovery</Category>
-        <DiscoveryTypes>
-          <DiscoveryRelationship TypeID="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
-        </DiscoveryTypes>
-        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
-          <RuleId>$MPElement$</RuleId>
-          <GroupInstanceId>$MPElement[Name="Commvault.Group.MediaAgents"]$</GroupInstanceId>
-          <MembershipRules>
-            <MembershipRule>
-              <MonitoringClass>$MPElement[Name="Windows!Microsoft.Windows.Computer"]$</MonitoringClass>
-              <RelationshipClass>$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
-              <Expression>
-                <RegExExpression>
-                  <ValueExpression>
-                    <Property>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Property>
-                  </ValueExpression>
-                  <Operator>MatchesRegularExpression</Operator>
-                  <Pattern>(?i:^nasp)|(?i:SYD01H757PPN.prod.atonet.gov.au)|(?i:SYD01H758PPN.prod.atonet.gov.au)|(?i:SYD01H905PV.prod.atonet.gov.au)|(?i:SYD02H754PPN.prod.atonet.gov.au)|(?i:SYD02H755PPN.prod.atonet.gov.au)</Pattern>
-                </RegExExpression>
-              </Expression>
-            </MembershipRule>
-          </MembershipRules>
-        </DataSource>
-      </Discovery>
-    </Discoveries>
-    <Monitors>
-      <UnitMonitor ID="Commvault.Monitor.AllServices" Accessibility="Public" Enabled="true" Target="Commvault.Class.Service" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Commvault.MonitorType.ServiceState" ConfirmDelivery="false">
-        <Category>AvailabilityHealth</Category>
-        <AlertSettings AlertMessage="Commvault.Monitor.AllServices.AlertMessage">
-          <AlertOnState>Error</AlertOnState>
-          <AutoResolve>true</AutoResolve>
-          <AlertPriority>Normal</AlertPriority>
-          <AlertSeverity>Error</AlertSeverity>
-          <AlertParameters>
-            <AlertParameter1>$Data/Context/Property[@Name='Name']$</AlertParameter1>
-            <AlertParameter2>$Data/Context/Property[@Name='DisplayName']$</AlertParameter2>
-            <AlertParameter3>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter3>
-          </AlertParameters>
-        </AlertSettings>
-        <OperationalStates>
-          <OperationalState ID="Running" MonitorTypeStateID="Running" HealthState="Success" />
-          <OperationalState ID="NotRunning" MonitorTypeStateID="NotRunning" HealthState="Error" />
-        </OperationalStates>
-        <Configuration>
-          <ComputerName />
-          <ServiceName>$Target/Property[Type="Commvault.Class.Service"]/ServiceName$</ServiceName>
-          <IntervalSeconds>120</IntervalSeconds>
-          <Samples>1</Samples>
-        </Configuration>
-      </UnitMonitor>
-    </Monitors>
-    <Recoveries>
-      <Recovery ID="Commvault.Recovery.StartWindowsService" Accessibility="Public" Enabled="true" Target="Commvault.Class.Service" Monitor="Commvault.Monitor.AllServices" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
-        <Category>Maintenance</Category>
-        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
-          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
-          <WorkingDirectory />
-          <CommandLine>start $Target/Property[Type="Commvault.Class.Service"]/ServiceName$</CommandLine>
-          <TimeoutSeconds>60</TimeoutSeconds>
-          <RequireOutput>true</RequireOutput>
-        </WriteAction>
-      </Recovery>
-    </Recoveries>
-  </Monitoring>
-  <Presentation>
-    <StringResources>
-      <StringResource ID="Commvault.Monitor.AllServices.AlertMessage" />
-    </StringResources>
-  </Presentation>
-  <LanguagePacks>
-    <LanguagePack ID="ENU" IsDefault="true">
-      <DisplayStrings>
-        <DisplayString ElementID="Commvault.Monitoring">
-          <Name>Commvault Monitoring</Name>
-          <Description>Custom monitoring for Commvault.</Description>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Class.Service">
-          <Name>Commvault Service</Name>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Class.Service" SubElementID="ServiceName">
-          <Name>Service Name</Name>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Class.Service" SubElementID="ServiceDisplayName">
-          <Name>Service Display Name</Name>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Class.Service" SubElementID="StartMode">
-          <Name>Start Mode</Name>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Discovery.AllServices">
-          <Name>Commvault All Services</Name>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Monitor.AllServices">
-          <Name>Commvault All Services</Name>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Monitor.AllServices" SubElementID="Running">
-          <Name>Running</Name>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Monitor.AllServices" SubElementID="NotRunning">
-          <Name>Not Running</Name>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Monitor.AllServices.AlertMessage">
-          <Name>Commvault Service Not Running</Name>
-          <Description>The '{1}' service on {2} is not running.</Description>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Recovery.StartWindowsService">
-          <Name>Commvault Start Windows Service Recovery</Name>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Group.CommServes">
-          <Name>Commvault CommServe Servers</Name>
-          <Description>This group is not used for monitoring, it is used by views in Commvault.Views mp.</Description>
-         </DisplayString>
-        <DisplayString ElementID="Commvault.Discovery.CommServes">
+			<Reference Alias="SCDW">
+				<ID>Microsoft.SystemCenter.DataWarehouse.Library</ID>
+				<Version>7.2.11719.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Performance">
+				<ID>System.Performance.Library</ID>
+				<Version>7.0.8437.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+		</References>
+	</Manifest>
+	<TypeDefinitions>
+		<EntityTypes>
+			<ClassTypes>
+				<ClassType ID="Commvault.Class.Service" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+					<Property ID="ServiceName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+					<Property ID="ServiceDisplayName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+					<Property ID="StartMode" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+				</ClassType>
+				<ClassType ID="Commvault.Group.CommServes" Accessibility="Public" Abstract="false" Base="MSIL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Commvault.Group.MediaAgents" Accessibility="Public" Abstract="false" Base="MSIL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+			</ClassTypes>
+		</EntityTypes>
+		<SecureReferences>
+			<SecureReference ID="Commvault.RunAsProfile.CommvaultDb" Accessibility="Public"/>
+		</SecureReferences>
+		<ModuleTypes>
+			<DataSourceModuleType ID="Commvault.DataSourceModule.BackupStatus" Accessibility="Internal" Batching="false">
+				<Configuration>
+					<xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+					<xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+					<xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+				</Configuration>
+				<OverrideableParameters>
+					<OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int"/>
+					<OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string"/>
+					<OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int"/>
+				</OverrideableParameters>
+				<ModuleImplementation Isolation="Any">
+					<Composite>
+						<MemberModules>
+							<DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+								<Scheduler>
+									<SimpleReccuringSchedule>
+										<Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+										<SyncTime>$Config/SyncTime$</SyncTime>
+									</SimpleReccuringSchedule>
+									<ExcludeDates/>
+								</Scheduler>
+							</DataSource>
+							<ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+								<ScriptName>BackupStatus.ps1</ScriptName>
+								<ScriptBody>
+									<![CDATA[
+Function Write-Log {
+    Param($ScriptState)
+    Switch ($ScriptState) {
+        "Information" {
+            $EventId = 17623
+            $EventLevel = 0 # 0=Info
+        }
+        "Error" {
+            $EventId = 17625
+            $EventLevel = 1 # 1=Error
+        }        
+        "Warning" {
+            $EventId = 17624
+            $EventLevel = 2 # 2=Warning
+        }
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`nOutput: $Message")
+    Break
+}
+Function Set-TerminatingError {
+    $ScriptState = "Error"
+    $Message += $_.Exception.Message
+    Write-Log -ScriptState $ScriptState
+}
+Function SQLQuery {
+    param($DbServer, $DbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$DbServer;Database=$DbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SqlTable = New-Object System.Data.DataTable
+    $SqlTable.Load($Reader)
+    $Connection.Close()
+    Return $SqlTable
+}
+Function Get-BackupStatus {
+    $ErrorActionPreference = "Stop" # This works well. It still logs terminating and non-terminating events.
+    Try {
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        $SetupRegKey = "HKLM:\SOFTWARE\CommVault Systems\Galaxy\Instance001\Database"
+        $CommDbServer = (Get-ItemProperty $SetupRegKey).sINSTANCE
+        $CommDbName = (Get-ItemProperty $SetupRegKey).sCSDBNAME
+
+        # Get total jobs.
+        $DbQuery = "SELECT COUNT(*) as TotalBackupJobs
+FROM [$CommDbName].[dbo].[CommCellBackupInfo]
+where CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,enddate),DATENAME(TzOffset, SYSDATETIMEOFFSET()))) > GETDATE()-1 --and jobstatus = 'successZ'"
+        $SqlTable = SQLQuery -DbServer $CommDbServer -DbName $CommDbName -DbQuery $DbQuery
+        $TotalBackupJobs = $SqlTable.TotalBackupJobs
+
+        # We expect a lot of jobs so if 0 log event and quit.
+        If ($TotalBackupJobs -lt 1) {
+            $Message += "SQL query executed successfully but 0 total jobs were returned. Please investigate."
+            $ScriptState = "Warning"
+            Write-Log -ScriptState $ScriptState
+        }
+        Else {
+            # Get unsuccessful jobs.
+            $Bag = $MomApi.CreatePropertyBag()
+            $DbQuery = "SELECT COUNT(*) as UnsuccessfulBackupJobs
+FROM [$CommDbName].[dbo].[CommCellBackupInfo]
+where CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,enddate),DATENAME(TzOffset, SYSDATETIMEOFFSET()))) > GETDATE()-1
+and jobstatus != 'Success'"
+            $SqlTable = SQLQuery -DbServer $CommDbServer -DbName $CommDbName -DbQuery $DbQuery
+            $UnsuccessfulBackupJobs = $SqlTable.UnsuccessfulBackupJobs
+            # Do math to get % success jobs.
+            $PctSuccessfulBackupJobs = [Math]::Round(($TotalBackupJobs - $UnsuccessfulBackupJobs) / $TotalBackupJobs * 100, 2)
+            $SuccessJobsThreshold = '98.00'
+            # Add count and % to property bag regardless of what threshold is.
+            $Bag.AddValue('TotalBackupJobs', $TotalBackupJobs)
+            $Bag.AddValue('UnsuccessfulBackupJobs', $UnsuccessfulBackupJobs)
+            $Bag.AddValue('PctSuccessfulBackupJobs', $PctSuccessfulBackupJobs)
+            If ($PctSuccessfulBackupJobs -lt $SuccessJobsThreshold) {
+                $Bag.AddValue('BackupStatus', 'Unhealthy')
+            }
+            Else {
+                $Bag.AddValue('BackupStatus', 'Healthy')
+            }
+            <# FOR TESTING
+write-host "Total Jobs: $TotalBackupJobs"
+write-host "Unsuccessful Jobs: $UnsuccessfulBackupJobs"
+write-host "% Success Jobs: $PctSuccessfulBackupJobs"
+write-host "% Success Threshold: $SuccessJobsThreshold"
+write-host
+$MomApi.Return($Bag)
+#>
+            $Bag
+            $Message += "$UnsuccessfulBackupJobs failed jobs."
+            $ScriptState = "Information"
+            Write-Log -ScriptState $ScriptState
+        }
+    } # end try
+    Catch {
+        Set-TerminatingError
+    }
+}
+# Declare all constants used by the script
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "BackupStatus.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$WorkflowName = "Commvault.DataSourceModule.BackupStatus"
+$MPName = "Commvault.Monitoring"
+$MpVersion = "2023.7.24.5"
+[datetime]$StartTime = Get-Date
+Get-BackupStatus									
+]]>
+								</ScriptBody>
+								<TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+							</ProbeAction>
+						</MemberModules>
+						<Composition>
+							<Node ID="PA">
+								<Node ID="Scheduler"/>
+							</Node>
+						</Composition>
+					</Composite>
+				</ModuleImplementation>
+				<OutputType>System!System.PropertyBagData</OutputType>
+			</DataSourceModuleType>
+		</ModuleTypes>
+		<MonitorTypes>
+			<UnitMonitorType ID="Commvault.MonitorType.BackupStatus" Accessibility="Internal">
+				<MonitorTypeStates>
+					<MonitorTypeState ID="Healthy" NoDetection="false"/>
+					<MonitorTypeState ID="Unhealthy" NoDetection="false"/>
+				</MonitorTypeStates>
+				<Configuration>
+					<xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+					<xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+					<xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+				</Configuration>
+				<OverrideableParameters>
+					<OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int"/>
+					<OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string"/>
+					<OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int"/>
+				</OverrideableParameters>
+				<MonitorImplementation>
+					<MemberModules>
+						<DataSource ID="DS" TypeID="Commvault.DataSourceModule.BackupStatus">
+							<IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+							<SyncTime>$Config/SyncTime$</SyncTime>
+							<TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+						</DataSource>
+						<ConditionDetection ID="HealthyFilter" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<XPathQuery Type="String">Property[@Name='BackupStatus']</XPathQuery>
+									</ValueExpression>
+									<Operator>Equal</Operator>
+									<ValueExpression>
+										<Value Type="String">Healthy</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+						</ConditionDetection>
+						<ConditionDetection ID="WarningFilter" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<XPathQuery Type="String">Property[@Name='BackupStatus']</XPathQuery>
+									</ValueExpression>
+									<Operator>Equal</Operator>
+									<ValueExpression>
+										<Value Type="String">Unhealthy</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+						</ConditionDetection>
+					</MemberModules>
+					<RegularDetections>
+						<RegularDetection MonitorTypeStateID="Healthy">
+							<Node ID="HealthyFilter">
+								<Node ID="DS"/>
+							</Node>
+						</RegularDetection>
+						<RegularDetection MonitorTypeStateID="Unhealthy">
+							<Node ID="WarningFilter">
+								<Node ID="DS"/>
+							</Node>
+						</RegularDetection>
+					</RegularDetections>
+				</MonitorImplementation>
+			</UnitMonitorType>
+			<UnitMonitorType ID="Commvault.MonitorType.ServiceState" Accessibility="Internal">
+				<MonitorTypeStates>
+					<MonitorTypeState ID="Running" NoDetection="false"/>
+					<MonitorTypeState ID="NotRunning" NoDetection="false"/>
+				</MonitorTypeStates>
+				<Configuration>
+					<xsd:element name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+					<xsd:element name="ServiceName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+					<xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+					<xsd:element name="Samples" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+				</Configuration>
+				<OverrideableParameters>
+					<OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int"/>
+					<OverrideableParameter ID="Samples" Selector="$Config/Samples$" ParameterType="int"/>
+				</OverrideableParameters>
+				<MonitorImplementation>
+					<MemberModules>
+						<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.Win32ServiceInformationProvider">
+							<ComputerName>$Config/ComputerName$</ComputerName>
+							<ServiceName>$Config/ServiceName$</ServiceName>
+							<Frequency>$Config/IntervalSeconds$</Frequency>
+							<DisableCaching>true</DisableCaching>
+							<CheckStartupType>true</CheckStartupType>
+						</DataSource>
+						<ProbeAction ID="Probe" TypeID="Windows!Microsoft.Windows.Win32ServiceInformationProbe">
+							<ComputerName>$Config/ComputerName$</ComputerName>
+							<ServiceName>$Config/ServiceName$</ServiceName>
+						</ProbeAction>
+						<ConditionDetection ID="ServiceRunning" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<Or>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="Integer">Property[@Name='StartMode']</XPathQuery>
+											</ValueExpression>
+											<Operator>Equal</Operator>
+											<ValueExpression>
+												<Value Type="Integer">4</Value>
+												<!-- 0=BootStart 1=SystemStart 2=Automatic 3=Manual 4=Disabled -->
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="Integer">Property[@Name='State']</XPathQuery>
+											</ValueExpression>
+											<Operator>Equal</Operator>
+											<ValueExpression>
+												<Value Type="Integer">4</Value>
+												<!-- 0=Unknown 1=Stopped 2=StartPending 3=StopPending 4=Running 5=ContinuePending 6=PausePending 7=Paused 8=ServiceNotFound 9=ServerNotFound -->
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+								</Or>
+							</Expression>
+						</ConditionDetection>
+						<ConditionDetection ID="ServiceNotRunning" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<And>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="Integer">Property[@Name='StartMode']</XPathQuery>
+											</ValueExpression>
+											<Operator>Equal</Operator>
+											<!-- OG value NotEqual-->
+											<ValueExpression>
+												<Value Type="Integer">2</Value>
+												<!-- 0=BootStart 1=SystemStart 2=Automatic 3=Manual 4=Disabled -->
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="Integer">Property[@Name='State']</XPathQuery>
+											</ValueExpression>
+											<Operator>NotEqual</Operator>
+											<ValueExpression>
+												<Value Type="Integer">4</Value>
+												<!-- 0=Unknown 1=Stopped 2=StartPending 3=StopPending 4=Running 5=ContinuePending 6=PausePending 7=Paused 8=ServiceNotFound 9=ServerNotFound -->
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+								</And>
+							</Expression>
+							<SuppressionSettings>
+								<MatchCount>$Config/Samples$</MatchCount>
+							</SuppressionSettings>
+						</ConditionDetection>
+					</MemberModules>
+					<RegularDetections>
+						<RegularDetection MonitorTypeStateID="Running">
+							<Node ID="ServiceRunning">
+								<Node ID="DS"/>
+							</Node>
+						</RegularDetection>
+						<RegularDetection MonitorTypeStateID="NotRunning">
+							<Node ID="ServiceNotRunning">
+								<Node ID="DS"/>
+							</Node>
+						</RegularDetection>
+					</RegularDetections>
+					<OnDemandDetections>
+						<OnDemandDetection MonitorTypeStateID="Running">
+							<Node ID="ServiceRunning">
+								<Node ID="Probe"/>
+							</Node>
+						</OnDemandDetection>
+						<OnDemandDetection MonitorTypeStateID="NotRunning">
+							<Node ID="ServiceNotRunning">
+								<Node ID="Probe"/>
+							</Node>
+						</OnDemandDetection>
+					</OnDemandDetections>
+				</MonitorImplementation>
+			</UnitMonitorType>
+		</MonitorTypes>
+	</TypeDefinitions>
+	<Monitoring>
+		<Discoveries>
+			<Discovery ID="Commvault.Discovery.AllServices" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="Commvault.Class.Service">
+						<Property PropertyID="ServiceName"/>
+						<Property PropertyID="ServiceDisplayName"/>
+						<Property PropertyID="StartMode"/>
+					</DiscoveryClass>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.WmiProviderWithClassSnapshotDataMapper">
+					<NameSpace>root\cimv2</NameSpace>
+					<Query>SELECT * FROM Win32_Service WHERE Name LIKE 'Gx%' and startmode="auto"</Query>
+					<Frequency>86400</Frequency>
+					<ClassId>$MPElement[Name="Commvault.Class.Service"]$</ClassId>
+					<InstanceSettings>
+						<Settings>
+							<Setting>
+								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="Commvault.Class.Service"]/ServiceName$</Name>
+								<Value>$Data/Property[@Name='Name']$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="Commvault.Class.Service"]/ServiceDisplayName$</Name>
+								<Value>$Data/Property[@Name='DisplayName']$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="Commvault.Class.Service"]/StartMode$</Name>
+								<Value>$Data/Property[@Name='StartMode']$</Value>
+							</Setting>
+							<!-- If you have additional class properties you want to provide values from WMI add them here as additional instance settings. -->
+						</Settings>
+					</InstanceSettings>
+				</DataSource>
+			</Discovery>
+			<!-- New groups discovery -->
+			<Discovery ID="Commvault.Discovery.CommServes" Enabled="true" Target="Commvault.Group.CommServes" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryRelationship TypeID="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
+				</DiscoveryTypes>
+				<DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+					<RuleId>$MPElement$</RuleId>
+					<GroupInstanceId>$MPElement[Name="Commvault.Group.CommServes"]$</GroupInstanceId>
+					<MembershipRules>
+						<MembershipRule>
+							<MonitoringClass>$MPElement[Name="Windows!Microsoft.Windows.Computer"]$</MonitoringClass>
+							<RelationshipClass>$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+							<Expression>
+								<RegExExpression>
+									<ValueExpression>
+										<Property>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Property>
+									</ValueExpression>
+									<Operator>MatchesRegularExpression</Operator>
+									<Pattern>(?i:^comvmgt)</Pattern>
+								</RegExExpression>
+							</Expression>
+						</MembershipRule>
+					</MembershipRules>
+				</DataSource>
+			</Discovery>
+			<Discovery ID="Commvault.Discovery.MediaAgents" Enabled="true" Target="Commvault.Group.MediaAgents" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryRelationship TypeID="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
+				</DiscoveryTypes>
+				<DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+					<RuleId>$MPElement$</RuleId>
+					<GroupInstanceId>$MPElement[Name="Commvault.Group.MediaAgents"]$</GroupInstanceId>
+					<MembershipRules>
+						<MembershipRule>
+							<MonitoringClass>$MPElement[Name="Windows!Microsoft.Windows.Computer"]$</MonitoringClass>
+							<RelationshipClass>$MPElement[Name="MSIL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+							<Expression>
+								<RegExExpression>
+									<ValueExpression>
+										<Property>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Property>
+									</ValueExpression>
+									<Operator>MatchesRegularExpression</Operator>
+									<Pattern>(?i:^nasp)|(?i:server_name1)|(?i:server_name2)</Pattern>
+								</RegExExpression>
+							</Expression>
+						</MembershipRule>
+					</MembershipRules>
+				</DataSource>
+			</Discovery>
+		</Discoveries>
+		<Rules>
+	<Rule ID="Commvault.Rule.BackupStatus" Enabled="false" Target="Windows!Microsoft.Windows.Computer" ConfirmDelivery="false" Remotable="true" Priority="Normal" DiscardLevel="100">
+		<Category>PerformanceCollection</Category>
+		<DataSources>
+			<DataSource ID="DS" TypeID="Commvault.DataSourceModule.BackupStatus" RunAs="Commvault.RunAsProfile.CommvaultDb">
+				<IntervalSeconds>3600</IntervalSeconds>
+				<SyncTime />
+				<TimeoutSeconds>120</TimeoutSeconds>
+			</DataSource>
+		</DataSources>
+		<ConditionDetection ID="System.Performance.DataGenericMapper" TypeID="Performance!System.Performance.DataGenericMapper">
+			<ObjectName>Commvault Backup Jobs </ObjectName>
+			<CounterName>% Successful</CounterName>
+			<InstanceName>Last 24 Hours</InstanceName>
+			<Value>$Data/Property[@Name='PctSuccessfulBackupJobs']$</Value>
+		</ConditionDetection>
+		<WriteActions>
+			<WriteAction ID="WriteToDB" TypeID="SystemCenter!Microsoft.SystemCenter.CollectPerformanceData" />
+			<WriteAction ID="WriteToDW" TypeID="SCDW!Microsoft.SystemCenter.DataWarehouse.PublishPerformanceData" />
+		</WriteActions>
+	</Rule>
+</Rules>
+		<Monitors>
+			<!-- Target needs to be Microsoft.Windows.Computer because there's no class for CommServes. -->
+			<UnitMonitor ID="Commvault.Monitor.BackupStatus" Accessibility="Public" Enabled="false" Target="Windows!Microsoft.Windows.Computer" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" RunAs="Commvault.RunAsProfile.CommvaultDb" TypeID="Commvault.MonitorType.BackupStatus" ConfirmDelivery="false"> <!-- ConfirmDelivery must be false or cookdown breaks. -->
+				<Category>PerformanceHealth</Category>
+				<AlertSettings AlertMessage="Commvault.Monitor.BackupStatus.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>MatchMonitorHealth</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Data/Context/Property[@Name='PctSuccessfulBackupJobs']$</AlertParameter1>
+						<AlertParameter2>$Data/Context/Property[@Name='TotalBackupJobs']$</AlertParameter2>
+						<AlertParameter3>$Data/Context/Property[@Name='UnsuccessfulBackupJobs']$</AlertParameter3>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Healthy" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="Unhealthy" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration>
+					<IntervalSeconds>3600</IntervalSeconds>
+					<SyncTime/>
+					<TimeoutSeconds>120</TimeoutSeconds>
+				</Configuration>
+			</UnitMonitor>
+			<UnitMonitor ID="Commvault.Monitor.AllServices" Accessibility="Public" Enabled="true" Target="Commvault.Class.Service" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Commvault.MonitorType.ServiceState" ConfirmDelivery="false">
+				<Category>AvailabilityHealth</Category>
+				<AlertSettings AlertMessage="Commvault.Monitor.AllServices.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Data/Context/Property[@Name='Name']$</AlertParameter1>
+						<AlertParameter2>$Data/Context/Property[@Name='DisplayName']$</AlertParameter2>
+						<AlertParameter3>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter3>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Running" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="NotRunning" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName/>
+					<ServiceName>$Target/Property[Type="Commvault.Class.Service"]/ServiceName$</ServiceName>
+					<IntervalSeconds>120</IntervalSeconds>
+					<Samples>1</Samples>
+				</Configuration>
+			</UnitMonitor>
+		</Monitors>
+		<Recoveries>
+			<Recovery ID="Commvault.Recovery.StartWindowsService" Accessibility="Public" Enabled="true" Target="Commvault.Class.Service" Monitor="Commvault.Monitor.AllServices" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start $Target/Property[Type="Commvault.Class.Service"]/ServiceName$</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+		</Recoveries>
+	</Monitoring>
+	<Presentation>
+		<StringResources>
+			<StringResource ID="Commvault.Monitor.AllServices.AlertMessage"/>
+			<StringResource ID="Commvault.Monitor.BackupStatus.AlertMessage"/>
+		</StringResources>
+	</Presentation>
+	<LanguagePacks>
+		<LanguagePack ID="ENU" IsDefault="true">
+			<DisplayStrings>
+				<DisplayString ElementID="Commvault.Monitoring">
+					<Name>Commvault Monitoring</Name>
+					<Description>Custom monitoring for Commvault.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Class.Service">
+					<Name>Commvault Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Class.Service" SubElementID="ServiceName">
+					<Name>Service Name</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Class.Service" SubElementID="ServiceDisplayName">
+					<Name>Service Display Name</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Class.Service" SubElementID="StartMode">
+					<Name>Start Mode</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Discovery.AllServices">
+					<Name>Commvault All Services</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Monitor.AllServices">
+					<Name>Commvault All Services</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Monitor.AllServices" SubElementID="Running">
+					<Name>Running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Monitor.AllServices" SubElementID="NotRunning">
+					<Name>Not Running</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Monitor.AllServices.AlertMessage">
+					<Name>Commvault Service Not Running</Name>
+					<Description>The '{1}' service on {2} is not running.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Recovery.StartWindowsService">
+					<Name>Commvault Start Windows Service Recovery</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Group.CommServes">
+					<Name>Commvault CommServe Servers</Name>
+					<Description>This group is not used for monitoring, it is used by views in Commvault.Views mp.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Discovery.CommServes">
 					<Name>Populate Commvault.Group.CommServes</Name>
 					<Description>This discovery rule populates the group Commvault.Group.CommServes.</Description>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Group.MediaAgents">
-          <Name>Commvault MediaAgent Servers</Name>
-          <Description>This group is not used for monitoring, it is used by views in Commvault.Views mp.</Description>
-        </DisplayString>
-        <DisplayString ElementID="Commvault.Discovery.MediaAgents">
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Group.MediaAgents">
+					<Name>Commvault MediaAgent Servers</Name>
+					<Description>This group is not used for monitoring, it is used by views in Commvault.Views mp.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Discovery.MediaAgents">
 					<Name>Populate Commvault.Group.MediaAgents</Name>
 					<Description>This discovery rule populates the group Commvault.Group.MediaAgents.</Description>
-        </DisplayString>
-      </DisplayStrings>
-    </LanguagePack>
-  </LanguagePacks>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Monitor.BackupStatus">
+					<Name>Commvault Backup Status</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Monitor.BackupStatus" SubElementID="Healthy">
+					<Name>At or above threshold</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Monitor.BackupStatus" SubElementID="Unhealthy">
+					<Name>Below threshold</Name>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Monitor.BackupStatus.AlertMessage">
+					<Name>Commvault Backup Status</Name>
+					<Description>{0}% successful backup jobs over last 24 hours.</Description>
+					<!-- This is kept short to use in SMS. -->
+				</DisplayString>
+				<DisplayString ElementID="Commvault.RunAsProfile.CommvaultDb">
+					<Name>Commvault Database Run As Profile</Name>
+					<Description>This profile is used to access the Commvault commserv database.</Description>
+				</DisplayString>
+				<DisplayString ElementID="Commvault.Rule.BackupStatus">
+					<Name>Commvault Backup Status Collection Rule</Name>
+				</DisplayString>				
+			</DisplayStrings>
+		</LanguagePack>
+	</LanguagePacks>
 </ManagementPack>
