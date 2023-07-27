@@ -2,7 +2,7 @@
 ==========
 CHANGE LOG
 ==========
-2023.7.24.5
+2023.7.27.0
 -Add Commvault.Monitor.BackupStatus monitor.
 2023.7.17.0
 -Remove {1} from Commvault.Monitor.AllServices.AlertMessage because it shows up in the notification.
@@ -15,7 +15,7 @@ CHANGE LOG
 	<Manifest>
 		<Identity>
 			<ID>Commvault.Monitoring</ID>
-			<Version>2023.7.24.5</Version>
+			<Version>2023.7.27.0</Version>
 		</Identity>
 		<Name>Commvault.Monitoring</Name>
 		<References>
@@ -209,7 +209,7 @@ $ScriptName = "BackupStatus.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $WorkflowName = "Commvault.DataSourceModule.BackupStatus"
 $MPName = "Commvault.Monitoring"
-$MpVersion = "2023.7.24.5"
+$MpVersion = "2023.7.27.0"
 [datetime]$StartTime = Get-Date
 Get-BackupStatus									
 ]]>
@@ -499,7 +499,7 @@ Get-BackupStatus
 										<Property>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Property>
 									</ValueExpression>
 									<Operator>MatchesRegularExpression</Operator>
-									<Pattern>(?i:^nasp)|(?i:server_name1)|(?i:server_name2)</Pattern>
+									<Pattern>(?i:^nasp)|(?i:SYD01H757PPN.prod.atonet.gov.au)|(?i:SYD01H758PPN.prod.atonet.gov.au)|(?i:SYD01H905PV.prod.atonet.gov.au)|(?i:SYD02H754PPN.prod.atonet.gov.au)|(?i:SYD02H755PPN.prod.atonet.gov.au)</Pattern>
 								</RegExExpression>
 							</Expression>
 						</MembershipRule>
