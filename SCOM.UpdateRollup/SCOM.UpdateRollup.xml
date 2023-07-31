@@ -2,6 +2,8 @@
 ==========
 CHANGE LOG
 ==========
+2023.7.31.2
+-Add rule SCOM.Rule.PowerShellScriptProblem.
 2023.7.12.0
 -Add L3 and L5 Passwordstate custom alert name assignment.
 2023.6.23.2
@@ -114,7 +116,7 @@ ENHANCEMENTS
 <Manifest>
 <Identity>
 <ID>SCOM.UpdateRollup</ID>
-<Version>2023.7.12.0</Version>
+<Version>2023.7.31.2</Version>
 </Identity>
 <Name>SCOM.UpdateRollup</Name>
 <References>
@@ -262,7 +264,7 @@ $EventId=17610
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.WindowsInventory.ps1", $EventId, $EventLevel, "Windows inventory discovery script executed.`nWorkflow Name: SCOM.Discovery.WindowsComputer`nManagement Pack: SCOM.UpdateRollup (2023.7.12.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.WindowsInventory.ps1", $EventId, $EventLevel, "Windows inventory discovery script executed.`nWorkflow Name: SCOM.Discovery.WindowsComputer`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -1700,7 +1702,7 @@ $EventId=17619 # success
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: SCOM.UpdateRollup (2023.7.12.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError
@@ -2109,7 +2111,7 @@ $EventId=17617 # success
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.AlertManagement.ps1", $EventId, $EventLevel, "Alert Management script executed.`nWorkflow Name: SCOM.Rule.AlertManagement`nManagement Pack: SCOM.UpdateRollup (2023.7.12.0)`nPowerShell Version: $PSVersion`nAlerts: $CountAlerts`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.AlertManagement.ps1", $EventId, $EventLevel, "Alert Management script executed.`nWorkflow Name: SCOM.Rule.AlertManagement`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)`nPowerShell Version: $PSVersion`nAlerts: $CountAlerts`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError
@@ -2333,7 +2335,7 @@ $EventId=17612
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: SCOM.UpdateRollup (2023.7.12.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -2461,7 +2463,7 @@ $EventId=17614
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: SCOM.UpdateRollup (2023.7.12.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -3231,7 +3233,7 @@ Write-Host
 $EventId=17616
 $EventLevel=0 # 0=Information, 1=Error, 2=Warning
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: SCOM.UpdateRollup (2023.7.12.0)")
+$ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)")
 Write-Host Information event ID 17616 successfully written to the Operations Manager log.
 Write-Host
 } catch {
@@ -3548,7 +3550,82 @@ Write-Host
 </WriteAction>
 </WriteActions>
 </Rule>
-<!-- end new -->
+
+<Rule ID="SCOM.Rule.PowerShellScriptProblem" Enabled="true" Target="SCOM.Class.URWindowsComputer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+<Category>Alert</Category>
+<DataSources>
+  <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
+	<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+	<LogName>Operations Manager</LogName>
+	<Expression>
+	  <And>
+		<Expression>
+		  <SimpleExpression>
+			<ValueExpression>
+			  <XPathQuery Type="String">PublisherName</XPathQuery>
+			</ValueExpression>
+			<Operator>Equal</Operator>
+			<ValueExpression>
+			  <Value Type="String">Health Service Script</Value>
+			</ValueExpression>
+		  </SimpleExpression>
+		</Expression>
+		<Expression>
+		  <Or>
+			<Expression>
+			  <SimpleExpression>
+				<ValueExpression>
+				  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+				</ValueExpression>
+				<Operator>Equal</Operator>
+				<ValueExpression>
+				  <Value Type="UnsignedInteger">17625</Value>
+				</ValueExpression>
+			  </SimpleExpression>
+			</Expression>
+			<Expression>
+			  <SimpleExpression>
+				<ValueExpression>
+				  <XPathQuery Type="UnsignedInteger">EventDisplayNumber</XPathQuery>
+				</ValueExpression>
+				<Operator>Equal</Operator>
+				<ValueExpression>
+				  <Value Type="UnsignedInteger">17624</Value>
+				</ValueExpression>
+			  </SimpleExpression>
+			</Expression>
+		  </Or>
+		</Expression>
+	  </And>
+	</Expression>
+  </DataSource>
+</DataSources>
+<WriteActions>
+  <WriteAction ID="Alert" TypeID="Health!System.Health.GenerateAlert">
+	<Priority>0</Priority>
+	<Severity>0</Severity>
+	<AlertName />
+	<AlertDescription />
+	<AlertOwner />
+	<AlertMessageId>$MPElement[Name="SCOM.Rule.PowerShellScriptProblem.AlertMessage"]$</AlertMessageId>
+	<AlertParameters>
+	  <AlertParameter1>$Data/EventDisplayNumber$</AlertParameter1>
+	  <AlertParameter2>$Data/EventDescription$</AlertParameter2>
+	</AlertParameters>
+	<Suppression />
+	<Custom1 />
+	<Custom2 />
+	<Custom3 />
+	<Custom4 />
+	<Custom5 />
+	<Custom6 />
+	<Custom7 />
+	<Custom8 />
+	<Custom9 />
+	<Custom10 />
+  </WriteAction>
+</WriteActions>
+</Rule>
 </Rules>
 <!--**************************************** TASKS ****************************************-->
 <Tasks>
@@ -3958,6 +4035,7 @@ Write-Host
 <StringResource ID="SCOM.Monitor.MpBackup.AlertMessage" />
 <StringResource ID="SCOM.Monitor.MgReport.AlertMessage" />
 <StringResource ID="SCOM.Rule.AlertOnLogWindowsTestEvent.AlertMessage" />
+<StringResource ID="SCOM.Rule.PowerShellScriptProblem.AlertMessage" />
 </StringResources>
 </Presentation>
 <LanguagePacks>
@@ -4311,7 +4389,17 @@ This task will reset all state in the Health Service. This includes the state of
 <DisplayString ElementID="SCOM.Task.RDP">
 <Name>RDP</Name>
 </DisplayString>
+<DisplayString ElementID="SCOM.Rule.PowerShellScriptProblem">
+  <Name>PowerShell Script Problem</Name>
+</DisplayString>
+<DisplayString ElementID="SCOM.Rule.PowerShellScriptProblem.AlertMessage">
+  <Name>PowerShell Script Problem</Name>
+    <Description>Event {0} detected. Description below:
+
+{1}</Description>
+</DisplayString>
 </DisplayStrings>
+
 <KnowledgeArticles>
 <KnowledgeArticle ElementID="SCOM.UpdateRollup" Visible="true">
 <MamlContent>
