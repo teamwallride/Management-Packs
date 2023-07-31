@@ -2,6 +2,8 @@
 ==========
 CHANGE LOG
 ==========
+2023.7.31.0
+-Add total backups jobs to $Message in event.
 2023.7.27.0
 -Add Commvault.Monitor.BackupStatus monitor.
 2023.7.17.0
@@ -15,7 +17,7 @@ CHANGE LOG
 	<Manifest>
 		<Identity>
 			<ID>Commvault.Monitoring</ID>
-			<Version>2023.7.27.0</Version>
+			<Version>2023.7.31.0</Version>
 		</Identity>
 		<Name>Commvault.Monitoring</Name>
 		<References>
@@ -194,7 +196,7 @@ write-host
 $MomApi.Return($Bag)
 #>
             $Bag
-            $Message += "$UnsuccessfulBackupJobs failed jobs."
+            $Message += "$TotalBackupJobs total jobs. $UnsuccessfulBackupJobs unsuccessful jobs."
             $ScriptState = "Information"
             Write-Log -ScriptState $ScriptState
         }
@@ -209,7 +211,7 @@ $ScriptName = "BackupStatus.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $WorkflowName = "Commvault.DataSourceModule.BackupStatus"
 $MPName = "Commvault.Monitoring"
-$MpVersion = "2023.7.27.0"
+$MpVersion = "2023.7.31.0"
 [datetime]$StartTime = Get-Date
 Get-BackupStatus									
 ]]>
