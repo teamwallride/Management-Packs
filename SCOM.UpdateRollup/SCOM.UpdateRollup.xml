@@ -2,6 +2,8 @@
 ==========
 CHANGE LOG
 ==========
+2023.8.4.0
+-Change event IDs in SCOM.Rule.PowerShellScriptProblem.
 2023.7.31.2
 -Add rule SCOM.Rule.PowerShellScriptProblem.
 2023.7.12.0
@@ -116,7 +118,7 @@ ENHANCEMENTS
 <Manifest>
 <Identity>
 <ID>SCOM.UpdateRollup</ID>
-<Version>2023.7.31.2</Version>
+<Version>2023.8.4.0</Version>
 </Identity>
 <Name>SCOM.UpdateRollup</Name>
 <References>
@@ -264,7 +266,7 @@ $EventId=17610
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.WindowsInventory.ps1", $EventId, $EventLevel, "Windows inventory discovery script executed.`nWorkflow Name: SCOM.Discovery.WindowsComputer`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.WindowsInventory.ps1", $EventId, $EventLevel, "Windows inventory discovery script executed.`nWorkflow Name: SCOM.Discovery.WindowsComputer`nManagement Pack: SCOM.UpdateRollup (2023.8.4.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -1702,7 +1704,7 @@ $EventId=17619 # success
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: SCOM.UpdateRollup (2023.8.4.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError
@@ -2111,7 +2113,7 @@ $EventId=17617 # success
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.AlertManagement.ps1", $EventId, $EventLevel, "Alert Management script executed.`nWorkflow Name: SCOM.Rule.AlertManagement`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)`nPowerShell Version: $PSVersion`nAlerts: $CountAlerts`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.AlertManagement.ps1", $EventId, $EventLevel, "Alert Management script executed.`nWorkflow Name: SCOM.Rule.AlertManagement`nManagement Pack: SCOM.UpdateRollup (2023.8.4.0)`nPowerShell Version: $PSVersion`nAlerts: $CountAlerts`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError
@@ -2335,7 +2337,7 @@ $EventId=17612
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: SCOM.UpdateRollup (2023.8.4.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -2463,7 +2465,7 @@ $EventId=17614
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: SCOM.UpdateRollup (2023.8.4.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -3233,7 +3235,7 @@ Write-Host
 $EventId=17616
 $EventLevel=0 # 0=Information, 1=Error, 2=Warning
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: SCOM.UpdateRollup (2023.7.31.2)")
+$ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: SCOM.UpdateRollup (2023.8.4.0)")
 Write-Host Information event ID 17616 successfully written to the Operations Manager log.
 Write-Host
 } catch {
@@ -3579,7 +3581,7 @@ Write-Host
 				</ValueExpression>
 				<Operator>Equal</Operator>
 				<ValueExpression>
-				  <Value Type="UnsignedInteger">17625</Value>
+				  <Value Type="UnsignedInteger">17611</Value>
 				</ValueExpression>
 			  </SimpleExpression>
 			</Expression>
@@ -3590,7 +3592,7 @@ Write-Host
 				</ValueExpression>
 				<Operator>Equal</Operator>
 				<ValueExpression>
-				  <Value Type="UnsignedInteger">17624</Value>
+				  <Value Type="UnsignedInteger">17612</Value>
 				</ValueExpression>
 			  </SimpleExpression>
 			</Expression>
