@@ -2,6 +2,8 @@
 ==========
 CHANGE LOG
 ==========
+2023.8.4.1
+-Change event IDs and Get-SQLData function name in Commvault.DataSourceModule.BackupStatus.
 2023.7.31.0
 -Add total backups jobs to $Message in event.
 2023.7.27.0
@@ -9,7 +11,7 @@ CHANGE LOG
 2023.7.17.0
 -Remove {1} from Commvault.Monitor.AllServices.AlertMessage because it shows up in the notification.
 2023.2.20.1
--Add CommServe and MediaAgent groups
+-Add CommServe and MediaAgent groups.
 2023.2.16.0
 -Initial release.
 -->
@@ -17,7 +19,7 @@ CHANGE LOG
 	<Manifest>
 		<Identity>
 			<ID>Commvault.Monitoring</ID>
-			<Version>2023.7.31.0</Version>
+			<Version>2023.8.4.1</Version>
 		</Identity>
 		<Name>Commvault.Monitoring</Name>
 		<References>
@@ -105,17 +107,17 @@ Function Write-Log {
     Param($ScriptState)
     Switch ($ScriptState) {
         "Information" {
-            $EventId = 17623
+            $EventId = 17610
             $EventLevel = 0 # 0=Info
         }
-        "Error" {
-            $EventId = 17625
-            $EventLevel = 1 # 1=Error
-        }        
         "Warning" {
-            $EventId = 17624
+            $EventId = 17611
             $EventLevel = 2 # 2=Warning
         }
+        "Error" {
+            $EventId = 17612
+            $EventLevel = 1 # 1=Error
+        }        
     }
     $End = Get-Date
     $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
@@ -127,7 +129,7 @@ Function Set-TerminatingError {
     $Message += $_.Exception.Message
     Write-Log -ScriptState $ScriptState
 }
-Function SQLQuery {
+Function Get-SQLData {
     param($DbServer, $DbName, $DbQuery)
     $Connection = New-Object System.Data.SQLClient.SQLConnection
     $Connection.ConnectionString = "Data Source=$DbServer;Database=$DbName;Trusted_Connection=True;"
@@ -156,12 +158,12 @@ Function Get-BackupStatus {
         $DbQuery = "SELECT COUNT(*) as TotalBackupJobs
 FROM [$CommDbName].[dbo].[CommCellBackupInfo]
 where CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,enddate),DATENAME(TzOffset, SYSDATETIMEOFFSET()))) > GETDATE()-1 --and jobstatus = 'successZ'"
-        $SqlTable = SQLQuery -DbServer $CommDbServer -DbName $CommDbName -DbQuery $DbQuery
+        $SqlTable = Get-SQLData -DbServer $CommDbServer -DbName $CommDbName -DbQuery $DbQuery
         $TotalBackupJobs = $SqlTable.TotalBackupJobs
 
         # We expect a lot of jobs so if 0 log event and quit.
         If ($TotalBackupJobs -lt 1) {
-            $Message += "SQL query executed successfully but 0 total jobs were returned. Please investigate."
+            $Message += "SQL query executed successfully but $TotalBackupJobs total jobs were returned. Please investigate."
             $ScriptState = "Warning"
             Write-Log -ScriptState $ScriptState
         }
@@ -172,7 +174,7 @@ where CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,enddate),DATENAME(TzO
 FROM [$CommDbName].[dbo].[CommCellBackupInfo]
 where CONVERT(datetime,SWITCHOFFSET(CONVERT(datetimeoffset,enddate),DATENAME(TzOffset, SYSDATETIMEOFFSET()))) > GETDATE()-1
 and jobstatus != 'Success'"
-            $SqlTable = SQLQuery -DbServer $CommDbServer -DbName $CommDbName -DbQuery $DbQuery
+            $SqlTable = Get-SQLData -DbServer $CommDbServer -DbName $CommDbName -DbQuery $DbQuery
             $UnsuccessfulBackupJobs = $SqlTable.UnsuccessfulBackupJobs
             # Do math to get % success jobs.
             $PctSuccessfulBackupJobs = [Math]::Round(($TotalBackupJobs - $UnsuccessfulBackupJobs) / $TotalBackupJobs * 100, 2)
@@ -211,9 +213,9 @@ $ScriptName = "BackupStatus.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $WorkflowName = "Commvault.DataSourceModule.BackupStatus"
 $MPName = "Commvault.Monitoring"
-$MpVersion = "2023.7.31.0"
+$MpVersion = "2023.8.4.1"
 [datetime]$StartTime = Get-Date
-Get-BackupStatus									
+Get-BackupStatus							
 ]]>
 								</ScriptBody>
 								<TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
