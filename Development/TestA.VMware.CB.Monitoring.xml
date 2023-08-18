@@ -2,14 +2,14 @@
 ==========
 CHANGE LOG
 ==========
-2023.8.18.5
+2023.8.18.6
 -Development.
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<Manifest>
 		<Identity>
 			<ID>TestA.VMware.CB.Monitoring</ID>
-			<Version>2023.8.18.5</Version>
+			<Version>2023.8.18.6</Version>
 		</Identity>
 		<Name>TestA.VMware.CB.Monitoring</Name>
 		<References>
@@ -30,7 +30,7 @@ CHANGE LOG
 			</Reference>
 			<Reference Alias="SystemCenter">
 				<ID>Microsoft.SystemCenter.Library</ID>
-				<Version>7.0.8437.17</Version>
+				<Version>7.0.8437.0</Version>
 				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
 			</Reference>
 			<Reference Alias="Health">
@@ -142,7 +142,7 @@ CHANGE LOG
 									<!-- For testing.
 									<Path>SOFTWARE\CarbonBlack\config</Path>
 									-->
-									<PathType>1</PathType>	<!-- 0=regKey 1=regValue -->
+									<PathType>0</PathType>	<!-- 0=regKey 1=regValue -->
 									<AttributeType>0</AttributeType>	<!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
 								</RegistryAttributeDefinition>
 								<RegistryAttributeDefinition>
@@ -522,11 +522,6 @@ CHANGE LOG
 				</WriteAction>
 			</Recovery>
 		</Recoveries>
-		<Overrides>
-			<DiscoveryPropertyOverride ID="Alias0b023d52ccec4479b14d52782166597aOverrideForDiscoveryTestAVMwareDiscoveryCBACServerForContextMicrosoftSystemCenterHealthService" Context="SystemCenter!Microsoft.SystemCenter.HealthService" ContextInstance="7ba6f9fe-15e1-aa42-684f-792a69c059a1" Enforced="false" Discovery="TestA.VMware.Discovery.CBACServer" Property="Enabled">
-				<Value>true</Value>
-			</DiscoveryPropertyOverride>
-		</Overrides>
 	</Monitoring>
 	<Presentation>
 		<StringResources>
