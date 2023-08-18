@@ -2,14 +2,14 @@
 ==========
 CHANGE LOG
 ==========
-2023.8.18.3
+2023.8.18.4
 -Development.
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<Manifest>
 		<Identity>
 			<ID>TestA.VMware.CB.Monitoring</ID>
-			<Version>2023.8.18.3</Version>
+			<Version>2023.8.18.4</Version>
 		</Identity>
 		<Name>TestA.VMware.CB.Monitoring</Name>
 		<References>
@@ -55,10 +55,9 @@ CHANGE LOG
 				</ClassType>
 			</ClassTypes>
 		</EntityTypes>
-		
 		<MonitorTypes>
-			<!-- Trellix.MonitorType.EDRAgentInstall -->
-			<UnitMonitorType ID="Trellix.MonitorType.EDRAgentInstall" Accessibility="Public">
+			<!-- TestA.VMware.MonitorType.EDRAgentInstall -->
+			<UnitMonitorType ID="TestA.VMware.MonitorType.EDRAgentInstall" Accessibility="Public">
 				<MonitorTypeStates>
 					<MonitorTypeState ID="RegKeyExists" NoDetection="false"/>
 					<MonitorTypeState ID="RegKeyMissing" NoDetection="false"/>
@@ -71,15 +70,19 @@ CHANGE LOG
 							<RegistryAttributeDefinitions>
 								<RegistryAttributeDefinition>
 									<AttributeName>EDRAgentInstalled</AttributeName>
-									<Path>SYSTEM\CurrentControlSet\Services\CarbonBlack</Path> <!-- Using this because SOFTWARE key is unreliable. -->
+									<Path>SYSTEM\CurrentControlSet\Services\CarbonBlack</Path>
+									<!-- Using this because SOFTWARE key is unreliable. -->
 									<!-- For testing.
 									<Path>SYSTEM\CurrentControlSet\Services\CarbonBlack</Path>
 									-->
-							<PathType>0</PathType>	<!-- 0=regKey 1=regValue -->
-							<AttributeType>0</AttributeType> <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+									<PathType>0</PathType>
+									<!-- 0=regKey 1=regValue -->
+									<AttributeType>0</AttributeType>
+									<!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
 								</RegistryAttributeDefinition>
 							</RegistryAttributeDefinitions>
-							<Frequency>120</Frequency> <!-- change in prod -->
+							<Frequency>120</Frequency>
+							<!-- change in prod -->
 						</DataSource>
 						<ConditionDetection ID="CDExists" TypeID="System!System.ExpressionFilter">
 							<Expression>
@@ -122,9 +125,100 @@ CHANGE LOG
 					</RegularDetections>
 				</MonitorImplementation>
 			</UnitMonitorType>
-
+			<!-- TestA.VMware.MonitorType.EDRAgentVersion -->
+			<UnitMonitorType ID="TestA.VMware.MonitorType.EDRAgentVersion" Accessibility="Internal">
+				<MonitorTypeStates>
+					<MonitorTypeState ID="RegValueMatch" NoDetection="false"/>
+					<MonitorTypeState ID="RegValueDoesNotMatch" NoDetection="false"/>
+				</MonitorTypeStates>
+				<Configuration/>
+				<MonitorImplementation>
+					<MemberModules>
+						<DataSource ID="RegDS" TypeID="Windows!Microsoft.Windows.RegistryProvider">
+							<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+							<RegistryAttributeDefinitions>
+								<RegistryAttributeDefinition>
+									<AttributeName>EDRAgentVersionExist</AttributeName>
+									<Path>SOFTWARE\CarbonBlack\config\SensorVersion</Path>
+									<!-- For testing.
+									<Path>SOFTWARE\CarbonBlack\config\SensorVersion</Path>
+									-->
+									<PathType>1</PathType>
+									<!-- 0=regKey 1=regValue -->
+									<AttributeType>0</AttributeType>
+									<!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+								</RegistryAttributeDefinition>
+								<RegistryAttributeDefinition>
+									<AttributeName>EDRAgentVersion</AttributeName>
+									<Path>SOFTWARE\CarbonBlack\config\SensorVersion</Path>
+									<!-- For testing.
+									<Path>SOFTWARE\CarbonBlack\config\SensorVersion</Path>
+									-->
+									<PathType>1</PathType>
+									<AttributeType>1</AttributeType>
+								</RegistryAttributeDefinition>
+							</RegistryAttributeDefinitions>
+							<Frequency>120</Frequency>
+							<!-- change in prod -->
+						</DataSource>
+						<ConditionDetection ID="CDGood" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<SimpleExpression>
+									<ValueExpression>
+										<XPathQuery Type="String">Values/EDRAgentVersion</XPathQuery>
+									</ValueExpression>
+									<Operator>Equal</Operator>
+									<ValueExpression>
+										<Value Type="String">0007.0003.0002.18738</Value>
+									</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+						</ConditionDetection>
+						<ConditionDetection ID="CDBad" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<!-- Need 'And' expression here otherwise it considers it unhealthy if the key isn't there and will alert. It will also alert if the value exists but the value data is blank. -->
+								<And>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="String">Values/EDRAgentVersion</XPathQuery>
+											</ValueExpression>
+											<Operator>NotEqual</Operator>
+											<ValueExpression>
+												<Value Type="String">0007.0003.0002.18738</Value>
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="String">Values/EDRAgentVersionExist</XPathQuery>
+											</ValueExpression>
+											<Operator>Equal</Operator>
+											<ValueExpression>
+												<Value Type="String">true</Value>
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+								</And>
+							</Expression>
+						</ConditionDetection>
+					</MemberModules>
+					<RegularDetections>
+						<RegularDetection MonitorTypeStateID="RegValueMatch">
+							<Node ID="CDGood">
+								<Node ID="RegDS"/>
+							</Node>
+						</RegularDetection>
+						<RegularDetection MonitorTypeStateID="RegValueDoesNotMatch">
+							<Node ID="CDBad">
+								<Node ID="RegDS"/>
+							</Node>
+						</RegularDetection>
+					</RegularDetections>
+				</MonitorImplementation>
+			</UnitMonitorType>
 		</MonitorTypes>
-		
 	</TypeDefinitions>
 	<Monitoring>
 		<Discoveries>
@@ -337,7 +431,7 @@ CHANGE LOG
 					<CheckStartupType>true</CheckStartupType>
 				</Configuration>
 			</UnitMonitor>
-<!-- Carbon Black Sensor OR VMware Carbon Black EDR Sensor (CarbonBlack) -->
+			<!-- Carbon Black Sensor OR VMware Carbon Black EDR Sensor (CarbonBlack) -->
 			<UnitMonitor ID="TestA.VMware.Monitor.CarbonBlackService" Accessibility="Public" Enabled="true" Target="TestA.VMware.Class.CBAgent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
 				<Category>Alert</Category>
 				<AlertSettings AlertMessage="TestA.VMware.Monitor.CarbonBlackService.AlertMessage">
@@ -360,9 +454,8 @@ CHANGE LOG
 					<CheckStartupType>true</CheckStartupType>
 				</Configuration>
 			</UnitMonitor>
-
 			<!-- TestA.VMware.Monitor.EDRAgentInstall -->
-			<UnitMonitor ID="TestA.VMware.Monitor.EDRAgentInstall" Accessibility="Public" Enabled="true" Target="TestA.VMware.Class.CBAgent" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="Trellix.MonitorType.EDRAgentInstall" ConfirmDelivery="true">
+			<UnitMonitor ID="TestA.VMware.Monitor.EDRAgentInstall" Accessibility="Public" Enabled="true" Target="TestA.VMware.Class.CBAgent" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="TestA.VMware.MonitorType.EDRAgentInstall" ConfirmDelivery="true">
 				<Category>Alert</Category>
 				<AlertSettings AlertMessage="TestA.VMware.Monitor.EDRAgentInstall.AlertMessage">
 					<AlertOnState>Error</AlertOnState>
@@ -379,7 +472,26 @@ CHANGE LOG
 				</OperationalStates>
 				<Configuration/>
 			</UnitMonitor>
-			
+			<!-- TestA.VMware.Monitor.EDRAgentVersion -->
+			<UnitMonitor ID="TestA.VMware.Monitor.EDRAgentVersion" Accessibility="Public" Enabled="true" Target="TestA.VMware.Class.CBAgent" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="TestA.VMware.MonitorType.EDRAgentVersion" ConfirmDelivery="true">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="TestA.VMware.Monitor.EDRAgentVersion.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>MatchMonitorHealth</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+						<!-- This is a cheat to show the agent version in the alert. I can't find a better way to do it. -->
+						<AlertParameter2>$Target/Property[Type="TestA.VMware.Class.CBAgent"]/EDRVersion$</AlertParameter2>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Success" MonitorTypeStateID="RegValueMatch" HealthState="Success"/>
+					<OperationalState ID="Warning" MonitorTypeStateID="RegValueDoesNotMatch" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration/>
+			</UnitMonitor>
 		</Monitors>
 		<Recoveries>
 			<Recovery ID="TestA.VMware.Recovery.ParityServerService" Accessibility="Public" Enabled="true" Target="TestA.VMware.Class.CBACServer" Monitor="TestA.VMware.Monitor.ParityServerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
@@ -424,8 +536,8 @@ CHANGE LOG
 			<StringResource ID="TestA.VMware.Monitor.ParityServerService.AlertMessage"/>
 			<StringResource ID="TestA.VMware.Monitor.ParityReporterService.AlertMessage"/>
 			<StringResource ID="TestA.VMware.Monitor.CarbonBlackService.AlertMessage"/>
-						<StringResource ID="TestA.VMware.Monitor.EDRAgentInstall.AlertMessage"/>
-
+			<StringResource ID="TestA.VMware.Monitor.EDRAgentInstall.AlertMessage"/>
+			<StringResource ID="TestA.VMware.Monitor.EDRAgentVersion.AlertMessage"/>
 		</StringResources>
 	</Presentation>
 	<LanguagePacks>
@@ -485,7 +597,6 @@ CHANGE LOG
 				<DisplayString ElementID="TestA.VMware.Monitor.ParityReporterService" SubElementID="Unhealthy">
 					<Name>Not running</Name>
 				</DisplayString>
-				
 				<DisplayString ElementID="TestA.VMware.Monitor.CarbonBlackService">
 					<Name>Carbon Black EDR Sensor</Name>
 				</DisplayString>
@@ -499,9 +610,8 @@ CHANGE LOG
 				<DisplayString ElementID="TestA.VMware.Monitor.CarbonBlackService" SubElementID="Unhealthy">
 					<Name>Not running</Name>
 				</DisplayString>
-				
 				<DisplayString ElementID="TestA.VMware.Monitor.EDRAgentInstall">
-					<Name>Trellix Agent Install</Name>
+					<Name>Carbon Black EDR Agent Install</Name>
 					<Description/>
 				</DisplayString>
 				<DisplayString ElementID="TestA.VMware.Monitor.EDRAgentInstall" SubElementID="Success">
@@ -513,10 +623,23 @@ CHANGE LOG
 				<DisplayString ElementID="TestA.VMware.Monitor.EDRAgentInstall.AlertMessage">
 					<Name>Carbon Black EDR Agent Not Installed</Name>
 					<Description>The Carbon Black EDR agent is not installed on {0}.
-					
 						See the knowledge section below for more information.</Description>
 				</DisplayString>
-				
+				<DisplayString ElementID="TestA.VMware.Monitor.EDRAgentVersion">
+					<Name>Carbon Black EDR Agent Version</Name>
+					<Description/>
+				</DisplayString>
+				<DisplayString ElementID="TestA.VMware.Monitor.EDRAgentVersion" SubElementID="Success">
+					<Name>RegValueMatch</Name>
+				</DisplayString>
+				<DisplayString ElementID="TestA.VMware.Monitor.EDRAgentVersion" SubElementID="Warning">
+					<Name>RegValueDoesNotMatch</Name>
+				</DisplayString>
+				<DisplayString ElementID="TestA.VMware.Monitor.EDRAgentVersion.AlertMessage">
+					<Name>Carbon Black EDR Agent Update Required</Name>
+					<Description>The Carbon Black EDR agent on {0} needs to be upgraded to version 0007.0003.0002.18738. The installed version is {1}.
+						See the knowledge section below for more information.</Description>
+				</DisplayString>
 			</DisplayStrings>
 			<KnowledgeArticles>
 				<KnowledgeArticle ElementID="TestA.VMware.Monitor.EDRAgentInstall" Visible="true">
@@ -540,8 +663,23 @@ CHANGE LOG
 						</maml:section>
 					</MamlContent>
 				</KnowledgeArticle>
-				</KnowledgeArticles>
-			
+				<KnowledgeArticle ElementID="TestA.VMware.Monitor.EDRAgentVersion" Visible="true">
+					<MamlContent>
+						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+							<maml:title>Summary</maml:title>
+							<maml:para>This monitor checks the version of the Carbon Black EDR agent.</maml:para>
+						</maml:section>
+						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+							<maml:title>Causes</maml:title>
+							<maml:para>If the agent is not version 0007.0003.0002.18738 an alert is generated.</maml:para>
+						</maml:section>
+						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+							<maml:title>Resolutions</maml:title>
+							<maml:para>Upgrade the agent and the alert will automatically close.</maml:para>
+						</maml:section>
+					</MamlContent>
+				</KnowledgeArticle>
+			</KnowledgeArticles>
 		</LanguagePack>
 	</LanguagePacks>
 </ManagementPack>
