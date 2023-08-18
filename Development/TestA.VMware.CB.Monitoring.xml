@@ -2,14 +2,14 @@
 ==========
 CHANGE LOG
 ==========
-2023.8.18.4
+2023.8.18.5
 -Development.
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<Manifest>
 		<Identity>
 			<ID>TestA.VMware.CB.Monitoring</ID>
-			<Version>2023.8.18.4</Version>
+			<Version>2023.8.18.5</Version>
 		</Identity>
 		<Name>TestA.VMware.CB.Monitoring</Name>
 		<References>
@@ -70,10 +70,9 @@ CHANGE LOG
 							<RegistryAttributeDefinitions>
 								<RegistryAttributeDefinition>
 									<AttributeName>EDRAgentInstalled</AttributeName>
-									<Path>SYSTEM\CurrentControlSet\Services\CarbonBlack</Path>
-									<!-- Using this because SOFTWARE key is unreliable. -->
+									<Path>SOFTWARE\CarbonBlack\config</Path>
 									<!-- For testing.
-									<Path>SYSTEM\CurrentControlSet\Services\CarbonBlack</Path>
+									<Path>SOFTWARE\CarbonBlack\config</Path>
 									-->
 									<PathType>0</PathType>
 									<!-- 0=regKey 1=regValue -->
@@ -139,14 +138,12 @@ CHANGE LOG
 							<RegistryAttributeDefinitions>
 								<RegistryAttributeDefinition>
 									<AttributeName>EDRAgentVersionExist</AttributeName>
-									<Path>SOFTWARE\CarbonBlack\config\SensorVersion</Path>
+									<Path>SOFTWARE\CarbonBlack\config</Path>
 									<!-- For testing.
-									<Path>SOFTWARE\CarbonBlack\config\SensorVersion</Path>
+									<Path>SOFTWARE\CarbonBlack\config</Path>
 									-->
-									<PathType>1</PathType>
-									<!-- 0=regKey 1=regValue -->
-									<AttributeType>0</AttributeType>
-									<!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+									<PathType>1</PathType>	<!-- 0=regKey 1=regValue -->
+									<AttributeType>0</AttributeType>	<!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
 								</RegistryAttributeDefinition>
 								<RegistryAttributeDefinition>
 									<AttributeName>EDRAgentVersion</AttributeName>
