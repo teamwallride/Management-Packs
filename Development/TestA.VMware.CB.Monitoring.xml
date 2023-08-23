@@ -2,14 +2,14 @@
 ==========
 CHANGE LOG
 ==========
-2023.8.18.6
+2023.8.23.3
 -Development.
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<Manifest>
 		<Identity>
 			<ID>TestA.VMware.CB.Monitoring</ID>
-			<Version>2023.8.18.6</Version>
+			<Version>2023.8.23.3</Version>
 		</Identity>
 		<Name>TestA.VMware.CB.Monitoring</Name>
 		<References>
@@ -80,7 +80,7 @@ CHANGE LOG
 									<!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
 								</RegistryAttributeDefinition>
 							</RegistryAttributeDefinitions>
-							<Frequency>120</Frequency>
+							<Frequency>60</Frequency>
 							<!-- change in prod -->
 						</DataSource>
 						<ConditionDetection ID="CDExists" TypeID="System!System.ExpressionFilter">
@@ -155,7 +155,7 @@ CHANGE LOG
 									<AttributeType>1</AttributeType>
 								</RegistryAttributeDefinition>
 							</RegistryAttributeDefinitions>
-							<Frequency>120</Frequency>
+							<Frequency>60</Frequency>
 							<!-- change in prod -->
 						</DataSource>
 						<ConditionDetection ID="CDGood" TypeID="System!System.ExpressionFilter">
@@ -219,7 +219,7 @@ CHANGE LOG
 	</TypeDefinitions>
 	<Monitoring>
 		<Discoveries>
-			<Discovery ID="TestA.VMware.Discovery.CBACServer" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="TestA.VMware.Discovery.CBACServer" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
 					<DiscoveryClass TypeID="TestA.VMware.Class.CBACServer"/>
@@ -324,7 +324,7 @@ CHANGE LOG
 							<AttributeType>1</AttributeType>
 						</RegistryAttributeDefinition>
 					</RegistryAttributeDefinitions>
-					<Frequency>300</Frequency>
+					<Frequency>60</Frequency>
 					<ClassId>$MPElement[Name="TestA.VMware.Class.CBAgent"]$</ClassId>
 					<InstanceSettings>
 						<Settings>
@@ -457,7 +457,7 @@ CHANGE LOG
 				<AlertSettings AlertMessage="TestA.VMware.Monitor.EDRAgentInstall.AlertMessage">
 					<AlertOnState>Error</AlertOnState>
 					<AutoResolve>true</AutoResolve>
-					<AlertPriority>High</AlertPriority>
+					<AlertPriority>Normal</AlertPriority>
 					<AlertSeverity>MatchMonitorHealth</AlertSeverity>
 					<AlertParameters>
 						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
@@ -642,10 +642,10 @@ CHANGE LOG
 						</maml:section>
 						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
 							<maml:title>Causes</maml:title>
-							<maml:para>If the below registry value is not found, it's assumed the agent is not installed and an alert is generated.</maml:para>
+							<maml:para>If the below registry key is not found, it's assumed the agent is not installed and an alert is generated.</maml:para>
 							<maml:list>
 								<maml:listItem>
-									<maml:para>HKLM\SYSTEM\CurrentControlSet\Services\CarbonBlack</maml:para>
+									<maml:para>HKLM\SOFTWARE\CarbonBlack\config</maml:para>
 								</maml:listItem>
 							</maml:list>
 						</maml:section>
@@ -663,7 +663,12 @@ CHANGE LOG
 						</maml:section>
 						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
 							<maml:title>Causes</maml:title>
-							<maml:para>If the agent is not version 0007.0003.0002.18738 an alert is generated.</maml:para>
+							<maml:para>If the below registry value is not version 0007.0003.0002.18738 an alert is generated.</maml:para>
+							<maml:list>
+								<maml:listItem>
+									<maml:para>HKLM\SOFTWARE\CarbonBlack\config\SensorVersion</maml:para>
+								</maml:listItem>
+							</maml:list>
 						</maml:section>
 						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
 							<maml:title>Resolutions</maml:title>
