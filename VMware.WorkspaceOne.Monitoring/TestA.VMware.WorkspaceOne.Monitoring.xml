@@ -1,0 +1,325 @@
+<!--
+==========
+CHANGE LOG 
+==========
+2023.9.1.1
+-Change service monitors to service discovery.
+2022.12.5.0
+-Initial release.
+-->
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>TestA.VMware.WorkspaceOne.Monitoring</ID>
+      <Version>2023.9.1.1</Version>
+    </Identity>
+    <Name>TestA.VMware.WorkspaceOne.Monitoring</Name>
+    <References>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8437.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8437.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="TestA.VMware.Class.WorkspaceOneUEMServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+          <Property> ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
+          <Property> ID="InstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
+        </ClassType>
+        <ClassType ID="TestA.VMware.Class.ACCServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+          <Property> ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
+          <Property> ID="InstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
+        </ClassType>
+				<ClassType ID="TestA.VMware.Class.AirWatchService" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+					<Property> ID="ServiceName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
+					<Property> ID="ServiceDisplayName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
+					<Property> ID="StartMode" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
+				</ClassType>
+      </ClassTypes>
+    </EntityTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Discoveries>
+      <Discovery ID="TestA.VMware.Discovery.WorkspaceOneServer.Registry" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.Agent" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="TestA.VMware.Class.WorkspaceOneUEMServer" />
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>WorkspaceOneInstalled</AttributeName>
+              <Path>SOFTWARE\WOW6432Node\AirWatch</Path>
+              <PathType>0</PathType>
+              <AttributeType>0</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>Version</AttributeName>
+              <Path>SOFTWARE\WOW6432Node\AirWatch\Version</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>InstalledPath</AttributeName>
+              <Path>SOFTWARE\WOW6432Node\AirWatch\AWVERSIONDIR</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <Frequency>60</Frequency>          <!--old value 86400 -->
+          <ClassId>$MPElement[Name="TestA.VMware.Class.WorkspaceOneUEMServer"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.VMware.Class.WorkspaceOneUEMServer"]/Version$</Name>
+                <Value>$Data/Values/Version$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.VMware.Class.WorkspaceOneUEMServer"]/InstallFolder$</Name>
+                <Value>$Data/Values/InstalledPath$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="Boolean">Values/WorkspaceOneInstalled</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="Boolean">true</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+      <Discovery ID="TestA.VMware.Discovery.ACCServer" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.Agent" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="TestA.VMware.Class.ACCServer" />
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>ACCServerInstalled</AttributeName>
+              <Path>SOFTWARE\WOW6432Node\AirWatch Cloud Connector</Path>
+              <PathType>0</PathType>
+              <AttributeType>0</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>Version</AttributeName>
+              <Path>SOFTWARE\WOW6432Node\AirWatch Cloud Connector\Version</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>InstalledPath</AttributeName>
+              <Path>SOFTWARE\WOW6432Node\AirWatch Cloud Connector\AWVERSIONDIR</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <Frequency>60</Frequency>          <!-- old value 86700 -->
+          <ClassId>$MPElement[Name="TestA.VMware.Class.ACCServer"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.VMware.Class.ACCServer"]/Version$</Name>
+                <Value>$Data/Values/Version$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.VMware.Class.ACCServer"]/InstallFolder$</Name>
+                <Value>$Data/Values/InstalledPath$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="Boolean">Values/ACCServerInstalled</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="Boolean">true</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+			<Discovery ID="TestA.VMware.Discovery.AllServices" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestA.VMware.Class.AirWatchService">
+						<Property PropertyID="ServiceName"/>
+						<Property PropertyID="ServiceDisplayName"/>
+						<Property PropertyID="StartMode"/>
+					</DiscoveryClass>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.WmiProviderWithClassSnapshotDataMapper">
+					<NameSpace>root\cimv2</NameSpace>
+					<Query>SELECT * FROM Win32_Service WHERE Name LIKE 'Gx%' and startmode="auto"</Query>
+					<Frequency>86400</Frequency>
+					<ClassId>$MPElement[Name="TestA.VMware.Class.AirWatchService"]$</ClassId>
+					<InstanceSettings>
+						<Settings>
+							<Setting>
+								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="TestA.VMware.Class.AirWatchService"]/ServiceName$</Name>
+								<Value>$Data/Property[@Name='Name']$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="TestA.VMware.Class.AirWatchService"]/ServiceDisplayName$</Name>
+								<Value>$Data/Property[@Name='DisplayName']$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="TestA.VMware.Class.AirWatchService"]/StartMode$</Name>
+								<Value>$Data/Property[@Name='StartMode']$</Value>
+							</Setting>
+							<!-- If you have additional class properties you want to provide values from WMI add them here as additional instance settings. -->
+						</Settings>
+					</InstanceSettings>
+				</DataSource>
+			</Discovery>
+    </Discoveries>
+    <Monitors>
+			<UnitMonitor ID="TestA.VMware.Monitor.AirWatchServices" Accessibility="Public" Enabled="true" Target="TestA.VMware.Class.AirWatchService" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Commvault.MonitorType.ServiceState" ConfirmDelivery="false">
+				<Category>AvailabilityHealth</Category>
+				<AlertSettings AlertMessage="TestA.VMware.Monitor.AirWatchServices.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Data/Context/Property[@Name='Name']$</AlertParameter1>
+						<AlertParameter2>$Data/Context/Property[@Name='DisplayName']$</AlertParameter2>
+						<AlertParameter3>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter3>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Running" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="NotRunning" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName/>
+					<ServiceName>$Target/Property[Type="TestA.VMware.Class.AirWatchService"]/ServiceName$</ServiceName>
+					<IntervalSeconds>120</IntervalSeconds>
+					<Samples>1</Samples>
+				</Configuration>
+			</UnitMonitor>
+		</Monitors>
+    </Monitors>
+		<Recoveries>
+			<Recovery ID="Commvault.Recovery.StartWindowsService" Accessibility="Public" Enabled="true" Target="TestA.VMware.Class.AirWatchService" Monitor="TestA.VMware.Monitor.AirWatchServices" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+				<Category>Maintenance</Category>
+				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
+					<WorkingDirectory/>
+					<CommandLine>start $Target/Property[Type="TestA.VMware.Class.AirWatchService"]/ServiceName$</CommandLine>
+					<TimeoutSeconds>60</TimeoutSeconds>
+					<RequireOutput>true</RequireOutput>
+				</WriteAction>
+			</Recovery>
+		</Recoveries>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="TestA.VMware.Monitor.CheckWindowsService.AirWatchAPIWorkflow.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="TestA.VMware.WorkspaceOne.Monitoring">
+          <Name>VMware Workspace ONE Monitoring</Name>
+          <Description>Custom monitoring for VMware Workspace ONE.</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestA.VMware.Class.WorkspaceOneUEMServer">
+          <Name>VMware WorkspaceOne UEM Server</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.VMware.Class.WorkspaceOneUEMServer" SubElementID="Version">
+          <Name>Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.VMware.Class.WorkspaceOneUEMServer" SubElementID="InstallFolder">
+          <Name>Install Folder</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.VMware.Class.ACCServer">
+          <Name>AirWatch Cloud Connector Server</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.VMware.Class.ACCServer" SubElementID="Version">
+          <Name>Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.VMware.Class.ACCServer" SubElementID="InstallFolder">
+          <Name>Install Folder</Name>
+        </DisplayString>
+				<DisplayString ElementID="TestA.VMware.Class.AirWatchService">
+					<Name>Commvault Service</Name>
+				</DisplayString>
+				<DisplayString ElementID="TestA.VMware.Class.AirWatchService" SubElementID="ServiceName">
+					<Name>Service Name</Name>
+				</DisplayString>
+				<DisplayString ElementID="TestA.VMware.Class.AirWatchService" SubElementID="ServiceDisplayName">
+					<Name>Service Display Name</Name>
+				</DisplayString>
+				<DisplayString ElementID="TestA.VMware.Class.AirWatchService" SubElementID="StartMode">
+					<Name>Start Mode</Name>
+				</DisplayString>
+				<DisplayString ElementID="TestA.VMware.Monitor.AirWatchServices">
+					<Name>Commvault All Services</Name>
+				</DisplayString>
+				<DisplayString ElementID="TestA.VMware.Monitor.AirWatchServices" SubElementID="Running">
+					<Name>Running</Name>
+				</DisplayString>
+				<DisplayString ElementID="TestA.VMware.Monitor.AirWatchServices" SubElementID="NotRunning">
+					<Name>Not Running</Name>
+				</DisplayString>
+				<DisplayString ElementID="TestA.VMware.Monitor.AirWatchServices.AlertMessage">
+					<Name>Commvault Service Not Running</Name>
+					<Description>The '{1}' service on {2} is not running.</Description>
+				</DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
