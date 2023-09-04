@@ -1,32 +1,8 @@
 <!--
-D:\Apps\SrvAny\SrvAny.exe AirWatch API Workflow 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatchBackgroundProcessorService 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatch Bulk Import Service 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatchComplianceService 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatchContentDelivery 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatch Device Scheduler 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatch Directory Sync Service 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatch Entity Change Queue Monitor 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatchEntityReconcileService 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatch GEM Inventory Service 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatch Integration Service 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatch MEG Queue Service 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatch Messaging Service 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatchOutboundQueueMonitorService 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatchPolicyEngine 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatchSmartGroupService 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatch SMS Service 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatchTunnelService 1 c:\windows\notepad.exe
-D:\Apps\SrvAny\SrvAny.exe AirWatchCloudConnector 1 c:\windows\notepad.exe
-
-
-
-
-
 ==========
 CHANGE LOG 
 ==========
-2023.9.4.0
+2023.9.4.1
 -Change service monitors to service discovery.
 2022.12.5.0
 -Initial release.
@@ -35,7 +11,7 @@ CHANGE LOG
   <Manifest>
     <Identity>
       <ID>TestA.VMware.WorkspaceOne.Monitoring</ID>
-      <Version>2023.9.4.0</Version>
+      <Version>2023.9.4.1</Version>
     </Identity>
     <Name>TestA.VMware.WorkspaceOne.Monitoring</Name>
     <References>
@@ -339,7 +315,7 @@ CHANGE LOG
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.WmiProviderWithClassSnapshotDataMapper">
 					<NameSpace>root\cimv2</NameSpace>
 					<Query>SELECT * FROM Win32_Service WHERE Name LIKE 'AirWatch%' and startmode="auto"</Query>
-					<Frequency>86400</Frequency>
+					<Frequency>60</Frequency> <!-- OG 86400-->
 					<ClassId>$MPElement[Name="TestA.VMware.Class.AirWatchService"]$</ClassId>
 					<InstanceSettings>
 						<Settings>
@@ -462,7 +438,8 @@ CHANGE LOG
 				</DisplayString>
 				<DisplayString ElementID="TestA.VMware.Monitor.AirWatchServices.AlertMessage">
 					<Name>AirWatch Service Not Running</Name>
-					<Description>The '{1}' service on {2} is not running.</Description>
+          <!-- Use {0} in alert description because DisplayName sometimes gets removed in the alert description. -->
+					<Description>The {0} service on {2} is not running.</Description>
 				</DisplayString>
       </DisplayStrings>
     </LanguagePack>
