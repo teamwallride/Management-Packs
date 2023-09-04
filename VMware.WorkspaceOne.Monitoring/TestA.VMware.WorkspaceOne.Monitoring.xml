@@ -2,7 +2,7 @@
 ==========
 CHANGE LOG 
 ==========
-2023.9.1.1
+2023.9.4.0
 -Change service monitors to service discovery.
 2022.12.5.0
 -Initial release.
@@ -11,7 +11,7 @@ CHANGE LOG
   <Manifest>
     <Identity>
       <ID>TestA.VMware.WorkspaceOne.Monitoring</ID>
-      <Version>2023.9.1.1</Version>
+      <Version>2023.9.4.0</Version>
     </Identity>
     <Name>TestA.VMware.WorkspaceOne.Monitoring</Name>
     <References>
@@ -41,20 +41,141 @@ CHANGE LOG
     <EntityTypes>
       <ClassTypes>
         <ClassType ID="TestA.VMware.Class.WorkspaceOneUEMServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
-          <Property> ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
-          <Property> ID="InstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
+          <Property  ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="InstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
         <ClassType ID="TestA.VMware.Class.ACCServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
-          <Property> ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
-          <Property> ID="InstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="InstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
 				<ClassType ID="TestA.VMware.Class.AirWatchService" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
-					<Property> ID="ServiceName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
-					<Property> ID="ServiceDisplayName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
-					<Property> ID="StartMode" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"</Property>
+					<Property ID="ServiceName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+					<Property ID="ServiceDisplayName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+					<Property ID="StartMode" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
 				</ClassType>
       </ClassTypes>
     </EntityTypes>
+		<MonitorTypes>
+			<UnitMonitorType ID="TestA.VMware.MonitorType.AirWatchServices" Accessibility="Internal">
+				<MonitorTypeStates>
+					<MonitorTypeState ID="Running" NoDetection="false"/>
+					<MonitorTypeState ID="NotRunning" NoDetection="false"/>
+				</MonitorTypeStates>
+				<Configuration>
+					<xsd:element name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+					<xsd:element name="ServiceName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+					<xsd:element name="IntervalSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+					<xsd:element name="Samples" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+				</Configuration>
+				<OverrideableParameters>
+					<OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int"/>
+					<OverrideableParameter ID="Samples" Selector="$Config/Samples$" ParameterType="int"/>
+				</OverrideableParameters>
+				<MonitorImplementation>
+					<MemberModules>
+						<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.Win32ServiceInformationProvider">
+							<ComputerName>$Config/ComputerName$</ComputerName>
+							<ServiceName>$Config/ServiceName$</ServiceName>
+							<Frequency>$Config/IntervalSeconds$</Frequency>
+							<DisableCaching>true</DisableCaching>
+							<CheckStartupType>true</CheckStartupType>
+						</DataSource>
+						<ProbeAction ID="Probe" TypeID="Windows!Microsoft.Windows.Win32ServiceInformationProbe">
+							<ComputerName>$Config/ComputerName$</ComputerName>
+							<ServiceName>$Config/ServiceName$</ServiceName>
+						</ProbeAction>
+						<ConditionDetection ID="ServiceRunning" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<Or>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="Integer">Property[@Name='StartMode']</XPathQuery>
+											</ValueExpression>
+											<Operator>Equal</Operator>
+											<ValueExpression>
+												<Value Type="Integer">4</Value>
+												<!-- 0=BootStart 1=SystemStart 2=Automatic 3=Manual 4=Disabled -->
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="Integer">Property[@Name='State']</XPathQuery>
+											</ValueExpression>
+											<Operator>Equal</Operator>
+											<ValueExpression>
+												<Value Type="Integer">4</Value>
+												<!-- 0=Unknown 1=Stopped 2=StartPending 3=StopPending 4=Running 5=ContinuePending 6=PausePending 7=Paused 8=ServiceNotFound 9=ServerNotFound -->
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+								</Or>
+							</Expression>
+						</ConditionDetection>
+						<ConditionDetection ID="ServiceNotRunning" TypeID="System!System.ExpressionFilter">
+							<Expression>
+								<And>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="Integer">Property[@Name='StartMode']</XPathQuery>
+											</ValueExpression>
+											<Operator>Equal</Operator>
+											<!-- OG value NotEqual-->
+											<ValueExpression>
+												<Value Type="Integer">2</Value>
+												<!-- 0=BootStart 1=SystemStart 2=Automatic 3=Manual 4=Disabled -->
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+									<Expression>
+										<SimpleExpression>
+											<ValueExpression>
+												<XPathQuery Type="Integer">Property[@Name='State']</XPathQuery>
+											</ValueExpression>
+											<Operator>NotEqual</Operator>
+											<ValueExpression>
+												<Value Type="Integer">4</Value>
+												<!-- 0=Unknown 1=Stopped 2=StartPending 3=StopPending 4=Running 5=ContinuePending 6=PausePending 7=Paused 8=ServiceNotFound 9=ServerNotFound -->
+											</ValueExpression>
+										</SimpleExpression>
+									</Expression>
+								</And>
+							</Expression>
+							<SuppressionSettings>
+								<MatchCount>$Config/Samples$</MatchCount>
+							</SuppressionSettings>
+						</ConditionDetection>
+					</MemberModules>
+					<RegularDetections>
+						<RegularDetection MonitorTypeStateID="Running">
+							<Node ID="ServiceRunning">
+								<Node ID="DS"/>
+							</Node>
+						</RegularDetection>
+						<RegularDetection MonitorTypeStateID="NotRunning">
+							<Node ID="ServiceNotRunning">
+								<Node ID="DS"/>
+							</Node>
+						</RegularDetection>
+					</RegularDetections>
+					<OnDemandDetections>
+						<OnDemandDetection MonitorTypeStateID="Running">
+							<Node ID="ServiceRunning">
+								<Node ID="Probe"/>
+							</Node>
+						</OnDemandDetection>
+						<OnDemandDetection MonitorTypeStateID="NotRunning">
+							<Node ID="ServiceNotRunning">
+								<Node ID="Probe"/>
+							</Node>
+						</OnDemandDetection>
+					</OnDemandDetections>
+				</MonitorImplementation>
+			</UnitMonitorType>
+    </MonitorTypes>
   </TypeDefinitions>
   <Monitoring>
     <Discoveries>
@@ -182,7 +303,7 @@ CHANGE LOG
           </Expression>
         </DataSource>
       </Discovery>
-			<Discovery ID="TestA.VMware.Discovery.AllServices" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="TestA.VMware.Discovery.AirWatchServices" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
 					<DiscoveryClass TypeID="TestA.VMware.Class.AirWatchService">
@@ -193,7 +314,7 @@ CHANGE LOG
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.WmiProviderWithClassSnapshotDataMapper">
 					<NameSpace>root\cimv2</NameSpace>
-					<Query>SELECT * FROM Win32_Service WHERE Name LIKE 'Gx%' and startmode="auto"</Query>
+					<Query>SELECT * FROM Win32_Service WHERE Name LIKE 'AirWatch%' and startmode="auto"</Query>
 					<Frequency>86400</Frequency>
 					<ClassId>$MPElement[Name="TestA.VMware.Class.AirWatchService"]$</ClassId>
 					<InstanceSettings>
@@ -225,7 +346,7 @@ CHANGE LOG
 			</Discovery>
     </Discoveries>
     <Monitors>
-			<UnitMonitor ID="TestA.VMware.Monitor.AirWatchServices" Accessibility="Public" Enabled="true" Target="TestA.VMware.Class.AirWatchService" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Commvault.MonitorType.ServiceState" ConfirmDelivery="false">
+			<UnitMonitor ID="TestA.VMware.Monitor.AirWatchServices" Accessibility="Public" Enabled="true" Target="TestA.VMware.Class.AirWatchService" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="TestA.VMware.MonitorType.AirWatchServices" ConfirmDelivery="false">
 				<Category>AvailabilityHealth</Category>
 				<AlertSettings AlertMessage="TestA.VMware.Monitor.AirWatchServices.AlertMessage">
 					<AlertOnState>Error</AlertOnState>
@@ -250,9 +371,9 @@ CHANGE LOG
 				</Configuration>
 			</UnitMonitor>
 		</Monitors>
-    </Monitors>
 		<Recoveries>
-			<Recovery ID="Commvault.Recovery.StartWindowsService" Accessibility="Public" Enabled="true" Target="TestA.VMware.Class.AirWatchService" Monitor="TestA.VMware.Monitor.AirWatchServices" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+    <!-- disabled for dev -->
+			<Recovery ID="TestA.VMware.Recovery.StartWindowsService" Accessibility="Public" Enabled="false" Target="TestA.VMware.Class.AirWatchService" Monitor="TestA.VMware.Monitor.AirWatchServices" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
 				<Category>Maintenance</Category>
 				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
 					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -266,14 +387,14 @@ CHANGE LOG
   </Monitoring>
   <Presentation>
     <StringResources>
-      <StringResource ID="TestA.VMware.Monitor.CheckWindowsService.AirWatchAPIWorkflow.AlertMessage" />
+      <StringResource ID="TestA.VMware.Monitor.AirWatchServices.AlertMessage" />
     </StringResources>
   </Presentation>
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="false">
       <DisplayStrings>
         <DisplayString ElementID="TestA.VMware.WorkspaceOne.Monitoring">
-          <Name>VMware Workspace ONE Monitoring</Name>
+          <Name>TestA.VMware Workspace ONE Monitoring</Name>
           <Description>Custom monitoring for VMware Workspace ONE.</Description>
         </DisplayString>
         <DisplayString ElementID="TestA.VMware.Class.WorkspaceOneUEMServer">
@@ -295,7 +416,7 @@ CHANGE LOG
           <Name>Install Folder</Name>
         </DisplayString>
 				<DisplayString ElementID="TestA.VMware.Class.AirWatchService">
-					<Name>Commvault Service</Name>
+					<Name>AirWatch Service</Name>
 				</DisplayString>
 				<DisplayString ElementID="TestA.VMware.Class.AirWatchService" SubElementID="ServiceName">
 					<Name>Service Name</Name>
@@ -307,7 +428,7 @@ CHANGE LOG
 					<Name>Start Mode</Name>
 				</DisplayString>
 				<DisplayString ElementID="TestA.VMware.Monitor.AirWatchServices">
-					<Name>Commvault All Services</Name>
+					<Name>AirWatch Services</Name>
 				</DisplayString>
 				<DisplayString ElementID="TestA.VMware.Monitor.AirWatchServices" SubElementID="Running">
 					<Name>Running</Name>
@@ -316,7 +437,7 @@ CHANGE LOG
 					<Name>Not Running</Name>
 				</DisplayString>
 				<DisplayString ElementID="TestA.VMware.Monitor.AirWatchServices.AlertMessage">
-					<Name>Commvault Service Not Running</Name>
+					<Name>AirWatch Service Not Running</Name>
 					<Description>The '{1}' service on {2} is not running.</Description>
 				</DisplayString>
       </DisplayStrings>
