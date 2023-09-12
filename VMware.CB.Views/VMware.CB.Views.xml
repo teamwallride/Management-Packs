@@ -2,6 +2,8 @@
 ==========
 CHANGE LOG
 ==========
+2023.9.12.2
+-Add CB Linux Process view.
 2023.9.12.0
 -Add CB Web Consoles view and redo dashboard to 6 views.
 2023.8.29.0
@@ -11,7 +13,7 @@ CHANGE LOG
   <Manifest>
     <Identity>
       <ID>VMware.CB.Views</ID>
-      <Version>2023.9.12.0</Version>
+      <Version>2023.9.12.2</Version>
     </Identity>
     <Name>VMware.CB.Views</Name>
     <References>
@@ -22,8 +24,13 @@ CHANGE LOG
       </Reference>
       <Reference Alias="CB">
         <ID>VMware.CB.Monitoring</ID>
-        <Version>2023.9.12.0</Version>
+        <Version>2023.9.12.1</Version>
         <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Unix1">
+        <ID>Microsoft.Unix.Process.Library</ID>
+        <Version>7.6.1064.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
       </Reference>
       <Reference Alias="SystemCenter1">
         <ID>Microsoft.SystemCenter.WebApplicationTest.Library</ID>
@@ -62,6 +69,7 @@ CHANGE LOG
           <Cell Row="1" Column="2" ViewID="View_9b0d88ba3b8d4859bba3959a2622bb38" />
           <Cell Row="2" Column="1" ViewID="View_7af691b3c40142559d1677d0350a0e1d" />
           <Cell Row="2" Column="2" ViewID="View_94464731fab6430ea6dfadcf46553268" />
+          <Cell Row="3" Column="2" ViewID="View_f32586b93e544f6cb37e51a97254ca1e" />
         </PanelConfiguration>
       </View>
       <View ID="View_b9e5659bf4094cf2bd264755ede1e629" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.AlertViewType" Visible="true">
@@ -7064,6 +7072,67 @@ CHANGE LOG
         </Presentation>
         <Target>8e138f99-8c52-7180-1181-a56a6a513b67</Target>
       </View>
+      <View ID="View_f32586b93e544f6cb37e51a97254ca1e" Accessibility="Public" Enabled="true" Target="Unix1!Microsoft.SystemCenter.MonitoredUnixProcess" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Microsoft.SystemCenter.MonitoredUnixProcess-*-a3f70f1c-9dc3-647b-acc0-1f0bfd4dfca3-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Process Name</Name>
+            <Id>Microsoft.SystemCenter.MonitoredUnixProcess/ProcessName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Instance</Name>
+            <Id>Microsoft.SystemCenter.MonitoredUnixProcess/Instance</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Monitoring Target Name</Name>
+            <Id>Microsoft.SystemCenter.MonitoredUnixProcess/MonitoringTargetName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Monitoring Target ID</Name>
+            <Id>Microsoft.SystemCenter.MonitoredUnixProcess/MonitoringTargetId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Argument Regular Expression</Name>
+            <Id>Microsoft.SystemCenter.MonitoredUnixProcess/ArgumentsFilterExpression</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Minimum Count Threshold</Name>
+            <Id>Microsoft.SystemCenter.MonitoredUnixProcess/MinProcessCount</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Maximum Count Threshold</Name>
+            <Id>Microsoft.SystemCenter.MonitoredUnixProcess/MaxProcessCount</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Alert Severity</Name>
+            <Id>Microsoft.SystemCenter.MonitoredUnixProcess/AlertSeverity</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target>1dcdc573-2696-181c-3ce6-07660ee12a52</Target>
+      </View>
     </Views>
     <Folders>
       <Folder ID="Folder_40bc4627a9114793a6794dd99811ccf6" Accessibility="Public" ParentFolder="SystemCenter!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
@@ -7075,6 +7144,7 @@ CHANGE LOG
       <FolderItem ElementID="View_9b0d88ba3b8d4859bba3959a2622bb38" ID="id71efc8b773040d09aa009dcb850aafa" Folder="Folder_40bc4627a9114793a6794dd99811ccf6" />
       <FolderItem ElementID="View_7af691b3c40142559d1677d0350a0e1d" ID="iecd5f1e9ab604d5faf877aed2de450e0" Folder="Folder_40bc4627a9114793a6794dd99811ccf6" />
       <FolderItem ElementID="View_1af6df421ed54cc99b2cda23dd003355" ID="i83485b36857543bf9796b06a798dc722" Folder="Folder_40bc4627a9114793a6794dd99811ccf6" />
+      <FolderItem ElementID="View_f32586b93e544f6cb37e51a97254ca1e" ID="ib306abc06f9f4a6cba157db7b2035287" Folder="Folder_40bc4627a9114793a6794dd99811ccf6" />
     </FolderItems>
   </Presentation>
   <LanguagePacks>
@@ -7104,6 +7174,9 @@ CHANGE LOG
         </DisplayString>
         <DisplayString ElementID="View_1af6df421ed54cc99b2cda23dd003355">
           <Name>CB Web Consoles</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_f32586b93e544f6cb37e51a97254ca1e">
+          <Name>CB Linux Process</Name>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
