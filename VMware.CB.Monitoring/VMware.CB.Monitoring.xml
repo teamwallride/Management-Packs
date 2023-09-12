@@ -2,6 +2,8 @@
 ==========
 CHANGE LOG
 ==========
+2023.9.12.1
+-Add group VMware.Group.CBLinuxProcess for state views.
 2023.9.12.0
 -Add group VMware.Group.CBWebConsole for state views.
 2x023.8.29.0
@@ -11,7 +13,7 @@ CHANGE LOG
 	<Manifest>
 		<Identity>
 			<ID>VMware.CB.Monitoring</ID>
-			<Version>2023.9.12.0</Version>
+			<Version>2023.9.12.1</Version>
 		</Identity>
 		<Name>VMware.CB.Monitoring</Name>
 		<References>
@@ -45,6 +47,11 @@ CHANGE LOG
 			<Version>7.2.11719.0</Version>
 			<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
 			</Reference>
+			<Reference Alias="UnixProcLib">
+			<ID>Microsoft.Unix.Process.Library</ID>
+			<Version>7.6.1064.0</Version>
+			<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
 		</References>
 	</Manifest>
 	<TypeDefinitions>
@@ -61,6 +68,7 @@ CHANGE LOG
 					<Property ID="ACInstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
 				</ClassType>
 				<ClassType ID="VMware.Group.CBWebConsole" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+				<ClassType ID="VMware.Group.CBLinuxProcess" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
 			</ClassTypes>
 		</EntityTypes>
 		<MonitorTypes>
@@ -415,6 +423,31 @@ CHANGE LOG
 			  </MembershipRules>
 			</DataSource>
 			</Discovery>			
+			<Discovery ID="VMware.Discovery.CBLinuxProcess" Enabled="true" Target="VMware.Group.CBLinuxProcess" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Category>Discovery</Category>
+			<DiscoveryTypes>
+			  <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+			</DiscoveryTypes>
+			<DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+			  <RuleId>$MPElement$</RuleId>
+			  <GroupInstanceId>$MPElement[Name="VMware.Group.CBLinuxProcess"]$</GroupInstanceId>
+			  <MembershipRules>
+				<MembershipRule>
+				  <MonitoringClass>$MPElement[Name="UnixProcLib!Microsoft.SystemCenter.MonitoredUnixProcess"]$</MonitoringClass>
+				  <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+				  <Expression>
+					<RegExExpression>
+					  <ValueExpression>
+						<Property>$MPElement[Name="System!System.Entity"]/DisplayName$</Property>
+					  </ValueExpression>
+					  <Operator>MatchesRegularExpression</Operator>
+					  <Pattern>(?i:^Carbon Black)</Pattern>
+					</RegExExpression>
+				  </Expression>
+				</MembershipRule>
+			  </MembershipRules>
+			</DataSource>
+			</Discovery>			
 		</Discoveries>
 		<Monitors>
 			<!-- Carbon Black App Control Server (ParityServer) -->
@@ -671,6 +704,14 @@ CHANGE LOG
 				<DisplayString ElementID="VMware.Discovery.CBWebConsole">
 					<Name>Populate VMware.Group.CBWebConsole</Name>
 					<Description>This discovery rule populates the group VMware.Group.CBWebConsole.</Description>
+				</DisplayString>
+				
+				<DisplayString ElementID="VMware.Group.CBLinuxProcess">
+				  <Name>VMware Carbon Black Linux Process</Name>
+				</DisplayString>
+				<DisplayString ElementID="VMware.Discovery.CBLinuxProcess">
+					<Name>Populate VMware.Group.CBLinuxProcess</Name>
+					<Description>This discovery rule populates the group VMware.Group.CBLinuxProcess.</Description>
 				</DisplayString>
 			</DisplayStrings>
 			<KnowledgeArticles>
