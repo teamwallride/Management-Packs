@@ -1,0 +1,260 @@
+<!--
+Change log.
+2023.9.15.0
+-Development.
+-->
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>TestA.SCOM.AlertManagement</ID>
+      <Version>2023.9.15.0</Version>
+    </Identity>
+    <Name>TestA.SCOM.AlertManagement</Name>
+    <References>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8437.17</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  
+  <!--**************************************** ALERT MANAGEMENT WRITE ACTION MODULE ****************************************-->
+<WriteActionModuleType ID="SCOM.WAM.URAlertManagement" Accessibility="Internal" Batching="false">
+<Configuration>
+<!--<xsd:element minOccurs="1" name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<xsd:element minOccurs="1" name="MpBackupFolder" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /> 
+-->
+<xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+</Configuration>
+<OverrideableParameters>
+<OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+</OverrideableParameters>
+<ModuleImplementation Isolation="Any">
+<Composite>
+<MemberModules>
+<WriteAction ID="WA" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+<ScriptName>SCOM.AlertManagement.ps1</ScriptName>
+<ScriptBody><![CDATA[
+# Start Alert MANAGEMENT
+<#**************************************** FUNCTION: LogAndQuit ****************************************#>
+Function LogAndQuit {
+If ($Script:CountError -gt 0) {
+# Codes: 0=Information, 1=Error, 2=Warning
+$EventId=17618 # error
+$EventLevel=2
+} Else {
+$Script:CountError=0 # If no errors set this value so it appears in the event.
+$EventId=17617 # success
+$EventLevel=0
+}
+# Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
+$ObjMomApi.LogScriptEvent("SCOM.AlertManagement.ps1", $EventId, $EventLevel, "Alert Management script executed.`nWorkflow Name: SCOM.Rule.AlertManagement`nManagement Pack: SCOM.UpdateRollup (2023.9.13.0)`nPowerShell Version: $PSVersion`nAlerts: $CountAlerts`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+}
+<#**************************************** FUNCTION: TerminatingError ****************************************#>
+Function TerminatingError
+{
+$script:CountError+=1
+$script:Message+="[CODE_SECTION_$CodeSection] A terminating error occurred. Error output: (" + $_.Exception.Message + ").`n"
+LogAndQuit
+}
+<#**************************************** FUNCTION: AlertManagement ****************************************#>
+Function AlertManagement {
+$ErrorActionPreference="SilentlyContinue"
+Try {
+<# FOR TESTING
+cls
+$csv=""
+$csv+="AlertName^CATEGORY^MpName^ObjectName^OWNER`r"
+#>
+<# CODE_SECTION_1
+Load required objects.
+#>
+$CodeSection="1"
+$ObjMomApi=New-Object -comObject 'MOM.ScriptAPI' # MOMScriptAPI object.
+<# CODE_SECTION_2.
+Get powershell version.
+This is shown in events to assist troubleshooting if powershell doesn't play nice.
+#>
+$CodeSection="2"
+$PSVersion=$PSVersionTable.PSVersion
+[string]$PSMajor=$PSVersion.Major
+[string]$PSMinor=$PSVersion.Minor
+$PSVersion=$PSMajor + "." + $PSMinor
+<# CODE_SECTION_3
+Set common variables.
+#>
+$CodeSection="3"
+$EutsServerTeam="EUTS Server Team"
+$EutsMonitoringTeam="EUTS Monitoring Team"
+$EutsSccmTeam="EUTS SCCM Team"
+$EutsSharePointTeam="EUTS SharePoint Team"
+$EutsCitrixTeam="EUTS Citrix Team"
+$EutsEndpointSecurityTeam="EUTS Endpoint Security Team"
+$EutsBackupStorageTeam="EUTS Backup and Storage Team"
+$EutsADTeam="EUTS AD Management Team"
+$EsmcSecurityTeam="ESMC Security Team"
+$Unknown="Unknown"
+<# CODE_SECTION_4
+Load SCOM module.
+#>
+$CodeSection="4"
+$PowerShellInstallDirectory=(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\Powershell\V2").InstallDirectory
+Import-module $PowerShellInstallDirectory`OperationsManager
+New-DefaultManagementGroupConnection
+$MgName=(Get-SCOMManagementGroupConnection).ManagementGroupName
+$MgServer=(Get-SCOMManagementGroupConnection).ManagementServerName
+$Script:SCOMMGName=(Get-SCOMManagementGroup).Name
+<# CODE_SECTION_5
+Process alerts.
+#>
+$Alerts=Get-SCOMAlert -Criteria "ResolutionState=0" # just get new alerts for now.
+$CountAlerts=$Alerts.count
+If ($CountAlerts -gt 0) {
+foreach($Alert in $Alerts) {
+# reset variables
+$category="" # need this?
+$owner="" # need this?
+if($Alert.ismonitoralert) {
+$Workflow=get-scommonitor -id $Alert.MonitoringRuleId
+} else {
+$Workflow=get-scomrule -id $Alert.MonitoringRuleId
+}
+$AlertName=$Alert.name
+$ObjectName=$Alert.MonitoringObjectDisplayName # use this as starting point, it will need to be changed per alert if necessary.
+$WorkflowName=$Workflow.name
+$MpName=$Workflow.GetManagementPack().name
+# This assigns alerts based on the mgmt pack it came from.
+switch -wildcard ($MpName) {
+# Active Directory
+"Microsoft.Windows.Server.AD.*" {$category="Active Directory"; $owner=$EutsADTeam; BREAK}
+"ActiveDirectory.Monitoring" {$category="Active Directory"; $owner=$EutsADTeam; BREAK}
+# ADFS
+"Microsoft.ActiveDirectoryFederationServices.2012.R2" {$category="ADFS"; $owner=$EutsServerTeam; BREAK}
+# Azure AD Connect
+"AADC.Monitoring" {$category="Azure AD Connect"; $owner=$EutsADTeam; BREAK}
+# Citrix
+"CitrixA.Monitoring" {$category="Citrix"; $owner=$EutsCitrixTeam; BREAK}
+# Client
+"*Client*" {$category="Client"; $owner=$EutsMonitoringTeam; BREAK}
+# Cmdb
+"SCOM.Cmdb" {$category="Cmdb"; $owner=$EutsMonitoringTeam; BREAK}
+# Commvault
+"Commvault.Monitoring" {$category="Commvault"; $owner=$EutsBackupStorageTeam; BREAK}
+# DHCP
+"Microsoft.Windows.DHCPServer.*" {$category="DHCP"; $owner=$EutsServerTeam; BREAK}
+# DNS
+"*.DNS*" {$category="DNS"; $owner=$EutsServerTeam; BREAK}
+# Exchange
+"*Exchange.*" {$category="Exchange"; $owner=$EutsServerTeam; BREAK}
+# IIS
+"Microsoft.Windows.InternetInformationServices.*" {$category="IIS"; $owner=$EutsServerTeam; BREAK}
+# Network
+"System.NetworkManagement.Monitoring" {$category="Network"; $owner=$Unknown; BREAK}
+# Passwordstate
+"Passwordstate.Monitoring" {$category="Passwordstate"; $owner=$EsmcSecurityTeam; BREAK}
+# SCOM
+"Microsoft.SystemCenter.*" {$category="SCOM"; $owner=$EutsMonitoringTeam; BREAK}
+"SCOM.UpdateRollup" {$category="SCOM"; $owner=$EutsMonitoringTeam; BREAK}
+# SCCM
+"Microsoft.SystemCenter2012.ConfigurationManager.*" {$category="SCCM"; $owner=$EutsSccmTeam; BREAK}
+# SharePoint
+"Microsoft.SharePoint.*" {$category="SharePoint"; $owner=$EutsSharePointTeam; BREAK}
+# SQL
+"Microsoft.SQLServer.*" {$category="SQL"; $owner=$EutsServerTeam; BREAK}
+# Trellix
+"Trellix.Monitoring" {$category="Trellix"; $owner=$EutsEndpointSecurityTeam; BREAK}
+# UNIX / Linux
+"Microsoft.Linux.*" {$category="Linux Server"; $owner=$EutsServerTeam; BREAK}
+"Microsoft.Unix.*" {$category="UNIX Server"; $owner=$EutsServerTeam; BREAK}
+# VMware Carbon Black
+"VMware.CB.Monitoring" {$category="Carbon Black"; $owner=$EutsServerTeam; BREAK}
+# VMware Workspace One
+"VMware.WorkspaceOne.Monitoring" {$category="VMware Workspace ONE"; $owner=$EutsServerTeam; BREAK}
+# Windows certificates
+"Certificate.Monitoring" {$category="Certificate"; $owner=$EutsServerTeam; BREAK}
+# Windows clusters
+"*.Cluster.*" {$category="Windows Cluster"; $owner=$EutsServerTeam; BREAK}
+"Microsoft.Windows.Server.ClusterSharedVolumeMonitoring" {$category="Windows Cluster"; $owner=$EutsServerTeam; BREAK}
+# Windows server
+"Microsoft.Windows.Server.*" {$category="Windows Server"; $owner=$EutsServerTeam; BREAK}
+default {
+$Script:CountError+=1
+$Script:Message+="[CODE_SECTION_$CodeSection] MP missing in switch statement for alert '$Alert'`n"
+$category="Unknown"; $owner=$EutsMonitoringTeam
+}
+} # end switch
+# This assigns alerts based on the monitor/rule name. Put workflow dot name in switch statement.
+switch -wildcard ($WorkflowName) {
+<#
+25/3/2022 - Monitoring team now manage agent health.
+"Microsoft.SystemCenter.HealthService.Heartbeat" {$owner=$EutsServerTeam; $category="Windows Server"; BREAK} 
+#>
+"Microsoft.SystemCenter.HealthService.ComputerDown" {$owner=$EutsServerTeam; $category="Windows Server"; BREAK} 
+"Microsoft.Windows.Server.*.LogicalDisk.FreeSpace" {$ObjectName=$Alert.MonitoringObjectPath; BREAK} 
+"Microsoft.Unix.LogFileModuleErrors.Alert" {$owner=$EutsMonitoringTeam; $category="SCOM"; BREAK} 
+"ActiveDirectory.Monitor.TimeDriftScriptError" {$owner=$EutsMonitoringTeam; $category="SCOM"; BREAK}
+# This is so we can see ADFS certificate alerts in the Certificates > Active Alerts view.
+"Microsoft.ActiveDirectoryFederationServices2012R2.FederationServerTrustsHaveExpiredCertsWarningMonitor" {$category="Certificate"; BREAK}
+}
+# This assigns alerts based on the alert name.
+switch ($AlertName) {
+"Web Application Unavailable: Hitachi Management portal" {$owner=$EutsBackupStorageTeam; $category="Hitachi"; BREAK} 
+"Web Application Unavailable: NetApp Management portal" {$owner=$EutsBackupStorageTeam; $category="NetApp"; BREAK} 
+"Web Application Unavailable: L3 Passwordstate portal" {$owner=$EsmcSecurityTeam; $category="Passwordstate"; BREAK} 
+"Web Application Unavailable: L5 Passwordstate portal" {$owner=$EsmcSecurityTeam; $category="Passwordstate"; BREAK} 
+"Web Application Unavailable: Carbon Black" {$owner=$EutsServerTeam; $category="Carbon Black"; BREAK} 
+"Web Application Unavailable: VMware Workspace ONE" {$owner=$EutsServerTeam; $category="VMware Workspace ONE"; BREAK} 
+}
+# Update alert properties and move to next.
+Set-SCOMAlert -Alert $Alert -Owner $owner -CustomField1 $Category -CustomField2 $ObjectName -ResolutionState 1
+} # end for loop
+#}
+} # end if count -ne 0
+LogAndQuit
+} # and try
+Catch
+{
+TerminatingError
+}
+} # end function
+AlertManagement
+# End AlertManagement
+]]>
+</ScriptBody>
+<!--
+<Parameters>
+<Parameter>
+<Name>ComputerName</Name>
+<Value>$Config/ComputerName$</Value>
+</Parameter>
+<Parameter>
+<Name>MpBackupFolder</Name>
+<Value>$Config/MpBackupFolder$</Value>
+</Parameter>			  
+</Parameters>
+-->
+<TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+</WriteAction>
+</MemberModules>
+<Composition>
+<Node ID="WA" />
+</Composition>
+</Composite>
+</ModuleImplementation>
+<OutputType>System!System.BaseData</OutputType>
+<InputType>System!System.BaseData</InputType>
+</WriteActionModuleType>
+
+
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="TestA.SCOM.AlertManagement">
+          <Name>TestA.SCOM Alert Management</Name>
+          <Description></Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
