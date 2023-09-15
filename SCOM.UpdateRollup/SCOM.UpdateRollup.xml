@@ -3386,7 +3386,7 @@ Write-Host
 </WriteActions>
 </Rule>
 <!--Alert Management rule-->
-<Rule ID="SCOM.Rule.AlertManagement" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+<Rule ID="SCOM.Rule.AlertManagement" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
 <Category>Maintenance</Category>
 <DataSources>
 <DataSource ID="Scheduler" TypeID="SCOM.DSM.URAlertManagement">

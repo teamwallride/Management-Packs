@@ -10,21 +10,71 @@ Change log.
       <Version>2023.9.15.0</Version>
     </Identity>
     <Name>TestA.SCOM.AlertManagement</Name>
-    <References>
-      <Reference Alias="SystemCenter">
-        <ID>Microsoft.SystemCenter.Library</ID>
-        <Version>7.0.8437.17</Version>
-        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-      </Reference>
-    </References>
+<References>
+<Reference Alias="Windows">
+<ID>Microsoft.Windows.Library</ID>
+<Version>7.5.8501.0</Version>
+<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+</Reference>
+<Reference Alias="System">
+<ID>System.Library</ID>
+<Version>7.5.8501.0</Version>
+<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+</Reference>
+<Reference Alias="SystemCenter">
+<ID>Microsoft.SystemCenter.Library</ID>
+<Version>7.0.8433.0</Version>
+<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+</Reference>
+<Reference Alias="Health">
+<ID>System.Health.Library</ID>
+<Version>7.0.8433.0</Version>
+<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+</Reference>
+</References>
   </Manifest>
+  <TypeDefinitions>
+<ModuleTypes>
+<DataSourceModuleType ID="SCOM.DSM.URAlertManagement" Accessibility="Public" Batching="false">
+<Configuration>
+<IncludeSchemaTypes>
+<SchemaType>System!System.ExpressionEvaluatorSchema</SchemaType>
+</IncludeSchemaTypes>
+<xsd:element name="IntervalSeconds" type="xsd:int" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+<xsd:element name="SyncTime" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+</Configuration>
+<OverrideableParameters>
+<OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+<OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+</OverrideableParameters>
+<ModuleImplementation Isolation="Any">
+<Composite>
+<MemberModules>
+<DataSource ID="DS" TypeID="System!System.Scheduler">
+<Scheduler>
+<SimpleReccuringSchedule>
+<Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+<SyncTime>$Config/SyncTime$</SyncTime>
+</SimpleReccuringSchedule>
+<ExcludeDates />
+</Scheduler>
+</DataSource>
+</MemberModules>
+<Composition>
+<Node ID="DS" />
+</Composition>
+</Composite>
+</ModuleImplementation>
+<OutputType>System!System.TriggerData</OutputType>
+</DataSourceModuleType>
+
+
+
+
+
   
-  <!--**************************************** ALERT MANAGEMENT WRITE ACTION MODULE ****************************************-->
 <WriteActionModuleType ID="SCOM.WAM.URAlertManagement" Accessibility="Internal" Batching="false">
 <Configuration>
-<!--<xsd:element minOccurs="1" name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-<xsd:element minOccurs="1" name="MpBackupFolder" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" /> 
--->
 <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
 </Configuration>
 <OverrideableParameters>
@@ -247,6 +297,42 @@ AlertManagement
 </WriteActionModuleType>
 
 
+</ModuleTypes>
+
+</TypeDefinitions>
+<Monitoring>
+
+
+<Rules>
+<!--Alert Management rule-->
+<Rule ID="SCOM.Rule.AlertManagement" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+<Category>Maintenance</Category>
+<DataSources>
+<DataSource ID="Scheduler" TypeID="SCOM.DSM.URAlertManagement">
+<IntervalSeconds>300</IntervalSeconds> <!-- 5 minutes -->
+<SyncTime></SyncTime>
+</DataSource>	  
+</DataSources>		
+<WriteActions>
+<WriteAction ID="WA" TypeID="SCOM.WAM.URAlertManagement">
+<!--
+<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+<MpBackupFolder></MpBackupFolder>
+-->
+<TimeoutSeconds>120</TimeoutSeconds>
+</WriteAction>
+</WriteActions>
+</Rule>
+
+
+
+
+</Rules>
+
+
+</Monitoring>
+
+
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="false">
       <DisplayStrings>
@@ -254,6 +340,12 @@ AlertManagement
           <Name>TestA.SCOM Alert Management</Name>
           <Description></Description>
         </DisplayString>
+
+<DisplayString ElementID="SCOM.Rule.AlertManagement">
+<Name>Alert Management</Name>
+<Description>This rule runs a scheduled PowerShell script that updates alert properties on new alerts.</Description>
+</DisplayString>
+
       </DisplayStrings>
     </LanguagePack>
   </LanguagePacks>
