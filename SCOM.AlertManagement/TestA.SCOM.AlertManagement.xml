@@ -1,6 +1,6 @@
 <!--
 Change log.
-2023.9.15.1
+2023.9.18.0
 -Development.
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
@@ -9,7 +9,7 @@ Change log.
     <Manifest>
         <Identity>
             <ID>TestA.SCOM.AlertManagement</ID>
-            <Version>2023.9.15.1</Version>
+            <Version>2023.9.18.0</Version>
         </Identity>
         <Name>TestA.SCOM.AlertManagement</Name>
         <References>
@@ -93,6 +93,10 @@ New event logging system:
 17610 - OK
 17611 - Script warning
 17612 - Script terminating error
+
+To fix:
+SCOM.Rule.PowerShellScriptProblem should be renamed to SCOM.Rule.PowerShellScript because it doesn't always mean there's a problem.
+
 The warning and error events are picked up in new rule SCOM.Rule.PowerShellScriptProblem in the update rollup mp.
 Write-EventLog -LogName "Operations Manager" -Source "Health Service Script" -EventId 17611 -EntryType Error -Message "this is a warning" -Category 0
 Write-EventLog -LogName "Operations Manager" -Source "Health Service Script" -EventId 17612 -EntryType Error -Message "this is an error, terminating thing happened." -Category 0
@@ -115,7 +119,11 @@ Function Write-Log {
    }
     $End=Get-Date
     $TimeCount=(New-TimeSpan -Start $StartTime -End $End)
-    $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`nOutput: $Message")
+    $Minutes=$TimeCount.Minutes
+    $Seconds=$TimeCount.Seconds
+    $Milliseconds=$TimeCount.Milliseconds
+
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`nOutput: $Message")
     Break
 }
 Function Set-TerminatingError {
@@ -124,9 +132,8 @@ Function Set-TerminatingError {
     Write-Log -ScriptState $ScriptState
 }
 Function Set-AlertManagement {
-    # Not sure which one to use here. We don't want the script to stop if non-term error occurrs. 
-    $ErrorActionPreference="Stop" # This works well. It still logs terminating and non-terminating events. Need to test this.
-    #$ErrorActionPreference="SilentlyContinue" # nothing is logged in Output if term error occurrs, maybe don't use it?
+    # This will log terminating and non-terminating events.
+    $ErrorActionPreference="Stop"
     Try {
         $PSVersion=$PSVersionTable.PSVersion
         [string]$PSMajor=$PSVersion.Major
@@ -155,9 +162,10 @@ Function Set-AlertManagement {
         #>
         # Get alerts with 'New' resolution state only.
         $NewAlerts=Get-SCOMAlert -Criteria "ResolutionState=0"
-        $CountAlerts=$NewAlerts.count
-        $Message += "$CountAlerts new alert(s).`n"
-        If ($CountAlerts -gt 0) {
+        $CountNewAlerts=$NewAlerts.count
+        $Message += "$CountNewAlerts new alert(s) processed. Any issues will be shown below.`n"
+        $ScriptState="Information"
+        If ($CountNewAlerts -gt 0) {
             foreach ($Alert in $NewAlerts) {
                 if ($Alert.ismonitoralert) {
                     $Workflow=get-scommonitor -id $Alert.MonitoringRuleId
@@ -201,7 +209,7 @@ Function Set-AlertManagement {
                     "Passwordstate.Monitoring" {$Category="Passwordstate"; $Owner=$SecurityTeam; BREAK}
                     # SCOM
                     #"Microsoft.SystemCenter.*" {$Category="SCOM"; $Owner=$MonitoringTeam; BREAK} # testing, remove.
-                    "SCOM.UpdateRollup" {$Category="SCOM"; $Owner=$MonitoringTeam; BREAK}
+                    #"SCOM.UpdateRollup" {$Category="SCOM"; $Owner=$MonitoringTeam; BREAK} # testing, remove.
                     # SCCM
                     "Microsoft.SystemCenter2012.ConfigurationManager.*" {$Category="SCCM"; $Owner=$SccmTeam; BREAK}
                     # SharePoint
@@ -226,7 +234,7 @@ Function Set-AlertManagement {
                     "Microsoft.Windows.Server.*" {$Category="Windows Server"; $Owner=$ServerTeam; BREAK}
                     # If no match found grab mp name and alert name and add to $Message to capture and log warning event.
                     default {
-                        $Message += "Management pack $MpName is not in the switch statement for alert '$Alert'`n"
+                        $Message += "Mp name MpName is not in the switch statement for alert '$Alert'`n"
                         $ScriptState="Warning"
                         $Category="Unknown"; $Owner=$MonitoringTeam
                    }
@@ -262,11 +270,11 @@ Function Set-AlertManagement {
 $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$WorkflowName="SCOM.Rule.AlertManagement"
-$MPName="TestA.SCOM.AlertManagement"
-$MpVersion="2023.9.15.1"
+$MpWorkflow="SCOM.Rule.AlertManagement"
+$Mp="TestA.SCOM.AlertManagement"
+$MpVersion="2023.9.18.0"
 [datetime]$StartTime=Get-Date
-Set-AlertManagement                                
+Set-AlertManagement
 
 ]]>
 
