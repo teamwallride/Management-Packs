@@ -1,6 +1,6 @@
 <!--
 Change log.
-2023.9.18.0
+2023.9.19.0
 -Development.
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
@@ -9,7 +9,7 @@ Change log.
     <Manifest>
         <Identity>
             <ID>TestA.SCOM.AlertManagement</ID>
-            <Version>2023.9.18.0</Version>
+            <Version>2023.9.19.0</Version>
         </Identity>
         <Name>TestA.SCOM.AlertManagement</Name>
         <References>
@@ -86,8 +86,6 @@ Change log.
                                 <ScriptName>SCOM.AlertManagement.ps1</ScriptName>
                                 <ScriptBody>
                                 <![CDATA[
-Think script is good for now. Do more testing on Monday. The code here is a copy of a.ps1.                                
-
 <#
 New event logging system:
 17610 - OK
@@ -95,7 +93,7 @@ New event logging system:
 17612 - Script terminating error
 
 To fix:
-SCOM.Rule.PowerShellScriptProblem should be renamed to SCOM.Rule.PowerShellScript because it doesn't always mean there's a problem.
+SCOM.Rule.PowerShellScriptProblem change to 2 events only. 17609 = OK, 17610 = warning.
 
 The warning and error events are picked up in new rule SCOM.Rule.PowerShellScriptProblem in the update rollup mp.
 Write-EventLog -LogName "Operations Manager" -Source "Health Service Script" -EventId 17611 -EntryType Error -Message "this is a warning" -Category 0
@@ -122,7 +120,6 @@ Function Write-Log {
     $Minutes=$TimeCount.Minutes
     $Seconds=$TimeCount.Seconds
     $Milliseconds=$TimeCount.Milliseconds
-
     $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`nOutput: $Message")
     Break
 }
@@ -132,13 +129,9 @@ Function Set-TerminatingError {
     Write-Log -ScriptState $ScriptState
 }
 Function Set-AlertManagement {
-    # This will log terminating and non-terminating events.
+    # This logs terminating and non-terminating events.
     $ErrorActionPreference="Stop"
     Try {
-        $PSVersion=$PSVersionTable.PSVersion
-        [string]$PSMajor=$PSVersion.Major
-        [string]$PSMinor=$PSVersion.Minor
-        $PSVersion=$PSMajor + "." + $PSMinor
         # Assign team names here.
         $ADTeam="Company AD Management Team"
         $BackupStorageTeam="Company Backup and Storage Team"
@@ -150,8 +143,12 @@ Function Set-AlertManagement {
         $SecurityTeam="Company Security Team"
         $ServerTeam="Company Server Team"
         $SharePointTeam="Company SharePoint Team"
-        # remove? $Unknown="Unknown" # go to monitoring team if team isn't found. this will happen if a new mp is added and a team isn't assigned.
-        # Load PShell module.
+		# Get PowerShell version.
+        $PSVersion=$PSVersionTable.PSVersion
+        [string]$PSMajor=$PSVersion.Major
+        [string]$PSMinor=$PSVersion.Minor
+        $PSVersion=$PSMajor + "." + $PSMinor
+        # Import` PowerShell module.
         $PowerShellInstallDirectory=(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\Powershell\V2").InstallDirectory
         Import-module $PowerShellInstallDirectory`OperationsManager
         New-DefaultManagementGroupConnection
@@ -163,15 +160,15 @@ Function Set-AlertManagement {
         # Get alerts with 'New' resolution state only.
         $NewAlerts=Get-SCOMAlert -Criteria "ResolutionState=0"
         $CountNewAlerts=$NewAlerts.count
-        $Message += "$CountNewAlerts new alert(s) processed. Any issues will be shown below.`n"
+        $Message += "$CountNewAlerts new alert(s) processed.`n"
         $ScriptState="Information"
         If ($CountNewAlerts -gt 0) {
             foreach ($Alert in $NewAlerts) {
                 if ($Alert.ismonitoralert) {
-                    $Workflow=get-scommonitor -id $Alert.MonitoringRuleId
+                    $Workflow=Get-SCOMMonitor -id $Alert.MonitoringRuleId
                }
                 else {
-                    $Workflow=get-scomrule -id $Alert.MonitoringRuleId
+                    $Workflow=Get-SCOMRule -id $Alert.MonitoringRuleId
                }
                 $AlertName=$Alert.name
                 # This maps to 'Source' in the alert name and will fit most needs but it can be customised below.
@@ -208,8 +205,8 @@ Function Set-AlertManagement {
                     # Passwordstate
                     "Passwordstate.Monitoring" {$Category="Passwordstate"; $Owner=$SecurityTeam; BREAK}
                     # SCOM
-                    #"Microsoft.SystemCenter.*" {$Category="SCOM"; $Owner=$MonitoringTeam; BREAK} # testing, remove.
-                    #"SCOM.UpdateRollup" {$Category="SCOM"; $Owner=$MonitoringTeam; BREAK} # testing, remove.
+                    "Microsoft.SystemCenter.*" {$Category="SCOM"; $Owner=$MonitoringTeam; BREAK} # testing, remove.
+                    "SCOM.UpdateRollup" {$Category="SCOM"; $Owner=$MonitoringTeam; BREAK} # testing, remove.
                     # SCCM
                     "Microsoft.SystemCenter2012.ConfigurationManager.*" {$Category="SCCM"; $Owner=$SccmTeam; BREAK}
                     # SharePoint
@@ -232,9 +229,9 @@ Function Set-AlertManagement {
                     "Microsoft.Windows.Server.ClusterSharedVolumeMonitoring" {$Category="Windows Cluster"; $Owner=$ServerTeam; BREAK}
                     # Windows server
                     "Microsoft.Windows.Server.*" {$Category="Windows Server"; $Owner=$ServerTeam; BREAK}
-                    # If no match found grab mp name and alert name and add to $Message to capture and log warning event.
+                    # If no match found, assign alert to monitoring team for follow up and set event to warning.
                     default {
-                        $Message += "Mp name MpName is not in the switch statement for alert '$Alert'`n"
+                        $Message += "Mp name $MpName is not in the switch statement for alert '$Alert'`n"
                         $ScriptState="Warning"
                         $Category="Unknown"; $Owner=$MonitoringTeam
                    }
@@ -247,7 +244,7 @@ Function Set-AlertManagement {
                     "ActiveDirectory.Monitor.TimeDriftScriptError" {$Owner=$MonitoringTeam; $Category="SCOM"; BREAK}
                     "Microsoft.ActiveDirectoryFederationServices2012R2.FederationServerTrustsHaveExpiredCertsWarningMonitor" {$Category="Certificate"; BREAK}
                }
-                # Assign alerts based on the alert name.
+                # Assign alerts based on alert name.
                 switch ($AlertName) {
                     "Web Application Unavailable: Hitachi Management portal" {$Owner=$BackupStorageTeam; $Category="Hitachi"; BREAK} 
                     "Web Application Unavailable: NetApp Management portal" {$Owner=$BackupStorageTeam; $Category="NetApp"; BREAK} 
@@ -256,7 +253,7 @@ Function Set-AlertManagement {
                     "Web Application Unavailable: Carbon Black" {$Owner=$ServerTeam; $Category="Carbon Black"; BREAK} 
                     "Web Application Unavailable: VMware Workspace ONE" {$Owner=$ServerTeam; $Category="VMware Workspace ONE"; BREAK} 
                }
-                # Update alert properties and move to next.
+                # Update alert properties and process next alert.
                 Set-SCOMAlert -Alert $Alert -Owner $Owner -CustomField1 $Category -CustomField2 $Source -ResolutionState 1
            }
        }
@@ -267,13 +264,13 @@ Function Set-AlertManagement {
    }
 }
 # Declare all constants used by the script
+[datetime]$StartTime=Get-Date
 $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$MpWorkflow="SCOM.Rule.AlertManagement"
 $Mp="TestA.SCOM.AlertManagement"
-$MpVersion="2023.9.18.0"
-[datetime]$StartTime=Get-Date
+$MpVersion="2023.9.19.0"
+$MpWorkflow="SCOM.Rule.AlertManagement"
 Set-AlertManagement
 
 ]]>
