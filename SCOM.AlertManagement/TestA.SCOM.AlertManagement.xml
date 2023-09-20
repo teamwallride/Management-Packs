@@ -1,6 +1,6 @@
 <!--
 Change log.
-2023.9.19.0
+2023.9.20.0
 -Development.
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
@@ -9,7 +9,7 @@ Change log.
     <Manifest>
         <Identity>
             <ID>TestA.SCOM.AlertManagement</ID>
-            <Version>2023.9.19.0</Version>
+            <Version>2023.9.20.0</Version>
         </Identity>
         <Name>TestA.SCOM.AlertManagement</Name>
         <References>
@@ -87,6 +87,10 @@ Change log.
                                 <ScriptBody>
                                 <![CDATA[
 <#
+We we're at 20/9.
+Think script is solid. Now that I'm using 17610 to indicate warnings/errors we need to update scripts like updaterollup scripts to change the numbers or else it's gonna alert.
+
+
 New event logging system:
 17610 - OK
 17611 - Script warning
@@ -103,15 +107,15 @@ Function Write-Log {
     Param($ScriptState)
     Switch ($ScriptState) {
         "Information" {
-            $EventId=17610
+            $EventId=17609
             $EventLevel=0 # 0=Info
        }
         "Warning" {
-            $EventId=17611
+            $EventId=17610
             $EventLevel=2 # 2=Warning
        }
         "Error" {
-            $EventId=17612
+            $EventId=17611
             $EventLevel=1 # 1=Error
        }        
    }
@@ -269,7 +273,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="TestA.SCOM.AlertManagement"
-$MpVersion="2023.9.19.0"
+$MpVersion="2023.9.20.0"
 $MpWorkflow="SCOM.Rule.AlertManagement"
 Set-AlertManagement
 
