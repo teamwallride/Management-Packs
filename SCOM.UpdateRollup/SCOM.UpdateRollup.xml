@@ -134,7 +134,7 @@
 <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
 <SyncTime>$Config/SyncTime$</SyncTime>
-<ScriptName>SCOM.WindowsInventory.ps1</ScriptName>
+<ScriptName>GetURInfo.ps1</ScriptName>
 <ScriptBody><![CDATA[
 # Start Windows discovery
 Param ($SourceId,$ManagedEntityId,$ComputerName) # Need this line to pass params in properly.
@@ -150,7 +150,7 @@ $EventId=17610
 $EventLevel=0
 }
 # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-$ObjMomApi.LogScriptEvent("SCOM.WindowsInventory.ps1", $EventId, $EventLevel, "Windows inventory discovery script executed.`nWorkflow Name: SCOM.Discovery.WindowsComputer`nManagement Pack: SCOM.UpdateRollup (2023.9.25.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+$ObjMomApi.LogScriptEvent("GetURInfo.ps1", $EventId, $EventLevel, "Windows inventory discovery script executed.`nWorkflow Name: SCOM.Discovery.WindowsComputer`nManagement Pack: SCOM.UpdateRollup (2023.9.25.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -3843,7 +3843,7 @@ This task will reset all state in the Health Service. This includes the state of
 <MamlContent>
 <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
 <maml:title>Summary</maml:title>
-<maml:para>This alert is generated when the SCOM.WindowsInventory.ps1 script experiences runtime problems or finds agent configuration issues.</maml:para>
+<maml:para>This alert is generated when the GetURInfo.ps1 script experiences runtime problems or finds agent configuration issues.</maml:para>
 </maml:section>
 <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
 <maml:title>Resolution</maml:title>

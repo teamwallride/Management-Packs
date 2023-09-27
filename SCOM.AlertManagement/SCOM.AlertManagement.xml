@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>SCOM.AlertManagement</ID>
-            <Version>2023.9.25.2</Version>
+            <Version>2023.9.25.3</Version>
         </Identity>
         <Name>SCOM.AlertManagement</Name>
         <References>
@@ -96,7 +96,7 @@ Function Write-Log {
     $Minutes=$TimeCount.Minutes
     $Seconds=$TimeCount.Seconds
     $Milliseconds=$TimeCount.Milliseconds
-    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`nScript Output: $CountNewAlerts new alert(s) processed. Any issues encountered shown below.`n$Message")
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`nScript Output: Any issues encountered will be shown below.`n$Message")
     Break
 }
 Function Set-AlertManagement {
@@ -242,7 +242,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="SCOM.AlertManagement"
-$MpVersion="2023.9.25.2"
+$MpVersion="2023.9.25.3"
 $MpWorkflow="SCOM.Rule.AlertManagement"
 Set-AlertManagement
 ]]>
