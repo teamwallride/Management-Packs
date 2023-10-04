@@ -348,6 +348,7 @@ Function Get-URInfo {
         ACS COLLECTORS. This section only applies to ACS collectors.
         #>
         $ACSCollectorServiceRegKey = "HKLM:SYSTEM\CurrentControlSet\Services\AdtServer"
+        $ACSCollectorInstallDirectory = (Get-ItemProperty -Path "$ACSCollectorServiceRegKey\Parameters\" -ErrorAction Ignore).ScriptFilePath.TrimEnd("\")
         If ((Get-ItemProperty -Path $ACSCollectorServiceRegKey -ErrorAction Ignore).DisplayName) {
             $ACSCollectorVersion = (Get-Item "$WinDir\System32\Security\AdtServer\OmacAdmn.dll").VersionInfo.FileVersion
             Switch ($ACSCollectorVersion) {

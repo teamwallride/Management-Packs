@@ -4,6 +4,7 @@ Collects SCOM update rollup information.
 
 # Enhancements
 
+- Fix $ACSCollectorInstallDirectory = (Get-ItemProperty -Path "$ACSCollectorServiceRegKey\Parameters\" -ErrorAction Ignore).ScriptFilePath.TrimEnd("\")
 - Change 'Agent MG Failovers' to just show mgmt group names. Currently, if there's too many it gets cut off. We can use other scripts to show agent failover.
 - Add to daily report a table showing top 10 list of servers with low disk space.
 - Add event monitor for SCOM.Rule.DailyReport.
