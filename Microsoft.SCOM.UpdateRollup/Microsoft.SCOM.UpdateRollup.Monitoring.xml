@@ -3,10 +3,10 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <Manifest>
         <Identity>
-            <ID>TestB.Microsoft.SCOM.UpdateRollup</ID>
-            <Version>2023.10.3.1</Version>
+            <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
+            <Version>2023.10.4.0</Version>
         </Identity>
-        <Name>TestB.Microsoft.SCOM.UpdateRollup</Name>
+        <Name>Microsoft.SCOM.UpdateRollup.Monitoring</Name>
         <References>
             <Reference Alias="Windows">
                 <ID>Microsoft.Windows.Library</ID>
@@ -33,7 +33,7 @@
     <TypeDefinitions>
         <EntityTypes>
             <ClassTypes>
-                <ClassType ID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+                <ClassType ID="Microsoft.SCOM.Class.WindowsUpdateRollup" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
                     <Property ID="ComputerType" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="OperatingSystem" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="Product" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
@@ -79,7 +79,7 @@
             </ClassTypes>
         </EntityTypes>
         <ModuleTypes>
-            <DataSourceModuleType ID="TestB.Microsoft.SCOM.DataSource.WindowsUpdateRollup" Accessibility="Internal" Batching="false">
+            <DataSourceModuleType ID="Microsoft.SCOM.DataSource.WindowsUpdateRollup" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element name="IntervalSeconds" type="xsd:integer"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -117,7 +117,7 @@ Function Write-Log {
     $Minutes = $TimeCount.Minutes
     $Seconds = $TimeCount.Seconds
     $Milliseconds = $TimeCount.Milliseconds
-    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`nAny issues encountered will be shown below.`n$Message")
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
     Break
 }
 Function Get-URInfo {
@@ -683,49 +683,49 @@ Function Get-URInfo {
         write-host "DisplayName: $ComputerName"
         #>
         # Return discovery data.
-        $Instance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']$")
+        $Instance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']$")
         $Instance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $ComputerName)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ComputerType$", $ComputerType)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/OperatingSystem$", $OperatingSystem)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/Product$", $Product)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/AgentInstallDirectory$", $AgentInstallDirectory)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/AgentVersion$", $AgentVersion)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ManagementGroups$", $ManagementGroups)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/HealthServiceAccount$", $HealthServiceAccount)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/CertificateExpiry$", $CertificateExpiry)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ADIntegration$", $ADIntegration)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/APMServiceStartMode$", $APMServiceStartMode)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSForwarderServiceStartMode$", $ACSForwarderServiceStartMode)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/LogAnalyticsWorkspaces$", $LogAnalyticsWorkspaces)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/MgmtServerInstallDirectory$", $MgmtServerInstallDirectory)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/MgmtServerVersion$", $MgmtServerVersion)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ConfigServiceAccount$", $ConfigServiceAccount)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/DataAccessServiceAccount$", $DataAccessServiceAccount)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/OpsDbName$", $OpsDbName)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/OpsDbServer$", $OpsDbServer)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/DWDbName$", $DWDbName)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/DwDbServer$", $DwDbServer)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSCollectorServiceAccount$", $ACSCollectorServiceAccount)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSCollectorVersion$", $ACSCollectorVersion)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/RMS$", $RMS)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/GatewayServerInstallDirectory$", $GatewayServerInstallDirectory)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/GatewayServerVersion$", $GatewayServerVersion)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/WebConsoleInstallDirectory$", $WebConsoleInstallDirectory)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/WebConsoleVersion$", $WebConsoleVersion)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/AuthenticationMode$", $AuthenticationMode)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/DefaultServer$", $DefaultServer)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/WebConsoleUrl$", $WebConsoleUrl)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ApmAdvisorUrl$", $ApmAdvisorUrl)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ApmDiagnosticsUrl$", $ApmDiagnosticsUrl)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerInstallDirectory$", $ReportServerInstallDirectory)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerVersion$", $ReportServerVersion)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerDwDbServer$", $ReportServerDwDbServer)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerDWDBName$", $ReportServerDWDBName)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerUrl$", $ReportServerUrl)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/SRSInstance$", $SRSInstance)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerServiceAccount$", $ReportServerServiceAccount)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ConsoleInstallDirectory$", $ConsoleInstallDirectory)
-        $Instance.AddProperty("$MPElement[Name='TestB.Microsoft.SCOM.Class.WindowsUpdateRollup']/ConsoleVersion$", $ConsoleVersion)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ComputerType$", $ComputerType)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/OperatingSystem$", $OperatingSystem)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/Product$", $Product)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/AgentInstallDirectory$", $AgentInstallDirectory)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/AgentVersion$", $AgentVersion)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ManagementGroups$", $ManagementGroups)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/HealthServiceAccount$", $HealthServiceAccount)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/CertificateExpiry$", $CertificateExpiry)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ADIntegration$", $ADIntegration)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/APMServiceStartMode$", $APMServiceStartMode)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSForwarderServiceStartMode$", $ACSForwarderServiceStartMode)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/LogAnalyticsWorkspaces$", $LogAnalyticsWorkspaces)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/MgmtServerInstallDirectory$", $MgmtServerInstallDirectory)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/MgmtServerVersion$", $MgmtServerVersion)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ConfigServiceAccount$", $ConfigServiceAccount)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/DataAccessServiceAccount$", $DataAccessServiceAccount)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/OpsDbName$", $OpsDbName)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/OpsDbServer$", $OpsDbServer)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/DWDbName$", $DWDbName)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/DwDbServer$", $DwDbServer)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSCollectorServiceAccount$", $ACSCollectorServiceAccount)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSCollectorVersion$", $ACSCollectorVersion)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/RMS$", $RMS)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/GatewayServerInstallDirectory$", $GatewayServerInstallDirectory)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/GatewayServerVersion$", $GatewayServerVersion)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/WebConsoleInstallDirectory$", $WebConsoleInstallDirectory)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/WebConsoleVersion$", $WebConsoleVersion)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/AuthenticationMode$", $AuthenticationMode)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/DefaultServer$", $DefaultServer)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/WebConsoleUrl$", $WebConsoleUrl)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ApmAdvisorUrl$", $ApmAdvisorUrl)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ApmDiagnosticsUrl$", $ApmDiagnosticsUrl)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerInstallDirectory$", $ReportServerInstallDirectory)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerVersion$", $ReportServerVersion)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerDwDbServer$", $ReportServerDwDbServer)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerDWDBName$", $ReportServerDWDBName)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerUrl$", $ReportServerUrl)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/SRSInstance$", $SRSInstance)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ReportServerServiceAccount$", $ReportServerServiceAccount)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ConsoleInstallDirectory$", $ConsoleInstallDirectory)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ConsoleVersion$", $ConsoleVersion)
         $Instance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $ComputerName)
         $DiscoveryData.AddInstance($Instance)
         # Submit discovery data back to Operations Manager and complete the script.
@@ -746,8 +746,8 @@ Function Get-URInfo {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "GetWindowsURInfo.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "Microsoft.SCOM.UpdateRollup"
-$MpVersion = "2023.10.3.1"
+$Mp = "Microsoft.SCOM.UpdateRollup.Monitoring"
+$MpVersion = "2023.10.4.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsUpdateRollup"
 Get-URInfo -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
 ]]>
@@ -776,7 +776,7 @@ Get-URInfo -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $
                 </ModuleImplementation>
                 <OutputType>System!System.Discovery.Data</OutputType>
             </DataSourceModuleType>
-            <DataSourceModuleType ID="TestB.Microsoft.SCOM.DataSource.ManagementPackBackup" Accessibility="Public" Batching="false">
+            <DataSourceModuleType ID="Microsoft.SCOM.DataSource.ManagementPackBackup" Accessibility="Public" Batching="false">
                 <Configuration>
                     <IncludeSchemaTypes>
                         <SchemaType>System!System.ExpressionEvaluatorSchema</SchemaType>
@@ -810,7 +810,7 @@ Get-URInfo -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $
                 </ModuleImplementation>
                 <OutputType>System!System.TriggerData</OutputType>
             </DataSourceModuleType>
-            <DataSourceModuleType ID="TestB.Microsoft.SCOM.DataSource.ManagementGroupReport" Accessibility="Public" Batching="false">
+            <DataSourceModuleType ID="Microsoft.SCOM.DataSource.ManagementGroupReport" Accessibility="Public" Batching="false">
                 <Configuration>
                     <IncludeSchemaTypes>
                         <SchemaType>System!System.ExpressionEvaluatorSchema</SchemaType>
@@ -844,7 +844,7 @@ Get-URInfo -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $
                 </ModuleImplementation>
                 <OutputType>System!System.TriggerData</OutputType>
             </DataSourceModuleType>
-            <WriteActionModuleType ID="TestB.Microsoft.SCOM.WriteAction.RunCommand" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.RunCommand" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -897,7 +897,7 @@ else {
                 <OutputType>System!System.BaseData</OutputType>
                 <InputType>System!System.BaseData</InputType>
             </WriteActionModuleType>
-            <WriteActionModuleType ID="TestB.Microsoft.SCOM.WriteAction.RemoveManagementGroup" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.RemoveManagementGroup" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="ManagementGroups" type="xsd:string"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
@@ -1012,7 +1012,7 @@ RunScript -ManagementGroups $ManagementGroups
                 <OutputType>System!System.BaseData</OutputType>
                 <InputType>System!System.BaseData</InputType>
             </WriteActionModuleType>
-            <WriteActionModuleType ID="TestB.Microsoft.SCOM.WriteAction.DailyReport" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.DailyReport" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="EmailFromAddress" type="xsd:string"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -1068,7 +1068,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: TestB.Microsoft.SCOM.UpdateRollup (2023.10.3.1)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.4.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError {
@@ -1427,7 +1427,7 @@ DailyReport -EmailFromAddress $EmailFromAddress -EmailToAddress $EmailToAddress 
                 <OutputType>System!System.BaseData</OutputType>
                 <InputType>System!System.BaseData</InputType>
             </WriteActionModuleType>
-            <WriteActionModuleType ID="TestB.Microsoft.SCOM.WriteAction.ManagementPackBackup" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.ManagementPackBackup" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="ComputerName" type="xsd:string"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -1459,7 +1459,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: TestB.Microsoft.SCOM.UpdateRollup (2023.10.3.1)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.4.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -1554,7 +1554,7 @@ MpBackup -MpBackupFolder $MpBackupFolder # Need this to pass params in properly.
                 <OutputType>System!System.BaseData</OutputType>
                 <InputType>System!System.BaseData</InputType>
             </WriteActionModuleType>
-            <WriteActionModuleType ID="TestB.Microsoft.SCOM.WriteAction.ManagementGroupReport" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.ManagementGroupReport" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="ComputerName" type="xsd:string"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -1590,7 +1590,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: TestB.Microsoft.SCOM.UpdateRollup (2023.10.3.1)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.4.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -2049,7 +2049,7 @@ MgReport -MgReportFolder $MgReportFolder # Need this to pass params in properly.
                 <OutputType>System!System.BaseData</OutputType>
                 <InputType>System!System.BaseData</InputType>
             </WriteActionModuleType>
-            <WriteActionModuleType ID="TestB.Microsoft.SCOM.WriteAction.GetLogAnalyticsWorkspaces" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.GetLogAnalyticsWorkspaces" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -2127,7 +2127,7 @@ GetLAWorkspaces
                 <OutputType>System!System.BaseData</OutputType>
                 <InputType>System!System.BaseData</InputType>
             </WriteActionModuleType>
-            <WriteActionModuleType ID="TestB.Microsoft.SCOM.WriteAction.GetTlsSettings" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.GetTlsSettings" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -2191,7 +2191,7 @@ RunScript
                 <OutputType>System!System.BaseData</OutputType>
                 <InputType>System!System.BaseData</InputType>
             </WriteActionModuleType>
-            <WriteActionModuleType ID="TestB.Microsoft.SCOM.WriteAction.GetWindowsServices" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.GetWindowsServices" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -2239,7 +2239,7 @@ $Output
                 <OutputType>System!System.BaseData</OutputType>
                 <InputType>System!System.BaseData</InputType>
             </WriteActionModuleType>
-            <WriteActionModuleType ID="TestB.Microsoft.SCOM.WriteAction.GetWindowsDiskInfo" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.GetWindowsDiskInfo" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -2306,7 +2306,7 @@ $Output
                 </ModuleImplementation>
                 <InputType>System!System.BaseData</InputType>
             </WriteActionModuleType>
-            <WriteActionModuleType ID="TestB.Microsoft.SCOM.WriteAction.LogWindowsTestEvent" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.LogWindowsTestEvent" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -2331,7 +2331,7 @@ try {
     $EventId = 17616
     $EventLevel = 0 # 0=Information, 1=Error, 2=Warning
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: TestB.Microsoft.SCOM.UpdateRollup (2023.10.3.1)")
+    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.4.0)")
     Write-Host Information event ID 17616 successfully written to the Operations Manager log.
     Write-Host
 }
@@ -2364,10 +2364,10 @@ catch {
     <Monitoring>
         <!--Discoveries.-->
         <Discoveries>
-            <Discovery ID="TestB.Microsoft.SCOM.Discovery.WindowsUpdateRollup" Target="SystemCenter!Microsoft.SystemCenter.HealthService" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+            <Discovery ID="Microsoft.SCOM.Discovery.WindowsUpdateRollup" Target="SystemCenter!Microsoft.SystemCenter.HealthService" Enabled="true" ConfirmDelivery="false" Remotable="true" Priority="Normal">
                 <Category>Discovery</Category>
                 <DiscoveryTypes>
-                    <DiscoveryClass TypeID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup">
+                    <DiscoveryClass TypeID="Microsoft.SCOM.Class.WindowsUpdateRollup">
                         <Property PropertyID="ComputerType"/>
                         <Property PropertyID="OperatingSystem"/>
                         <Property PropertyID="Product"/>
@@ -2411,9 +2411,8 @@ catch {
                         <Property PropertyID="ConsoleVersion"/>
                     </DiscoveryClass>
                 </DiscoveryTypes>
-                <DataSource ID="DS" TypeID="TestB.Microsoft.SCOM.DataSource.WindowsUpdateRollup">
-                    <!--change to 86400 when done. -->
-                    <IntervalSeconds>60</IntervalSeconds>
+                <DataSource ID="DS" TypeID="Microsoft.SCOM.DataSource.WindowsUpdateRollup">
+                    <IntervalSeconds>86400</IntervalSeconds>
                     <SyncTime></SyncTime>
                     <TimeoutSeconds>120</TimeoutSeconds>
                 </DataSource>
@@ -2427,15 +2426,15 @@ catch {
                     <DataSource ID="DS" TypeID="System!System.Scheduler">
                         <Scheduler>
                             <SimpleReccuringSchedule>
-                                <Interval Unit="Seconds">86400</Interval>                                <!-- 86400 daily default -->
-                                <SyncTime>08:00</SyncTime>                                <!-- 8am -->
+                                <Interval Unit="Seconds">86400</Interval>
+                                <SyncTime>08:00</SyncTime>
                             </SimpleReccuringSchedule>
                             <ExcludeDates />
                         </Scheduler>
                     </DataSource>
                 </DataSources>
                 <WriteActions>
-                    <WriteAction ID="WA" TypeID="TestB.Microsoft.SCOM.WriteAction.DailyReport">
+                    <WriteAction ID="WA" TypeID="Microsoft.SCOM.WriteAction.DailyReport">
                         <EmailFromAddress>from@email.address</EmailFromAddress>
                         <EmailToAddress>one@email.address,two@email.address</EmailToAddress>
                         <EmailServer>Smtp.server</EmailServer>
@@ -2445,39 +2444,39 @@ catch {
                     </WriteAction>
                 </WriteActions>
             </Rule>
-            <Rule ID="SCOM.Rule.MpBackup" Enabled="false" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+            <Rule ID="SCOM.Rule.MpBackup" Enabled="false" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
                 <Category>Maintenance</Category>
                 <DataSources>
-                    <DataSource ID="Scheduler" TypeID="TestB.Microsoft.SCOM.DataSource.ManagementPackBackup">
+                    <DataSource ID="Scheduler" TypeID="Microsoft.SCOM.DataSource.ManagementPackBackup">
                         <IntervalSeconds>86400</IntervalSeconds>
                         <SyncTime></SyncTime>
                     </DataSource>
                 </DataSources>
                 <WriteActions>
-                    <WriteAction ID="WA" TypeID="TestB.Microsoft.SCOM.WriteAction.ManagementPackBackup">
+                    <WriteAction ID="WA" TypeID="Microsoft.SCOM.WriteAction.ManagementPackBackup">
                         <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-                        <MpBackupFolder></MpBackupFolder>                        <!--LEAVE BLANK-->
+                        <MpBackupFolder></MpBackupFolder>
                         <TimeoutSeconds>120</TimeoutSeconds>
                     </WriteAction>
                 </WriteActions>
             </Rule>
-            <Rule ID="SCOM.Rule.MgReport" Enabled="false" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+            <Rule ID="SCOM.Rule.MgReport" Enabled="false" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
                 <Category>Maintenance</Category>
                 <DataSources>
-                    <DataSource ID="Scheduler" TypeID="TestB.Microsoft.SCOM.DataSource.ManagementGroupReport">
+                    <DataSource ID="Scheduler" TypeID="Microsoft.SCOM.DataSource.ManagementGroupReport">
                         <IntervalSeconds>86400</IntervalSeconds>
                         <SyncTime></SyncTime>
                     </DataSource>
                 </DataSources>
                 <WriteActions>
-                    <WriteAction ID="WA" TypeID="TestB.Microsoft.SCOM.WriteAction.ManagementGroupReport">
+                    <WriteAction ID="WA" TypeID="Microsoft.SCOM.WriteAction.ManagementGroupReport">
                         <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
                         <MgReportFolder></MgReportFolder>                        <!--LEAVE BLANK-->
                         <TimeoutSeconds>120</TimeoutSeconds>
                     </WriteAction>
                 </WriteActions>
             </Rule>
-            <Rule ID="SCOM.Rule.AlertOnLogWindowsTestEvent" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+            <Rule ID="SCOM.Rule.AlertOnLogWindowsTestEvent" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
                 <Category>Alert</Category>
                 <DataSources>
                     <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
@@ -2538,7 +2537,7 @@ catch {
                     </WriteAction>
                 </WriteActions>
             </Rule>
-            <Rule ID="SCOM.Rule.PowerShellScriptWarning" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+            <Rule ID="SCOM.Rule.PowerShellScriptWarning" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
                 <Category>Alert</Category>
                 <DataSources>
                     <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.EventProvider">
@@ -2600,50 +2599,50 @@ catch {
         </Rules>
         <!--Tasks.-->
         <Tasks>
-            <Task ID="SCOM.Task.RunCommand" Accessibility="Public" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
+            <Task ID="SCOM.Task.RunCommand" Accessibility="Public" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
                 <Category>Maintenance</Category>
-                <WriteAction ID="PSWA" TypeID="TestB.Microsoft.SCOM.WriteAction.RunCommand">
+                <WriteAction ID="PSWA" TypeID="Microsoft.SCOM.WriteAction.RunCommand">
                     <TimeoutSeconds>60</TimeoutSeconds>
                     <RunCommand></RunCommand>
                 </WriteAction>
             </Task>
-            <Task ID="SCOM.Task.GetLogAnalyticsWorkspace" Accessibility="Public" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
+            <Task ID="SCOM.Task.GetLogAnalyticsWorkspace" Accessibility="Public" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
                 <Category>Maintenance</Category>
-                <WriteAction ID="PSWA" TypeID="TestB.Microsoft.SCOM.WriteAction.GetLogAnalyticsWorkspaces">
+                <WriteAction ID="PSWA" TypeID="Microsoft.SCOM.WriteAction.GetLogAnalyticsWorkspaces">
                     <TimeoutSeconds>180</TimeoutSeconds>
                 </WriteAction>
             </Task>
-            <Task ID="SCOM.Task.GetTLSRegSettings" Accessibility="Public" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
+            <Task ID="SCOM.Task.GetTLSRegSettings" Accessibility="Public" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
                 <Category>Maintenance</Category>
-                <WriteAction ID="PSWA" TypeID="TestB.Microsoft.SCOM.WriteAction.GetTlsSettings">
+                <WriteAction ID="PSWA" TypeID="Microsoft.SCOM.WriteAction.GetTlsSettings">
                     <TimeoutSeconds>180</TimeoutSeconds>
                 </WriteAction>
             </Task>
-            <Task ID="SCOM.Task.GetWindowsServices" Accessibility="Public" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
+            <Task ID="SCOM.Task.GetWindowsServices" Accessibility="Public" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
                 <Category>Maintenance</Category>
-                <WriteAction ID="PSWA" TypeID="TestB.Microsoft.SCOM.WriteAction.GetWindowsServices">
+                <WriteAction ID="PSWA" TypeID="Microsoft.SCOM.WriteAction.GetWindowsServices">
                     <TimeoutSeconds>180</TimeoutSeconds>
                 </WriteAction>
             </Task>
-            <Task ID="SCOM.Task.GetWindowsDiskInfo" Accessibility="Public" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
+            <Task ID="SCOM.Task.GetWindowsDiskInfo" Accessibility="Public" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
                 <Category>Maintenance</Category>
-                <WriteAction ID="PSWA" TypeID="TestB.Microsoft.SCOM.WriteAction.GetWindowsDiskInfo">
+                <WriteAction ID="PSWA" TypeID="Microsoft.SCOM.WriteAction.GetWindowsDiskInfo">
                     <TimeoutSeconds>180</TimeoutSeconds>
                 </WriteAction>
             </Task>
-            <Task ID="SCOM.Task.ResetHealth" Comment="Request Health Service Store Reset" Accessibility="Internal" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="300" Remotable="true">
+            <Task ID="SCOM.Task.ResetHealth" Comment="Request Health Service Store Reset" Accessibility="Internal" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="300" Remotable="true">
                 <Category>Maintenance</Category>
                 <WriteAction ID="ResetServiceStore" TypeID="Microsoft.SystemCenter.ResetServiceStoreAction" />
             </Task>
-            <Task ID="SCOM.Task.LogWindowsTestEvent" Accessibility="Public" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
+            <Task ID="SCOM.Task.LogWindowsTestEvent" Accessibility="Public" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
                 <Category>Maintenance</Category>
-                <WriteAction ID="PSWA" TypeID="TestB.Microsoft.SCOM.WriteAction.LogWindowsTestEvent">
+                <WriteAction ID="PSWA" TypeID="Microsoft.SCOM.WriteAction.LogWindowsTestEvent">
                     <TimeoutSeconds>180</TimeoutSeconds>
                 </WriteAction>
             </Task>
-            <Task ID="SCOM.Task.RemoveMgmtGroup" Accessibility="Public" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
+            <Task ID="SCOM.Task.RemoveMgmtGroup" Accessibility="Public" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" Timeout="120" Remotable="true">
                 <Category>Maintenance</Category>
-                <WriteAction ID="PSWA" TypeID="TestB.Microsoft.SCOM.WriteAction.RemoveManagementGroup">
+                <WriteAction ID="PSWA" TypeID="Microsoft.SCOM.WriteAction.RemoveManagementGroup">
                     <ManagementGroups></ManagementGroups>
                     <TimeoutSeconds>180</TimeoutSeconds>
                 </WriteAction>
@@ -2655,7 +2654,7 @@ catch {
     </Monitoring>
     <Presentation>
         <ConsoleTasks>
-            <ConsoleTask ID="SCOM.Task.Ping" Accessibility="Internal" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" RequireOutput="true">
+            <ConsoleTask ID="SCOM.Task.Ping" Accessibility="Internal" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" RequireOutput="true">
                 <Assembly>Resource.SCOM.Task.Ping</Assembly>
                 <Handler>ShellHandler</Handler>
                 <Parameters>
@@ -2664,7 +2663,7 @@ catch {
                     <Argument>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Argument>
                 </Parameters>
             </ConsoleTask>
-            <ConsoleTask ID="SCOM.Task.RDP" Accessibility="Internal" Enabled="true" Target="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" RequireOutput="false">
+            <ConsoleTask ID="SCOM.Task.RDP" Accessibility="Internal" Enabled="true" Target="Microsoft.SCOM.Class.WindowsUpdateRollup" RequireOutput="false">
                 <Assembly>Resource.SCOM.Task.RDP</Assembly>
                 <Handler>ShellHandler</Handler>
                 <Parameters>
@@ -2684,142 +2683,142 @@ catch {
         <LanguagePack ID="ENU" IsDefault="true">
             <DisplayStrings>
                 <!--Management pack.-->
-                <DisplayString ElementID="TestB.Microsoft.SCOM.UpdateRollup">
-                    <Name>TestB.Microsoft.SCOM.UpdateRollup</Name>
-                    <Description>Collects update rollup information on SCOM components.</Description>
+                <DisplayString ElementID="Microsoft.SCOM.UpdateRollup.Monitoring">
+                    <Name>Microsoft SCOM Update Rollup Monitoring</Name>
+                    <Description>Collects SCOM update rollup information.</Description>
                 </DisplayString>
                 <!--Classes.-->
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup">
                     <Name>Windows Update Rollup</Name>
                     <Description>Shows update rollup information for Windows computers.</Description>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ComputerType">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ComputerType">
                     <Name>Computer Type</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="OperatingSystem">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="OperatingSystem">
                     <Name>Operating System</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="Product">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="Product">
                     <Name>Product</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="AgentInstallDirectory">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="AgentInstallDirectory">
                     <Name>Agent Install Directory</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="AgentVersion">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="AgentVersion">
                     <Name>Agent Version</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ManagementGroups">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ManagementGroups">
                     <Name>Management Groups</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="HealthServiceAccount">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="HealthServiceAccount">
                     <Name>Health Service Account</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="CertificateExpiry">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="CertificateExpiry">
                     <Name>Certificate Expiry (YMDT)</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ADIntegration">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ADIntegration">
                     <Name>AD Integration</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="APMServiceStartMode">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="APMServiceStartMode">
                     <Name>APM Service Start Mode</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ACSForwarderServiceStartMode">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ACSForwarderServiceStartMode">
                     <Name>ACS Forwarder Service Start Mode</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="LogAnalyticsWorkspaces">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="LogAnalyticsWorkspaces">
                     <Name>Log Analytics Workspaces</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="MgmtServerInstallDirectory">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="MgmtServerInstallDirectory">
                     <Name>Mgmt Server Install Directory</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="MgmtServerVersion">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="MgmtServerVersion">
                     <Name>Mgmt Server Version</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ConfigServiceAccount">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ConfigServiceAccount">
                     <Name>Config Service Account</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="DataAccessServiceAccount">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="DataAccessServiceAccount">
                     <Name>Data Access Service Account</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="OpsDbName">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="OpsDbName">
                     <Name>Operations Manager Db Name</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="OpsDbServer">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="OpsDbServer">
                     <Name>Operations Manager Db Server</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="DWDbName">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="DWDbName">
                     <Name>Data Warehouse Db Name</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="DwDbServer">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="DwDbServer">
                     <Name>Data Warehouse Db Server</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ACSCollectorServiceAccount">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ACSCollectorServiceAccount">
                     <Name>ACS Collector Service Account</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ACSCollectorVersion">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ACSCollectorVersion">
                     <Name>ACS Collector Version</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="RMS">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="RMS">
                     <Name>RMS</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="GatewayServerInstallDirectory">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="GatewayServerInstallDirectory">
                     <Name>Gateway Server Install Directory</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="GatewayServerVersion">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="GatewayServerVersion">
                     <Name>Gateway Server Version</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="WebConsoleInstallDirectory">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="WebConsoleInstallDirectory">
                     <Name>Web Console Install Directory</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="WebConsoleVersion">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="WebConsoleVersion">
                     <Name>Web Console Version</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="AuthenticationMode">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="AuthenticationMode">
                     <Name>Authentication Mode</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="DefaultServer">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="DefaultServer">
                     <Name>Default Server</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="WebConsoleUrl">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="WebConsoleUrl">
                     <Name>Web Console Url</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ApmAdvisorUrl">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ApmAdvisorUrl">
                     <Name>Apm Advisor Url</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ApmDiagnosticsUrl">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ApmDiagnosticsUrl">
                     <Name>Apm Diagnostics Url</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerInstallDirectory">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerInstallDirectory">
                     <Name>Report Server Install Directory</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerVersion">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerVersion">
                     <Name>Report Server Version</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerDwDbServer">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerDwDbServer">
                     <Name>Data Warehouse Db Server</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerDWDBName">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerDWDBName">
                     <Name>Data Warehouse Db Name</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerUrl">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerUrl">
                     <Name>Report Server Url</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="SRSInstance">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="SRSInstance">
                     <Name>SRS Instance</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerServiceAccount">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ReportServerServiceAccount">
                     <Name>Report Server Service Account</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ConsoleVersion">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ConsoleVersion">
                     <Name>Console Version</Name>
                 </DisplayString>
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ConsoleInstallDirectory">
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ConsoleInstallDirectory">
                     <Name>Console Install Directory</Name>
                 </DisplayString>
                 <!--Discoveries.-->
-                <DisplayString ElementID="TestB.Microsoft.SCOM.Discovery.WindowsUpdateRollup">
+                <DisplayString ElementID="Microsoft.SCOM.Discovery.WindowsUpdateRollup">
                     <Name>Windows Computer PowerShell Discovery</Name>
-                    <Description>This script gets the properties of class 'TestB.Microsoft.SCOM.Class.WindowsUpdateRollup'.</Description>
+                    <Description>This script gets the properties of class 'Microsoft.SCOM.Class.WindowsUpdateRollup'.</Description>
                 </DisplayString>
                 <!--Rules.-->
                 <DisplayString ElementID="SCOM.Rule.DailyReport">

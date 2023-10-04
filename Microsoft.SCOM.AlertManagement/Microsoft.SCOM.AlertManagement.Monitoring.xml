@@ -3,10 +3,10 @@
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
     <Manifest>
         <Identity>
-            <ID>SCOM.AlertManagement</ID>
-            <Version>2023.9.25.3</Version>
+            <ID>Microsoft.SCOM.AlertManagement.Monitoring</ID>
+            <Version>2023.10.4.0</Version>
         </Identity>
-        <Name>SCOM.AlertManagement</Name>
+        <Name>Microsoft.SCOM.AlertManagement.Monitoring</Name>
         <References>
             <Reference Alias="Windows">
                 <ID>Microsoft.Windows.Library</ID>
@@ -32,7 +32,7 @@
     </Manifest>
     <TypeDefinitions>
         <ModuleTypes>
-            <DataSourceModuleType ID="SCOM.DSM.URAlertManagement" Accessibility="Public" Batching="false">
+            <DataSourceModuleType ID="Microsoft.SCOM.DataSource.AlertManagement" Accessibility="Public" Batching="false">
                 <Configuration>
                     <IncludeSchemaTypes>
                         <SchemaType>System!System.ExpressionEvaluatorSchema</SchemaType>
@@ -66,7 +66,7 @@
                 </ModuleImplementation>
                 <OutputType>System!System.TriggerData</OutputType>
             </DataSourceModuleType>
-            <WriteActionModuleType ID="SCOM.WAM.URAlertManagement" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.AlertManagement" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -78,25 +78,25 @@
                     <Composite>
                         <MemberModules>
                             <WriteAction ID="WA" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
-                                <ScriptName>SCOM.AlertManagement.ps1</ScriptName>
+                                <ScriptName>AlertManagement.ps1</ScriptName>
                                 <ScriptBody>
                                 <![CDATA[
 Function Write-Log {
     Param($ScriptState)
     if ($ScriptState -eq "Information") {
-        $EventId=17609
-        $EventLevel=0 # 0=Info
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
     }
     else {
-        $EventId=17610
-        $EventLevel=2 # 2=Warning
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
     }
-    $End=Get-Date
-    $TimeCount=(New-TimeSpan -Start $StartTime -End $End)
-    $Minutes=$TimeCount.Minutes
-    $Seconds=$TimeCount.Seconds
-    $Milliseconds=$TimeCount.Milliseconds
-    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`nScript Output: Any issues encountered will be shown below.`n$Message")
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
     Break
 }
 Function Set-AlertManagement {
@@ -177,7 +177,7 @@ Function Set-AlertManagement {
                     "Passwordstate.Monitoring" { $Category="Passwordstate"; $Owner=$SecurityTeam; BREAK }
                     # SCOM
                     "Microsoft.SystemCenter.*" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
-                    "SCOM.UpdateRollup" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
+                    "*.Microsoft.SCOM.UpdateRollup" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
                     # SCCM
                     "Microsoft.SystemCenter2012.ConfigurationManager.*" { $Category="SCCM"; $Owner=$SccmTeam; BREAK }
                     # SharePoint
@@ -241,9 +241,9 @@ Function Set-AlertManagement {
 $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp="SCOM.AlertManagement"
-$MpVersion="2023.9.25.3"
-$MpWorkflow="SCOM.Rule.AlertManagement"
+$Mp="Microsoft.SCOM.AlertManagement.Monitoring"
+$MpVersion="2023.10.4.0"
+$MpWorkflow="Microsoft.SCOM.Rule.AlertManagement"
 Set-AlertManagement
 ]]>
 
@@ -263,17 +263,16 @@ Set-AlertManagement
     </TypeDefinitions>
     <Monitoring>
         <Rules>
-            <!--Alert Management rule-->
-            <Rule ID="SCOM.Rule.AlertManagement" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+            <Rule ID="Microsoft.SCOM.Rule.AlertManagement" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
                 <Category>Maintenance</Category>
                 <DataSources>
-                    <DataSource ID="Scheduler" TypeID="SCOM.DSM.URAlertManagement">
+                    <DataSource ID="Scheduler" TypeID="Microsoft.SCOM.DataSource.AlertManagement">
                         <IntervalSeconds>300</IntervalSeconds>
                         <SyncTime></SyncTime>
                     </DataSource>
                 </DataSources>
                 <WriteActions>
-                    <WriteAction ID="WA" TypeID="SCOM.WAM.URAlertManagement">
+                    <WriteAction ID="WA" TypeID="Microsoft.SCOM.WriteAction.AlertManagement">
                         <TimeoutSeconds>120</TimeoutSeconds>
                     </WriteAction>
                 </WriteActions>
@@ -283,13 +282,13 @@ Set-AlertManagement
     <LanguagePacks>
         <LanguagePack ID="ENU" IsDefault="false">
             <DisplayStrings>
-                <DisplayString ElementID="SCOM.AlertManagement">
-                    <Name>SCOM Alert Management</Name>
+                <DisplayString ElementID="Microsoft.SCOM.AlertManagement.Monitoring">
+                    <Name>Microsoft SCOM Alert Management Monitoring</Name>
                     <Description>Assigns alerts to support teams.</Description>
                 </DisplayString>
-                <DisplayString ElementID="SCOM.Rule.AlertManagement">
+                <DisplayString ElementID="Microsoft.SCOM.Rule.AlertManagement">
                     <Name>Alert Management</Name>
-                    <Description>This rule runs a scheduled PowerShell script to assign alerts to support teams.</Description>
+                    <Description>This is a PowerShell script that runs every 5 minutes to assign alerts to support teams.</Description>
                 </DisplayString>
             </DisplayStrings>
         </LanguagePack>
