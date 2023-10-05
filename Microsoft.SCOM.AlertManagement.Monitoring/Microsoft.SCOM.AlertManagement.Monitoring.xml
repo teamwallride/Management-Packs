@@ -1,0 +1,296 @@
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <Manifest>
+        <Identity>
+            <ID>Microsoft.SCOM.AlertManagement.Monitoring</ID>
+            <Version>2023.10.5.0</Version>
+        </Identity>
+        <Name>Microsoft.SCOM.AlertManagement.Monitoring</Name>
+        <References>
+            <Reference Alias="Windows">
+                <ID>Microsoft.Windows.Library</ID>
+                <Version>7.5.8501.0</Version>
+                <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+            </Reference>
+            <Reference Alias="System">
+                <ID>System.Library</ID>
+                <Version>7.5.8501.0</Version>
+                <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+            </Reference>
+            <Reference Alias="SystemCenter">
+                <ID>Microsoft.SystemCenter.Library</ID>
+                <Version>7.0.8433.0</Version>
+                <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+            </Reference>
+            <Reference Alias="Health">
+                <ID>System.Health.Library</ID>
+                <Version>7.0.8433.0</Version>
+                <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+            </Reference>
+        </References>
+    </Manifest>
+    <TypeDefinitions>
+        <ModuleTypes>
+            <DataSourceModuleType ID="Microsoft.SCOM.DataSource.AlertManagement" Accessibility="Public" Batching="false">
+                <Configuration>
+                    <IncludeSchemaTypes>
+                        <SchemaType>System!System.ExpressionEvaluatorSchema</SchemaType>
+                    </IncludeSchemaTypes>
+                    <xsd:element name="IntervalSeconds" type="xsd:int"
+                        xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+                    <xsd:element name="SyncTime" type="xsd:string"
+                        xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+                </Configuration>
+                <OverrideableParameters>
+                    <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+                    <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+                </OverrideableParameters>
+                <ModuleImplementation Isolation="Any">
+                    <Composite>
+                        <MemberModules>
+                            <DataSource ID="DS" TypeID="System!System.Scheduler">
+                                <Scheduler>
+                                    <SimpleReccuringSchedule>
+                                        <Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+                                        <SyncTime>$Config/SyncTime$</SyncTime>
+                                    </SimpleReccuringSchedule>
+                                    <ExcludeDates />
+                                </Scheduler>
+                            </DataSource>
+                        </MemberModules>
+                        <Composition>
+                            <Node ID="DS" />
+                        </Composition>
+                    </Composite>
+                </ModuleImplementation>
+                <OutputType>System!System.TriggerData</OutputType>
+            </DataSourceModuleType>
+            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.AlertManagement" Accessibility="Internal" Batching="false">
+                <Configuration>
+                    <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer"
+                        xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+                </Configuration>
+                <OverrideableParameters>
+                    <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+                </OverrideableParameters>
+                <ModuleImplementation Isolation="Any">
+                    <Composite>
+                        <MemberModules>
+                            <WriteAction ID="WA" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
+                                <ScriptName>AlertManagement.ps1</ScriptName>
+                                <ScriptBody>
+                                <![CDATA[
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Set-AlertManagement {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference="Stop"
+    Try {
+        # Set this here so info event is logged if there's no issues.
+        $ScriptState="Information"
+        # Assign team names here.
+        $ADTeam="Company AD Management Team"
+        $BackupStorageTeam="Company Backup and Storage Team"
+        $CitrixTeam="Company Citrix Team"
+        $EndpointSecurityTeam="Company Endpoint Security Team"
+        $MonitoringTeam="Company Monitoring Team"
+        $NetworkTeam="Company Network Team"
+        $SccmTeam="Company SCCM Team"
+        $SecurityTeam="Company Security Team"
+        $ServerTeam="Company Server Team"
+        $SharePointTeam="Company SharePoint Team"
+        # Get PowerShell version.
+        $PSVersion=$PSVersionTable.PSVersion
+        [string]$PSMajor=$PSVersion.Major
+        [string]$PSMinor=$PSVersion.Minor
+        $PSVersion=$PSMajor + "." + $PSMinor
+        # Import PowerShell module.
+        $PowerShellInstallDirectory=(Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\Powershell\V2").InstallDirectory
+        Import-module $PowerShellInstallDirectory`OperationsManager
+        New-DefaultManagementGroupConnection
+        <# Not needed but leaving in.
+        $MgName=(Get-SCOMManagementGroupConnection).ManagementGroupName
+        $MgServer=(Get-SCOMManagementGroupConnection).ManagementServerName
+        $Script:SCOMMGName=(Get-SCOMManagementGroup).Name
+        #>
+        # Get alerts with 'New' resolution state only.
+        $NewAlerts=Get-SCOMAlert -Criteria "ResolutionState=0"
+        $CountNewAlerts=$NewAlerts.Count
+        If ($CountNewAlerts -gt 0) {
+            foreach ($Alert in $NewAlerts) {
+                if ($Alert.ismonitoralert) {
+                    $Workflow=Get-SCOMMonitor -id $Alert.MonitoringRuleId
+                }
+                else {
+                    $Workflow=Get-SCOMRule -id $Alert.MonitoringRuleId
+                }
+                $AlertName=$Alert.name
+                # This maps to 'Source' in the alert name and will fit most needs but it can be customised below.
+                $Source=$Alert.MonitoringObjectDisplayName
+                $WorkflowName=$Workflow.name
+                $MpName=$Workflow.GetManagementPack().name
+                # Assign alerts based on the management pack that generated it.
+                switch -wildcard ($MpName) {
+                    # Active Directory
+                    "Microsoft.Windows.Server.AD.*" { $Category="Active Directory"; $Owner=$ADTeam; BREAK }
+                    "ActiveDirectory.Monitoring" { $Category="Active Directory"; $Owner=$ADTeam; BREAK }
+                    # ADFS
+                    "Microsoft.ActiveDirectoryFederationServices.2012.R2" { $Category="ADFS"; $Owner=$ServerTeam; BREAK }
+                    # Azure AD Connect
+                    "AADC.Monitoring" { $Category="Azure AD Connect"; $Owner=$ADTeam; BREAK }
+                    # Citrix
+                    "CitrixA.Monitoring" { $Category="Citrix"; $Owner=$CitrixTeam; BREAK }
+                    # Client
+                    "*Client*" { $Category="Client"; $Owner=$MonitoringTeam; BREAK }
+                    # Cmdb
+                    "SCOM.Cmdb" { $Category="Cmdb"; $Owner=$MonitoringTeam; BREAK }
+                    # Commvault
+                    "Commvault.Monitoring" { $Category="Commvault"; $Owner=$BackupStorageTeam; BREAK }
+                    # DHCP
+                    "Microsoft.Windows.DHCPServer.*" { $Category="DHCP"; $Owner=$ServerTeam; BREAK }
+                    # DNS
+                    "*.DNS*" { $Category="DNS"; $Owner=$ServerTeam; BREAK }
+                    # Exchange
+                    "*Exchange.*" { $Category="Exchange"; $Owner=$ServerTeam; BREAK }
+                    # IIS
+                    "Microsoft.Windows.InternetInformationServices.*" { $Category="IIS"; $Owner=$ServerTeam; BREAK }
+                    # Network
+                    "System.NetworkManagement.Monitoring" { $Category="Network"; $Owner=$NetworkTeam; BREAK }
+                    # Passwordstate
+                    "Passwordstate.Monitoring" { $Category="Passwordstate"; $Owner=$SecurityTeam; BREAK }
+                    # SCOM
+                    "Microsoft.SystemCenter.*" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
+                    "*.Microsoft.SCOM.UpdateRollup" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
+                    # SCCM
+                    "Microsoft.SystemCenter2012.ConfigurationManager.*" { $Category="SCCM"; $Owner=$SccmTeam; BREAK }
+                    # SharePoint
+                    "Microsoft.SharePoint.*" { $Category="SharePoint"; $Owner=$SharePointTeam; BREAK }
+                    # SQL
+                    "Microsoft.SQLServer.*" { $Category="SQL"; $Owner=$ServerTeam; BREAK }
+                    # Trellix
+                    "Trellix.Monitoring" { $Category="Trellix"; $Owner=$EndpointSecurityTeam; BREAK }
+                    # UNIX / Linux
+                    "Microsoft.Linux.*" { $Category="Linux Server"; $Owner=$ServerTeam; BREAK }
+                    "Microsoft.Unix.*" { $Category="UNIX Server"; $Owner=$ServerTeam; BREAK }
+                    # VMware Carbon Black
+                    "VMware.CB.Monitoring" { $Category="Carbon Black"; $Owner=$ServerTeam; BREAK }
+                    # VMware Workspace One
+                    "VMware.WorkspaceOne.Monitoring" { $Category="VMware Workspace ONE"; $Owner=$ServerTeam; BREAK }
+                    # Windows certificates
+                    "Certificate.Monitoring" { $Category="Certificate"; $Owner=$ServerTeam; BREAK }
+                    # Windows clusters
+                    "*.Cluster.*" { $Category="Windows Cluster"; $Owner=$ServerTeam; BREAK }
+                    "Microsoft.Windows.Server.ClusterSharedVolumeMonitoring" { $Category="Windows Cluster"; $Owner=$ServerTeam; BREAK }
+                    # Windows server
+                    "Microsoft.Windows.Server.*" { $Category="Windows Server"; $Owner=$ServerTeam; BREAK }
+                    # If no match found, assign alert to monitoring team for follow up and set event to warning.
+                    default {
+                        $Message+="Mp name $MpName not in `switch statement for alert '$Alert'`n"
+                        $ScriptState="Warning"
+                        $Category="Unknown"; $Owner=$MonitoringTeam
+                    }
+                }
+                # Assign alerts based on monitor or rule name.
+                switch -wildcard ($WorkflowName) {
+                    "Microsoft.SystemCenter.HealthService.ComputerDown" { $Owner=$ServerTeam; $Category="Windows Server"; BREAK } 
+                    "Microsoft.Windows.Server.*.LogicalDisk.FreeSpace" { $Source=$Alert.MonitoringObjectPath; BREAK } 
+                    "Microsoft.Unix.LogFileModuleErrors.Alert" { $Owner=$MonitoringTeam; $Category="SCOM"; BREAK } 
+                    "ActiveDirectory.Monitor.TimeDriftScriptError" { $Owner=$MonitoringTeam; $Category="SCOM"; BREAK }
+                    "Microsoft.ActiveDirectoryFederationServices2012R2.FederationServerTrustsHaveExpiredCertsWarningMonitor" { $Category="Certificate"; BREAK }
+                }
+                # Assign alerts based on alert name.
+                switch ($AlertName) {
+                    "Web Application Unavailable: Hitachi Management portal" { $Owner=$BackupStorageTeam; $Category="Hitachi"; BREAK } 
+                    "Web Application Unavailable: NetApp Management portal" { $Owner=$BackupStorageTeam; $Category="NetApp"; BREAK } 
+                    "Web Application Unavailable: L3 Passwordstate portal" { $Owner=$SecurityTeam; $Category="Passwordstate"; BREAK } 
+                    "Web Application Unavailable: L5 Passwordstate portal" { $Owner=$SecurityTeam; $Category="Passwordstate"; BREAK } 
+                    "Web Application Unavailable: Carbon Black" { $Owner=$ServerTeam; $Category="Carbon Black"; BREAK } 
+                    "Web Application Unavailable: VMware Workspace ONE" { $Owner=$ServerTeam; $Category="VMware Workspace ONE"; BREAK } 
+                }
+                # Update alert properties and process next alert.
+                Set-SCOMAlert -Alert $Alert -Owner $Owner -CustomField1 $Category -CustomField2 $Source -ResolutionState 1
+            }
+        }
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState="Warning"
+        $Message+=$_.Exception.Message
+        Write-Log -ScriptState $ScriptState   
+    }
+}
+# Declare all constants used by the script
+[datetime]$StartTime=Get-Date
+$MomApi=New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName="AlertManagement.ps1"
+$Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp="Microsoft.SCOM.AlertManagement.Monitoring"
+$MpVersion="2023.10.5.0"
+$MpWorkflow="Microsoft.SCOM.Rule.AlertManagement"
+Set-AlertManagement
+]]>
+
+                                </ScriptBody>
+                                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+                            </WriteAction>
+                        </MemberModules>
+                        <Composition>
+                            <Node ID="WA" />
+                        </Composition>
+                    </Composite>
+                </ModuleImplementation>
+                <OutputType>System!System.BaseData</OutputType>
+                <InputType>System!System.BaseData</InputType>
+            </WriteActionModuleType>
+        </ModuleTypes>
+    </TypeDefinitions>
+    <Monitoring>
+        <Rules>
+            <Rule ID="Microsoft.SCOM.Rule.AlertManagement" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+                <Category>Maintenance</Category>
+                <DataSources>
+                    <DataSource ID="Scheduler" TypeID="Microsoft.SCOM.DataSource.AlertManagement">
+                        <IntervalSeconds>300</IntervalSeconds>
+                        <SyncTime></SyncTime>
+                    </DataSource>
+                </DataSources>
+                <WriteActions>
+                    <WriteAction ID="WA" TypeID="Microsoft.SCOM.WriteAction.AlertManagement">
+                        <TimeoutSeconds>120</TimeoutSeconds>
+                    </WriteAction>
+                </WriteActions>
+            </Rule>
+        </Rules>
+    </Monitoring>
+    <LanguagePacks>
+        <LanguagePack ID="ENU" IsDefault="false">
+            <DisplayStrings>
+                <DisplayString ElementID="Microsoft.SCOM.AlertManagement.Monitoring">
+                    <Name>Microsoft SCOM Alert Management Monitoring</Name>
+                    <Description>Assigns alerts to support teams.</Description>
+                </DisplayString>
+                <DisplayString ElementID="Microsoft.SCOM.Rule.AlertManagement">
+                    <Name>Alert Management</Name>
+                    <Description>This is a PowerShell script that runs every 5 minutes to assign alerts to support teams.</Description>
+                </DisplayString>
+            </DisplayStrings>
+        </LanguagePack>
+    </LanguagePacks>
+</ManagementPack>

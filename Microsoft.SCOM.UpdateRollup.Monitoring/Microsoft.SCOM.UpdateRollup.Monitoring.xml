@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
-            <Version>2023.10.4.0</Version>
+            <Version>2023.10.5.5</Version>
         </Identity>
         <Name>Microsoft.SCOM.UpdateRollup.Monitoring</Name>
         <References>
@@ -46,16 +46,17 @@
                     <Property ID="APMServiceStartMode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="ACSForwarderServiceStartMode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="LogAnalyticsWorkspaces" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
-                    <Property ID="MgmtServerInstallDirectory" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
-                    <Property ID="MgmtServerVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+                    <Property ID="ManagementServerInstallDirectory" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+                    <Property ID="ManagementServerVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="ConfigServiceAccount" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="DataAccessServiceAccount" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="OpsDbName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="OpsDbServer" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="DWDbName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="DwDbServer" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
-                    <Property ID="ACSCollectorServiceAccount" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+                    <Property ID="ACSCollectorInstallDirectory" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="ACSCollectorVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+                    <Property ID="ACSCollectorServiceAccount" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="RMS" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="GatewayServerInstallDirectory" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
                     <Property ID="GatewayServerVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
@@ -170,7 +171,7 @@ Function Get-URInfo {
             $CertificateExpiry = $Thumbprint.NotAfter.ToString("yyyy/MM/dd HH:mm:ss")
         }
         Else {
-            $CertificateExpiry = "n/a"
+            $CertificateExpiry = "None found"
         }
         # Get AD Integration. This will be on every server so just see if it's enabled or disabled.
         $ADIntegRegKey = "HKLM:\SYSTEM\CurrentControlSet\Services\HealthService\Parameters\ConnectorManager"
@@ -210,7 +211,7 @@ Function Get-URInfo {
             $LogAnalyticsWorkspaces = $LogAnalyticsWorkspaces.TrimEnd(",")
         }
         Else {
-            $LogAnalyticsWorkspaces = "n/a"
+            $LogAnalyticsWorkspaces = "None found"
         }
         <#
         AGENTS. This section only applies to agents.
@@ -262,44 +263,44 @@ Function Get-URInfo {
         MANAGEMENT SERVERS. This section only applies to management servers.
         #>
         If ((Get-ItemProperty -Path $SetupRegKey -ErrorAction Ignore).ServerVersion) {
-            $MgmtServerInstallDirectory = (Get-ItemProperty -Path $SetupRegKey).InstallDirectory.TrimEnd("\")
-            $MgmtServerVersion = (Get-Item "$MgmtServerInstallDirectory\Tools\TMF\OMTraceTMFVer.Dll").VersionInfo.FileVersion
-            Switch ($MgmtServerVersion) {
+            $ManagementServerInstallDirectory = (Get-ItemProperty -Path $SetupRegKey).InstallDirectory.TrimEnd("\")
+            $ManagementServerVersion = (Get-Item "$ManagementServerInstallDirectory\Tools\TMF\OMTraceTMFVer.Dll").VersionInfo.FileVersion
+            Switch ($ManagementServerVersion) {
                 # SCOM 2012 R2
-                "7.1.10226.0" { $MgmtServerVersion = "2012 R2 RTM"; BREAK }
-                "7.1.10226.1009" { $MgmtServerVersion = "2012 R2 UR1"; BREAK }
-                "7.1.10226.1015" { $MgmtServerVersion = "2012 R2 UR2"; BREAK }
-                "7.1.10226.1037" { $MgmtServerVersion = "2012 R2 UR3"; BREAK }
-                "7.1.10226.1046" { $MgmtServerVersion = "2012 R2 UR4"; BREAK }
-                "7.1.10226.1052" { $MgmtServerVersion = "2012 R2 UR5"; BREAK }
-                "7.1.10226.1064" { $MgmtServerVersion = "2012 R2 UR6"; BREAK }
-                "7.1.10226.1090" { $MgmtServerVersion = "2012 R2 UR7"; BREAK }
-                "7.1.10226.1118" { $MgmtServerVersion = "2012 R2 UR8"; BREAK }
-                "7.1.10226.1177" { $MgmtServerVersion = "2012 R2 UR9"; BREAK }
-                "7.1.10226.1239" { $MgmtServerVersion = "2012 R2 UR11"; BREAK }
-                "7.1.10226.1304" { $MgmtServerVersion = "2012 R2 UR12"; BREAK }
-                "7.1.10226.1360" { $MgmtServerVersion = "2012 R2 UR13"; BREAK }
-                "7.1.10226.1387" { $MgmtServerVersion = "2012 R2 UR14"; BREAK }
+                "7.1.10226.0" { $ManagementServerVersion = "2012 R2 RTM"; BREAK }
+                "7.1.10226.1009" { $ManagementServerVersion = "2012 R2 UR1"; BREAK }
+                "7.1.10226.1015" { $ManagementServerVersion = "2012 R2 UR2"; BREAK }
+                "7.1.10226.1037" { $ManagementServerVersion = "2012 R2 UR3"; BREAK }
+                "7.1.10226.1046" { $ManagementServerVersion = "2012 R2 UR4"; BREAK }
+                "7.1.10226.1052" { $ManagementServerVersion = "2012 R2 UR5"; BREAK }
+                "7.1.10226.1064" { $ManagementServerVersion = "2012 R2 UR6"; BREAK }
+                "7.1.10226.1090" { $ManagementServerVersion = "2012 R2 UR7"; BREAK }
+                "7.1.10226.1118" { $ManagementServerVersion = "2012 R2 UR8"; BREAK }
+                "7.1.10226.1177" { $ManagementServerVersion = "2012 R2 UR9"; BREAK }
+                "7.1.10226.1239" { $ManagementServerVersion = "2012 R2 UR11"; BREAK }
+                "7.1.10226.1304" { $ManagementServerVersion = "2012 R2 UR12"; BREAK }
+                "7.1.10226.1360" { $ManagementServerVersion = "2012 R2 UR13"; BREAK }
+                "7.1.10226.1387" { $ManagementServerVersion = "2012 R2 UR14"; BREAK }
                 # SCOM 2016
-                "7.2.11719.0" { $MgmtServerVersion = "2016 RTM"; BREAK }
-                "7.2.11759.0" { $MgmtServerVersion = "2016 UR1"; BREAK }
-                "7.2.11822.0" { $MgmtServerVersion = "2016 UR2"; BREAK }
-                "7.2.11878.0" { $MgmtServerVersion = "2016 UR3"; BREAK }
-                "7.2.11938.0" { $MgmtServerVersion = "2016 UR4"; BREAK }
-                "7.2.12016.0" { $MgmtServerVersion = "2016 UR5"; BREAK }
-                "7.2.12066.0" { $MgmtServerVersion = "2016 UR6"; BREAK }
-                "7.2.12150.0" { $MgmtServerVersion = "2016 UR7"; BREAK }
-                "7.2.12213.0" { $MgmtServerVersion = "2016 UR8"; BREAK }
-                "7.2.12265.0" { $MgmtServerVersion = "2016 UR9"; BREAK }
-                "7.2.12324.0" { $MgmtServerVersion = "2016 UR10"; BREAK }
+                "7.2.11719.0" { $ManagementServerVersion = "2016 RTM"; BREAK }
+                "7.2.11759.0" { $ManagementServerVersion = "2016 UR1"; BREAK }
+                "7.2.11822.0" { $ManagementServerVersion = "2016 UR2"; BREAK }
+                "7.2.11878.0" { $ManagementServerVersion = "2016 UR3"; BREAK }
+                "7.2.11938.0" { $ManagementServerVersion = "2016 UR4"; BREAK }
+                "7.2.12016.0" { $ManagementServerVersion = "2016 UR5"; BREAK }
+                "7.2.12066.0" { $ManagementServerVersion = "2016 UR6"; BREAK }
+                "7.2.12150.0" { $ManagementServerVersion = "2016 UR7"; BREAK }
+                "7.2.12213.0" { $ManagementServerVersion = "2016 UR8"; BREAK }
+                "7.2.12265.0" { $ManagementServerVersion = "2016 UR9"; BREAK }
+                "7.2.12324.0" { $ManagementServerVersion = "2016 UR10"; BREAK }
                 # SCOM 1801
-                "7.3.13142.0" { $MgmtServerVersion = "1801"; BREAK }
-                "7.3.13261.0" { $MgmtServerVersion = "1807"; BREAK }
+                "7.3.13142.0" { $ManagementServerVersion = "1801"; BREAK }
+                "7.3.13261.0" { $ManagementServerVersion = "1807"; BREAK }
                 # SCOM 2019
-                "10.19.10050.0" { $MgmtServerVersion = "2019 RTM"; BREAK }
-                "10.19.10311.0" { $MgmtServerVersion = "2019 UR1"; BREAK }
-                "10.19.10349.0" { $MgmtServerVersion = "2019 UR1 Hotfix"; BREAK }
-                "10.19.10407.0" { $MgmtServerVersion = "2019 UR2"; BREAK }
+                "10.19.10050.0" { $ManagementServerVersion = "2019 RTM"; BREAK }
+                "10.19.10311.0" { $ManagementServerVersion = "2019 UR1"; BREAK }
+                "10.19.10349.0" { $ManagementServerVersion = "2019 UR1 Hotfix"; BREAK }
+                "10.19.10407.0" { $ManagementServerVersion = "2019 UR2"; BREAK }
             }
             # Get CSHostService account.
             $ConfigServiceAccount = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\cshost").ObjectName
@@ -334,8 +335,8 @@ Function Get-URInfo {
             }
         }
         Else {
-            $MgmtServerInstallDirectory = "n/a"
-            $MgmtServerVersion = "n/a"
+            $ManagementServerInstallDirectory = "n/a"
+            $ManagementServerVersion = "n/a"
             $ConfigServiceAccount = "n/a"
             $DataAccessServiceAccount = "n/a"
             $OpsDbName = "n/a"
@@ -348,8 +349,8 @@ Function Get-URInfo {
         ACS COLLECTORS. This section only applies to ACS collectors.
         #>
         $ACSCollectorServiceRegKey = "HKLM:SYSTEM\CurrentControlSet\Services\AdtServer"
-        $ACSCollectorInstallDirectory = (Get-ItemProperty -Path "$ACSCollectorServiceRegKey\Parameters\" -ErrorAction Ignore).ScriptFilePath.TrimEnd("\")
         If ((Get-ItemProperty -Path $ACSCollectorServiceRegKey -ErrorAction Ignore).DisplayName) {
+            $ACSCollectorInstallDirectory = (Get-ItemProperty -Path "$ACSCollectorServiceRegKey\Parameters\").ScriptFilePath.TrimEnd("\")
             $ACSCollectorVersion = (Get-Item "$WinDir\System32\Security\AdtServer\OmacAdmn.dll").VersionInfo.FileVersion
             Switch ($ACSCollectorVersion) {
                 # SCOM 2012 R2
@@ -378,8 +379,9 @@ Function Get-URInfo {
             $ACSCollectorServiceAccount = (Get-ItemProperty -Path $ACSCollectorServiceRegKey).ObjectName
         }
         Else {
-            $ACSCollectorServiceAccount = "n/a"
+            $ACSCollectorInstallDirectory = "n/a"
             $ACSCollectorVersion = "n/a"
+            $ACSCollectorServiceAccount = "n/a"
         }
         <#
         GATEWAY SERVERS. This section only applies to gateway servers.
@@ -652,16 +654,17 @@ Function Get-URInfo {
         write-host "APMServiceStartMode: $APMServiceStartMode"
         write-host "ACSForwarderServiceStartMode: $ACSForwarderServiceStartMode"
         write-host "LogAnalyticsWorkspaces: $LogAnalyticsWorkspaces"
-        write-host "MgmtServerInstallDirectory: $MgmtServerInstallDirectory"
-        write-host "MgmtServerVersion: $MgmtServerVersion"
+        write-host "ManagementServerInstallDirectory: $ManagementServerInstallDirectory"
+        write-host "ManagementServerVersion: $ManagementServerVersion"
         write-host "ConfigServiceAccount: $ConfigServiceAccount"
         write-host "DataAccessServiceAccount: $DataAccessServiceAccount"
         write-host "OpsDbName: $OpsDbName"
         write-host "OpsDbServer: $OpsDbServer"
         write-host "DWDbName: $DWDbName"
         write-host "DwDbServer: $DwDbServer"
-        write-host "ACSCollectorServiceAccount: $ACSCollectorServiceAccount"
+        write-host "ACSCollectorInstallDirectory: $ACSCollectorInstallDirectory"
         write-host "ACSCollectorVersion: $ACSCollectorVersion"
+        write-host "ACSCollectorServiceAccount: $ACSCollectorServiceAccount"
         write-host "RMS: $RMS"
         write-host "GatewayServerInstallDirectory: $GatewayServerInstallDirectory"
         write-host "GatewayServerVersion: $GatewayServerVersion"
@@ -698,16 +701,17 @@ Function Get-URInfo {
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/APMServiceStartMode$", $APMServiceStartMode)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSForwarderServiceStartMode$", $ACSForwarderServiceStartMode)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/LogAnalyticsWorkspaces$", $LogAnalyticsWorkspaces)
-        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/MgmtServerInstallDirectory$", $MgmtServerInstallDirectory)
-        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/MgmtServerVersion$", $MgmtServerVersion)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ManagementServerInstallDirectory$", $ManagementServerInstallDirectory)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ManagementServerVersion$", $ManagementServerVersion)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ConfigServiceAccount$", $ConfigServiceAccount)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/DataAccessServiceAccount$", $DataAccessServiceAccount)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/OpsDbName$", $OpsDbName)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/OpsDbServer$", $OpsDbServer)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/DWDbName$", $DWDbName)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/DwDbServer$", $DwDbServer)
-        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSCollectorServiceAccount$", $ACSCollectorServiceAccount)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSCollectorInstallDirectory$", $ACSCollectorInstallDirectory)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSCollectorVersion$", $ACSCollectorVersion)
+        $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/ACSCollectorServiceAccount$", $ACSCollectorServiceAccount)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/RMS$", $RMS)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/GatewayServerInstallDirectory$", $GatewayServerInstallDirectory)
         $Instance.AddProperty("$MPElement[Name='Microsoft.SCOM.Class.WindowsUpdateRollup']/GatewayServerVersion$", $GatewayServerVersion)
@@ -748,7 +752,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "GetWindowsURInfo.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.UpdateRollup.Monitoring"
-$MpVersion = "2023.10.4.0"
+$MpVersion = "2023.10.5.5"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsUpdateRollup"
 Get-URInfo -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
 ]]>
@@ -1069,7 +1073,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.4.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.5.5)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError {
@@ -1460,7 +1464,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.4.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.5.5)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -1591,7 +1595,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.4.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.5.5)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -1798,11 +1802,11 @@ Mgmt group summary.
 #>
             $CodeSection = "6" $DbQuery = "SELECT 'SCOM Version' AS Column1,
 CASE 
-WHEN MgmtServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799 like '%2012 R2%' then 'Extended support - 2012 R2'
-WHEN MgmtServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799 like '%2016%' then '2016'
-WHEN MgmtServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799 like '%180%' then '1801'
-WHEN MgmtServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799 like '%2019%' then '2019'
-ELSE 'Unknown - ' + MgmtServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799
+WHEN ManagementServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799 like '%2012 R2%' then 'Extended support - 2012 R2'
+WHEN ManagementServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799 like '%2016%' then '2016'
+WHEN ManagementServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799 like '%180%' then '1801'
+WHEN ManagementServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799 like '%2019%' then '2019'
+ELSE 'Unknown - ' + ManagementServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799
 END AS Column2
 FROM [$Script:OpsDbName].[dbo].[MTV_SCOM`$WindowsComputer]
 WHERE RMS_771D4202_8806_363E_07CD_678590489569='yes'
@@ -1999,7 +2003,7 @@ Update rollup info.
 #>
             $CodeSection = "11" $DbQuery = "SELECT UPPER (DisplayName) As Computer
 ,AgentVersion_3AFB8DF2_255D_EF64_2996_AB381CA83F11 AS Agent
-,[MgmtServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799] AS ManagementServer
+,[ManagementServerVersion_E8B08CCC_887D_3193_5AF3_01E1225E8799] AS ManagementServer
 ,[WebConsoleVersion_6EC692DE_61A1_190E_D016_A6D8039081C2] AS WebConsole
 ,[ReportServerVersion_A9D4505D_ADFE_5CF2_7E23_FFFC0ED131EB] AS ReportServer
 ,[GatewayServerVersion_C5C64EC6_1FAE_82EB_90BF_37D55CB4FF69] AS GatewayServer
@@ -2332,7 +2336,7 @@ try {
     $EventId = 17616
     $EventLevel = 0 # 0=Information, 1=Error, 2=Warning
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.4.0)")
+    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.5.5)")
     Write-Host Information event ID 17616 successfully written to the Operations Manager log.
     Write-Host
 }
@@ -2381,16 +2385,17 @@ catch {
                         <Property PropertyID="APMServiceStartMode"/>
                         <Property PropertyID="ACSForwarderServiceStartMode"/>
                         <Property PropertyID="LogAnalyticsWorkspaces"/>
-                        <Property PropertyID="MgmtServerInstallDirectory"/>
-                        <Property PropertyID="MgmtServerVersion"/>
+                        <Property PropertyID="ManagementServerInstallDirectory"/>
+                        <Property PropertyID="ManagementServerVersion"/>
                         <Property PropertyID="ConfigServiceAccount"/>
                         <Property PropertyID="DataAccessServiceAccount"/>
                         <Property PropertyID="OpsDbName"/>
                         <Property PropertyID="OpsDbServer"/>
                         <Property PropertyID="DWDbName"/>
                         <Property PropertyID="DwDbServer"/>
-                        <Property PropertyID="ACSCollectorServiceAccount"/>
+                        <Property PropertyID="ACSCollectorInstallDirectory"/>
                         <Property PropertyID="ACSCollectorVersion"/>
+                        <Property PropertyID="ACSCollectorServiceAccount"/>
                         <Property PropertyID="RMS"/>
                         <Property PropertyID="GatewayServerInstallDirectory"/>
                         <Property PropertyID="GatewayServerVersion"/>
@@ -2729,11 +2734,11 @@ catch {
                 <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="LogAnalyticsWorkspaces">
                     <Name>Log Analytics Workspaces</Name>
                 </DisplayString>
-                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="MgmtServerInstallDirectory">
-                    <Name>Mgmt Server Install Directory</Name>
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ManagementServerInstallDirectory">
+                    <Name>Management Server Install Directory</Name>
                 </DisplayString>
-                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="MgmtServerVersion">
-                    <Name>Mgmt Server Version</Name>
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ManagementServerVersion">
+                    <Name>Management Server Version</Name>
                 </DisplayString>
                 <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ConfigServiceAccount">
                     <Name>Config Service Account</Name>
@@ -2753,11 +2758,14 @@ catch {
                 <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="DwDbServer">
                     <Name>Data Warehouse Db Server</Name>
                 </DisplayString>
-                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ACSCollectorServiceAccount">
-                    <Name>ACS Collector Service Account</Name>
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ACSCollectorInstallDirectory">
+                    <Name>ACS Collector Install Directory</Name>
                 </DisplayString>
                 <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ACSCollectorVersion">
                     <Name>ACS Collector Version</Name>
+                </DisplayString>
+                <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="ACSCollectorServiceAccount">
+                    <Name>ACS Collector Service Account</Name>
                 </DisplayString>
                 <DisplayString ElementID="Microsoft.SCOM.Class.WindowsUpdateRollup" SubElementID="RMS">
                     <Name>RMS</Name>
