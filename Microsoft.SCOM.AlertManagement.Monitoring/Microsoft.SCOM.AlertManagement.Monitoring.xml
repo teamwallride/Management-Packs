@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.AlertManagement.Monitoring</ID>
-            <Version>2023.10.5.0</Version>
+            <Version>2023.10.6.0</Version>
         </Identity>
         <Name>Microsoft.SCOM.AlertManagement.Monitoring</Name>
         <References>
@@ -177,7 +177,7 @@ Function Set-AlertManagement {
                     "Passwordstate.Monitoring" { $Category="Passwordstate"; $Owner=$SecurityTeam; BREAK }
                     # SCOM
                     "Microsoft.SystemCenter.*" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
-                    "*.Microsoft.SCOM.UpdateRollup" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
+                    "Microsoft.SCOM.UpdateRollup.Monitoring" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
                     # SCCM
                     "Microsoft.SystemCenter2012.ConfigurationManager.*" { $Category="SCCM"; $Owner=$SccmTeam; BREAK }
                     # SharePoint
@@ -242,7 +242,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="Microsoft.SCOM.AlertManagement.Monitoring"
-$MpVersion="2023.10.5.0"
+$MpVersion="2023.10.6.0"
 $MpWorkflow="Microsoft.SCOM.Rule.AlertManagement"
 Set-AlertManagement
 ]]>

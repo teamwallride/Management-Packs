@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
-            <Version>2023.10.5.5</Version>
+            <Version>2023.10.6.0</Version>
         </Identity>
         <Name>Microsoft.SCOM.UpdateRollup.Monitoring</Name>
         <References>
@@ -385,10 +385,14 @@ Function Get-URInfo {
         }
         <#
         GATEWAY SERVERS. This section only applies to gateway servers.
+
+        *** Definite problem here. The files used to get version are all over the place so need to fix next week. ***
+
         #>
         If ((Get-ItemProperty -Path $SetupRegKey -ErrorAction Ignore).MOMGatewayVersion) {
             $GatewayServerInstallDirectory = (Get-ItemProperty -Path $SetupRegKey).InstallDirectory.TrimEnd("\")
-            # Get Gateway UR info. Note there are different files for different versions.This should be on all versions. Best UR file for 2012 R2 (All URs), 2016 (UR2, UR4-9), 2019 UR1.
+            # Get Gateway UR info.
+            # Note there are different files for different versions.This should be on all versions. Best UR file for 2012 R2 (All URs), 2016 (UR2, UR4-9), 2019 UR1.
             $GatewayServerVersion = (Get-Item "$GatewayServerInstallDirectory\HealthService.dll").VersionInfo.FileVersion
             If ($GatewayServerVersion -match "8.0.10970.0") {
                 # Best UR file for 2016 UR3.
@@ -752,7 +756,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "GetWindowsURInfo.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.UpdateRollup.Monitoring"
-$MpVersion = "2023.10.5.5"
+$MpVersion = "2023.10.6.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsUpdateRollup"
 Get-URInfo -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
 ]]>
@@ -1073,7 +1077,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.5.5)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: SCOM.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.6.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError {
@@ -1464,7 +1468,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.5.5)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: SCOM.Rule.MpBackup`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.6.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -1595,7 +1599,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.5.5)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: SCOM.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.6.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -2336,7 +2340,7 @@ try {
     $EventId = 17616
     $EventLevel = 0 # 0=Information, 1=Error, 2=Warning
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.5.5)")
+    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2023.10.6.0)")
     Write-Host Information event ID 17616 successfully written to the Operations Manager log.
     Write-Host
 }
@@ -2418,7 +2422,7 @@ catch {
                     </DiscoveryClass>
                 </DiscoveryTypes>
                 <DataSource ID="DS" TypeID="Microsoft.SCOM.DataSource.WindowsUpdateRollup">
-                    <IntervalSeconds>86400</IntervalSeconds>
+                    <IntervalSeconds>120</IntervalSeconds><!--86400-->
                     <SyncTime></SyncTime>
                     <TimeoutSeconds>120</TimeoutSeconds>
                 </DataSource>
