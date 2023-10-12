@@ -2,13 +2,13 @@
   <Manifest>
     <Identity>
       <ID>Microsoft.SCOM.UpdateRollup.Views</ID>
-      <Version>2023.10.13.0</Version>
+      <Version>2023.10.13.1</Version>
     </Identity>
     <Name>Microsoft.SCOM.UpdateRollup.Views</Name>
     <References>
       <Reference Alias="SCOM">
         <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
-        <Version>2023.10.5.4</Version>
+        <Version>2023.10.9.4</Version>
         <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
       </Reference>
       <Reference Alias="OpsManager2007">
@@ -16,9 +16,14 @@
         <Version>7.2.11719.0</Version>
         <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
       </Reference>
+      <Reference Alias="A0cf47181eb46492eacb9b981af8f1ccd">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
       <Reference Alias="SystemCenter">
         <ID>Microsoft.SystemCenter.Library</ID>
-        <Version>7.0.8437.0</Version>
+        <Version>7.0.8437.17</Version>
         <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
       </Reference>
       <Reference Alias="Unix">
@@ -1534,6 +1539,19 @@
         </Presentation>
         <Target />
       </View>
+      <View ID="View_05b47d9943cd4078b110b43ff302e767" Accessibility="Public" Enabled="true" Target="A0cf47181eb46492eacb9b981af8f1ccd!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.DashboardViewType" Visible="true">
+        <Category>Operations</Category>
+        <PanelConfiguration Columns="3" Rows="3">
+          <Cell Column="1" Row="3" ViewID="View_6725521cb7cb4644a8c6fc9c17c7d441" />
+          <Cell Row="1" Column="1" ViewID="View_c0f5a20432c84b06a0e9935fbc7bcc6e" />
+          <Cell Row="1" Column="2" ViewID="View_2d8f9ac284fc403d9da9669a4391ca03" />
+          <Cell Row="1" Column="3" ViewID="View_541e8e576f184fe8bd5752c283f9a80b" />
+          <Cell Row="2" Column="1" ViewID="View_ab2f6d1b669f47f28c131f950afca5f3" />
+          <Cell Row="2" Column="2" ViewID="View_839844019ce0442fb29f2d96e505beba" />
+          <Cell Row="2" Column="3" ViewID="View_60fcfe334a4c423c8e0c634d9987e155" />
+          <Cell Row="3" Column="2" ViewID="View_9e6522f7b0e44ce8aefc375a1d5171f5" />
+        </PanelConfiguration>
+      </View>
     </Views>
     <Folders>
       <Folder ID="Folder_50c746647832419ea58190b7cbe03215" Accessibility="Public" ParentFolder="OpsManager2007!Microsoft.SystemCenter.OperationsManager.ViewFolder.Root" />
@@ -1547,6 +1565,7 @@
       <FolderItem ElementID="View_9e6522f7b0e44ce8aefc375a1d5171f5" ID="ia811ac00a24a417c85950c23b05103e3" Folder="Folder_50c746647832419ea58190b7cbe03215" />
       <FolderItem ElementID="View_ab2f6d1b669f47f28c131f950afca5f3" ID="ie9b5c6c40ecc4d9398d900e94841cca7" Folder="Folder_50c746647832419ea58190b7cbe03215" />
       <FolderItem ElementID="View_541e8e576f184fe8bd5752c283f9a80b" ID="i9e5a475adc1d41e0ad8dd19d865e65ab" Folder="Folder_50c746647832419ea58190b7cbe03215" />
+      <FolderItem ElementID="View_05b47d9943cd4078b110b43ff302e767" ID="i74ea46ffc5484468aaf0033290de79ed" Folder="Folder_50c746647832419ea58190b7cbe03215" />
     </FolderItems>
   </Presentation>
   <LanguagePacks>
@@ -1582,7 +1601,9 @@
         </DisplayString>
         <DisplayString ElementID="View_541e8e576f184fe8bd5752c283f9a80b">
           <Name>Agents</Name>
-          <Description />
+        </DisplayString>
+        <DisplayString ElementID="View_05b47d9943cd4078b110b43ff302e767">
+          <Name>Dashboard</Name>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
