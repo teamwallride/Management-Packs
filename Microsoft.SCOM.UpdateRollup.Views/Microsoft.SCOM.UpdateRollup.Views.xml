@@ -1,10 +1,10 @@
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
-      <ID>Microsoft.SCOM.AlertManagement.Views</ID>
-      <Version>2023.10.6.0</Version>
+      <ID>Microsoft.SCOM.UpdateRollup.Views</ID>
+      <Version>2023.10.13.0</Version>
     </Identity>
-    <Name>Microsoft.SCOM.AlertManagement.Views</Name>
+    <Name>Microsoft.SCOM.UpdateRollup.Views</Name>
     <References>
       <Reference Alias="SCOM">
         <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
@@ -1552,9 +1552,9 @@
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="false">
       <DisplayStrings>
-        <DisplayString ElementID="Microsoft.SCOM.AlertManagement.Views">
-          <Name>Microsoft SCOM Alert Management Views</Name>
-          <Description>Console views for the Microsoft.SCOM.AlertManagement.Monitoring management pack.</Description>
+        <DisplayString ElementID="Microsoft.SCOM.UpdateRollup.Views">
+          <Name>Microsoft SCOM Update Rollup Views</Name>
+          <Description>Console views for the Microsoft.SCOM.UpdateRollup.Monitoring management pack.</Description>
         </DisplayString>
         <DisplayString ElementID="Folder_50c746647832419ea58190b7cbe03215">
           <Name>Update Rollup</Name>
