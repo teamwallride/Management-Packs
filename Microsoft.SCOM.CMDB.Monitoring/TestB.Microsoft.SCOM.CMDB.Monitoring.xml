@@ -1,0 +1,2819 @@
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<Manifest>
+		<Identity>
+			<ID>TestB.Microsoft.SCOM.CMDB.Monitoring</ID>
+			<Version>2023.10.23.0</Version>
+		</Identity>
+		<Name>TestB.Microsoft.SCOM.CMDB.Monitoring</Name>
+		<References>
+			<Reference Alias="Windows">
+				<ID>Microsoft.Windows.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="MSIGL">
+				<ID>Microsoft.SystemCenter.InstanceGroup.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="System">
+				<ID>System.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="SystemCenter">
+				<ID>Microsoft.SystemCenter.Library</ID>
+				<Version>7.0.8437.17</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Health">
+				<ID>System.Health.Library</ID>
+				<Version>7.0.8437.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="ClusterLib">
+				<ID>Microsoft.Windows.Cluster.Library</ID>
+				<Version>7.0.8437.17</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+		</References>
+	</Manifest>
+	<TypeDefinitions>
+		<EntityTypes>
+			<ClassTypes>
+				<!--WindowsServer-->
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<!--HealthServiceWatcher-->
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<!--ADDS-->
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<!--DNS-->
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<!--DHCP-->
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<!--IIS-->
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.IISCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.IISCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.IISCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<!--SQL-->
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<!--WindowsCluster-->
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<!--ADFS-->
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+			</ClassTypes>
+			<RelationshipTypes>
+				<!--WindowsServer-->
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatCContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<!--ADDS-->
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.ADDSCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.ADDSCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<!--DNS-->
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.DNSCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.DNSCatA"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.DNSCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.DNSCatB"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<!--DHCP-->
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.DHCPCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.DHCPCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<!--IIS-->
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.IISCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.IISCatA"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.IISCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.IISCatB"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.IISCatCContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.IISCatC"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<!--SQL-->
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.SQLCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.SQLCatA"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.SQLCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.SQLCatB"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<!--WindowsCluster-->
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatAContainsWindowsClusters" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="ClusterLib!Microsoft.Windows.Cluster"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatBContainsWindowsClusters" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="ClusterLib!Microsoft.Windows.Cluster"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatCContainsWindowsClusters" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="ClusterLib!Microsoft.Windows.Cluster"/>
+				</RelationshipType>
+				<!--ADFS-->
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.ADFSCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.ADFSCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+			</RelationshipTypes>
+		</EntityTypes>
+	</TypeDefinitions>
+	<Monitoring>
+		<Discoveries>
+			<!--WindowsServerCatA-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatA" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>60</IntervalSeconds><!--14400-->
+					<SyncTime/>
+					<ScriptName>WindowsServerCatA.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA']$")
+        $CMDBQuery = "SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsServer' and Category ='CatA' and status = 'Active'"
+        $SCOMQuery = "SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatAContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "WindowsServerCatA.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.WindowsServerCatA"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--WindowsServerCatB-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatB" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>60</IntervalSeconds><!--14700-->
+					<SyncTime/>
+					<ScriptName>WindowsServerCatB.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB']$")
+        $CMDBQuery = "SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsServer' and Category ='CatB' and status = 'Active'"
+        $SCOMQuery = "SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatBContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "WindowsServerCatB.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.WindowsServerCatB"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--WindowsServerCatC-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatC" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>60</IntervalSeconds><!--15000-->
+					<SyncTime/>
+					<ScriptName>WindowsServerCatC.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC']$")
+        $CMDBQuery = "SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsServer' and Category ='CatC' and status = 'Active'"
+        $SCOMQuery = "SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatCContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "WindowsServerCatC.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.WindowsServerCatC"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--HealthServiceWatcherCatA-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatA" Enabled="true" Target="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+					<RuleId>$MPElement$</RuleId>
+					<GroupInstanceId>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA"]$</GroupInstanceId>
+					<MembershipRules>
+						<MembershipRule>
+							<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthServiceWatcher"]$</MonitoringClass>
+							<RelationshipClass>$MPElement[Name='MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities']$</RelationshipClass>
+							<Expression>
+								<Contains>
+									<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthService"]$</MonitoringClass>
+									<Expression>
+										<Contained>
+											<MonitoringClass>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA"]$</MonitoringClass>
+										</Contained>
+									</Expression>
+								</Contains>
+							</Expression>
+						</MembershipRule>
+					</MembershipRules>
+				</DataSource>
+			</Discovery>
+			<!--HealthServiceWatcherCatB-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatB" Enabled="true" Target="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+					<RuleId>$MPElement$</RuleId>
+					<GroupInstanceId>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB"]$</GroupInstanceId>
+					<MembershipRules>
+						<MembershipRule>
+							<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthServiceWatcher"]$</MonitoringClass>
+							<RelationshipClass>$MPElement[Name='MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities']$</RelationshipClass>
+							<Expression>
+								<Contains>
+									<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthService"]$</MonitoringClass>
+									<Expression>
+										<Contained>
+											<MonitoringClass>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB"]$</MonitoringClass>
+										</Contained>
+									</Expression>
+								</Contains>
+							</Expression>
+						</MembershipRule>
+					</MembershipRules>
+				</DataSource>
+			</Discovery>
+			<!--HealthServiceWatcherCatC-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatC" Enabled="true" Target="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+					<RuleId>$MPElement$</RuleId>
+					<GroupInstanceId>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC"]$</GroupInstanceId>
+					<MembershipRules>
+						<MembershipRule>
+							<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthServiceWatcher"]$</MonitoringClass>
+							<RelationshipClass>$MPElement[Name='MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities']$</RelationshipClass>
+							<Expression>
+								<Contains>
+									<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthService"]$</MonitoringClass>
+									<Expression>
+										<Contained>
+											<MonitoringClass>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC"]$</MonitoringClass>
+										</Contained>
+									</Expression>
+								</Contains>
+							</Expression>
+						</MembershipRule>
+					</MembershipRules>
+				</DataSource>
+			</Discovery>
+			<!--ADDSCatA-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.ADDSCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>15300</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>ADDSCatA.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+	Param($ScriptState)
+	if ($ScriptState -eq "Information") {
+		$EventId = 17609
+		$EventLevel = 0 # 0=Info
+	}
+	else {
+		$EventId = 17610
+		$EventLevel = 2 # 2=Warning
+	}
+	$End = Get-Date
+	$TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+	$Minutes = $TimeCount.Minutes
+	$Seconds = $TimeCount.Seconds
+	$Milliseconds = $TimeCount.Milliseconds
+	$MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+	Break
+}
+Function Get-SQLTable {
+	param($OpsDbServer, $OpsDbName, $DbQuery)
+	$Connection = New-Object System.Data.SQLClient.SQLConnection
+	$Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+	$Connection.Open()
+	$Command = New-Object System.Data.SQLClient.SQLCommand
+	$Command.Connection = $Connection
+	$Command.CommandText = $DbQuery
+	$Reader = $Command.ExecuteReader()
+	$SQLTable = New-Object System.Data.DataTable
+	$SQLTable.Load($Reader)
+	$Connection.Close()
+	Return $SQLTable
+}
+Function Set-GroupMembers {
+	# This logs terminating and non-terminating events.
+	$ErrorActionPreference = "Stop"
+	Try {
+		$ScriptState = "Information"
+		<# FOR TESTING
+		$SQLTable = ""
+		$SourceId = "{00000000-0000-0000-0000-000000000000}"
+		$ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+		#>
+		$DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+		# Get PowerShell version.
+		$PSVersion = $PSVersionTable.PSVersion
+		[string]$PSMajor = $PSVersion.Major
+		[string]$PSMinor = $PSVersion.Minor
+		$PSVersion = $PSMajor + "." + $PSMinor
+		# Common variables.
+		$SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+		$OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+		$OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+		$SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA']$")
+		$CmdbQuery = "SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='DomainController' and Category ='CatA' and status = 'Active'"
+		$ScomQuery = "SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+		<# FOR TESTING
+		#$OpsDbServer="bad_error"
+		#$OpsDbName="bad_db"
+		#>
+		# Get CMDB list.
+		$CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+		# Get SCOM list.
+		$SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+		ForEach ($ConfigItem In $CmdbTable) {
+			$Object = $ConfigItem.Name
+			# Compare CMDB list to SCOM list, if match found add to discovery.
+			$Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+			If ($Match -eq $true) {
+				$ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+				$ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+				$RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.ADDSCatAContainsWindowsComputers']$")
+				$RelationshipInstance.Source = $SCOMGroupInstance
+				$RelationshipInstance.Target = $ObjectInstance
+				$DiscoveryData.AddInstance($RelationshipInstance)   
+			}
+		}
+		# Submit discovery data back to Operations Manager and complete the script.
+		$DiscoveryData
+		<# FOR TESTING
+		$MomApi.Return($DiscoveryData)
+		#>
+		Write-Log -ScriptState $ScriptState
+	}
+	Catch {
+		$ScriptState = "Warning"
+		$Message += $_.Exception.Message
+		Write-Log -ScriptState $ScriptState 
+	}
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "ADDSCatA.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.ADDSCatA"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--ADDSCatB-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.ADDSCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>15600</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>ADDSCatB.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB']$")
+        $CmdbQuery = "SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='DomainController' and Category ='CatB' and status = 'Active'"
+        $ScomQuery = "SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.ADDSCatBContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "ADDSCatB.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.ADDSCatB"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--DNSCatA-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.DNSCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatA"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>15900</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>DNSCatA.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.DNSCatA']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsDnsServer' and Category ='CatA' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.DNSCatAContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "DNSCatA.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.DNSCatA"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--DNSCatB-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.DNSCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatB"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>16200</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>DNSCatB.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.DNSCatB']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsDnsServer' and Category ='CatB' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.DNSCatBContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "DNSCatB.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.DNSCatB"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--DHCPCatA-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.DHCPCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>16500</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>DHCPCatA.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsDHCPServer' and Category ='CatA' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.DHCPCatAContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "DHCPCatA.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.DHCPCatA"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--DHCPCatB-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.DHCPCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>16800</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>DHCPCatB.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsDHCPServer' and Category ='CatB' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.DHCPCatBContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "DHCPCatB.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.DHCPCatB"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--IISCatA-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.IISCatA"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>17100</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>IISCatA.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.IISCatA']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='IISWebServer' and Category ='CatA' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.IISCatAContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "IISCatA.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.IISCatA"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--IISCatB-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.IISCatB"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>19500</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>IISCatB.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.IISCatB']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='IISWebServer' and Category ='CatB' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.IISCatBContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "IISCatB.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.IISCatB"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--IISCatC-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatC" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.IISCatC"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>20100</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>IISCatC.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.IISCatC']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='IISWebServer' and Category ='CatC' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.IISCatCContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "IISCatC.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.IISCatC"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--SQLCatA-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.SQLCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatA"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>17400</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>SQLCatA.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.SQLCatA']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='SqlServer' and Category ='CatA' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.SQLCatAContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "SQLCatA.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.SQLCatA"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--SQLCatB-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.SQLCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatB"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>17700</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>SQLCatB.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.SQLCatB']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='SqlServer' and Category ='CatB' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.SQLCatBContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "SQLCatB.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.SQLCatB"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--WindowsClusterCatA-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>18000</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>WindowsClusterCatA.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsCluster' and Category ='CatA' and status = 'Active'"
+        $ScomQuery="SELECT DisplayName AS Name from [$OpsDbName].[dbo].[MT_Microsoft`$Windows`$Cluster]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance=$DiscoveryData.CreateClassInstance("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']/Name$", $Object)
+                $RelationshipInstance=$DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatAContainsWindowsClusters']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "WindowsClusterCatA.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.WindowsClusterCatA"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--WindowsClusterCatB-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>18300</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>WindowsClusterCatB.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsCluster' and Category ='CatB' and status = 'Active'"
+        $ScomQuery="SELECT DisplayName AS Name from [$OpsDbName].[dbo].[MT_Microsoft`$Windows`$Cluster]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance=$DiscoveryData.CreateClassInstance("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']/Name$", $Object)
+                $RelationshipInstance=$DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatBContainsWindowsClusters']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "WindowsClusterCatB.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.WindowsClusterCatB"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--WindowsClusterCatC-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatC" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>18600</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>WindowsClusterCatC.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsCluster' and Category ='CatC' and status = 'Active'"
+        $ScomQuery="SELECT DisplayName AS Name from [$OpsDbName].[dbo].[MT_Microsoft`$Windows`$Cluster]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance=$DiscoveryData.CreateClassInstance("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']/Name$", $Object)
+                $RelationshipInstance=$DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatCContainsWindowsClusters']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "WindowsClusterCatC.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.WindowsClusterCatC"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--ADFSCatA-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.ADFSCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>18900</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>ADFSCatA.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='FederationServer' and Category ='CatA' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.ADFSCatAContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "ADFSCatA.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.ADFSCatA"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--ADFSCatB-->
+			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.ADFSCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>19200</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>ADFSCatB.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB']$")
+        $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='FederationServer' and Category ='CatB' and status = 'Active'"
+        $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CmdbTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $CMDBQuery
+        # Get SCOM list.
+        $SCOMTable = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        ForEach ($ConfigItem In $CmdbTable) {
+            $Object = $ConfigItem.Name
+            # Compare CMDB list to SCOM list, if match found add to discovery.
+            $Match = select-string -inputobject $SCOMTable.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.ADFSCatBContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "ADFSCatB.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.0"
+$MpWorkflow = "Microsoft.SCOM.Discovery.ADFSCatB"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+		</Discoveries>
+	</Monitoring>
+	<LanguagePacks>
+		<LanguagePack ID="ENU" IsDefault="false">
+			<DisplayStrings>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Monitoring">
+					<Name>TestB Microsoft SCOM CMDB Monitoring</Name>
+					<Description>This management pack populates groups using SQL queries.</Description>
+				</DisplayString>
+				<!--WindowsServer-->
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA">
+					<Name>TestB CMDB Windows Server CatA</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatA">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB">
+					<Name>TestB CMDB Windows Server CatB</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatB">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC">
+					<Name>TestB CMDB Windows Server CatC</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatC">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC.</Description>
+				</DisplayString>
+				<!--Health Service Watcher-->
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA">
+					<Name>TestB CMDB Health Service Watcher CatA</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatA">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB">
+					<Name>TestB CMDB Health Service Watcher CatB</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatB">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC">
+					<Name>TestB CMDB Health Service Watcher CatC</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatC">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC</Description>
+				</DisplayString>
+				<!--ADDS-->
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA">
+					<Name>TestB CMDB ADDS CatA</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.ADDSCatA">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB">
+					<Name>TestB CMDB ADDS CatB</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.ADDSCatB">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB.</Description>
+				</DisplayString>
+				<!--DNS-->
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatA">
+					<Name>TestB CMDB DNS CatA</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.DNSCatA">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.DNSCatA</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.DNSCatA.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatB">
+					<Name>TestB CMDB DNS CatB</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.DNSCatB">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.DNSCatB</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.DNSCatB.</Description>
+				</DisplayString>
+				<!--DHCP-->
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA">
+					<Name>TestB CMDB DHCP CatA</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.DHCPCatA">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB">
+					<Name>TestB CMDB DHCP CatB</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.DHCPCatB">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB.</Description>
+				</DisplayString>
+				<!--IIS-->
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.IISCatA">
+					<Name>TestB CMDB IIS CatA</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatA">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.IISCatA</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.IISCatA.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.IISCatB">
+					<Name>TestB CMDB IIS CatB</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatB">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.IISCatB</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.IISCatB.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.IISCatC">
+					<Name>TestB CMDB IIS CatC</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatC">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.IISCatC</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.IISCatC.</Description>
+				</DisplayString>
+				<!--SQL-->
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatA">
+					<Name>TestB CMDB SQL CatA</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.SQLCatA">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.SQLCatA</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.SQLCatA.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatB">
+					<Name>TestB CMDB SQL CatB</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.SQLCatB">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.SQLCatB</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.SQLCatB.</Description>
+				</DisplayString>
+				<!--WindowsCluster-->
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA">
+					<Name>TestB CMDB Windows Cluster CatA</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatA">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB">
+					<Name>TestB CMDB Windows Cluster CatB</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatB">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC">
+					<Name>TestB CMDB Windows Cluster CatC</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatC">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC.</Description>
+				</DisplayString>
+				<!--ADFS-->
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA">
+					<Name>TestB CMDB ADFS CatA</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.ADFSCatA">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB">
+					<Name>TestB CMDB ADFS CatB</Name>
+					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				</DisplayString>
+				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.ADFSCatB">
+					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB</Name>
+					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB.</Description>
+				</DisplayString>
+			</DisplayStrings>
+		</LanguagePack>
+	</LanguagePacks>
+</ManagementPack>
