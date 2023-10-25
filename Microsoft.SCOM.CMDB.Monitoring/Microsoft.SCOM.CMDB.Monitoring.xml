@@ -1,10 +1,10 @@
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<Manifest>
 		<Identity>
-			<ID>TestB.Microsoft.SCOM.CMDB.Monitoring</ID>
-			<Version>2023.10.23.0</Version>
+			<ID>Microsoft.SCOM.CMDB.Monitoring</ID>
+			<Version>2023.10.23.2</Version>
 		</Identity>
-		<Name>TestB.Microsoft.SCOM.CMDB.Monitoring</Name>
+		<Name>Microsoft.SCOM.CMDB.Monitoring</Name>
 		<References>
 			<Reference Alias="Windows">
 				<ID>Microsoft.Windows.Library</ID>
@@ -42,120 +42,120 @@
 		<EntityTypes>
 			<ClassTypes>
 				<!--WindowsServer-->
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.WindowsServerCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.WindowsServerCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.WindowsServerCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
 				<!--HealthServiceWatcher-->
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
 				<!--ADDS-->
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.ADDSCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.ADDSCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
 				<!--DNS-->
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.DNSCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.DNSCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
 				<!--DHCP-->
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.DHCPCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.DHCPCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
 				<!--IIS-->
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.IISCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.IISCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.IISCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.IISCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.IISCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.IISCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
 				<!--SQL-->
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.SQLCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.SQLCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
 				<!--WindowsCluster-->
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatC" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
 				<!--ADFS-->
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
-				<ClassType ID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.ADFSCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.ADFSCatB" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
 			</ClassTypes>
 			<RelationshipTypes>
 				<!--WindowsServer-->
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.WindowsServerCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.WindowsServerCatA"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.WindowsServerCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.WindowsServerCatB"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatCContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.WindowsServerCatCContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.WindowsServerCatC"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
 				<!--ADDS-->
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.ADDSCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.ADDSCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.ADDSCatA"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.ADDSCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.ADDSCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.ADDSCatB"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
 				<!--DNS-->
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.DNSCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.DNSCatA"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.DNSCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.DNSCatA"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.DNSCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.DNSCatB"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.DNSCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.DNSCatB"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
 				<!--DHCP-->
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.DHCPCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.DHCPCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.DHCPCatA"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.DHCPCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.DHCPCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.DHCPCatB"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
 				<!--IIS-->
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.IISCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.IISCatA"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.IISCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.IISCatA"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.IISCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.IISCatB"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.IISCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.IISCatB"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.IISCatCContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.IISCatC"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.IISCatCContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.IISCatC"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
 				<!--SQL-->
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.SQLCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.SQLCatA"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.SQLCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.SQLCatA"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.SQLCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.SQLCatB"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.SQLCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.SQLCatB"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
 				<!--WindowsCluster-->
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatAContainsWindowsClusters" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatAContainsWindowsClusters" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.WindowsClusterCatA"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="ClusterLib!Microsoft.Windows.Cluster"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatBContainsWindowsClusters" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatBContainsWindowsClusters" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.WindowsClusterCatB"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="ClusterLib!Microsoft.Windows.Cluster"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatCContainsWindowsClusters" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatCContainsWindowsClusters" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.WindowsClusterCatC"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="ClusterLib!Microsoft.Windows.Cluster"/>
 				</RelationshipType>
 				<!--ADFS-->
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.ADFSCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.ADFSCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.ADFSCatA"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
-				<RelationshipType ID="TestB.Microsoft.SCOM.CMDB.Relationship.ADFSCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
-					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB"/>
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.ADFSCatBContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.ADFSCatB"/>
 					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
 				</RelationshipType>
 			</RelationshipTypes>
@@ -164,13 +164,13 @@
 	<Monitoring>
 		<Discoveries>
 			<!--WindowsServerCatA-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatA" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.WindowsServerCatA" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsServerCatA"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>60</IntervalSeconds><!--14400-->
+					<IntervalSeconds>14400</IntervalSeconds>
 					<SyncTime/>
 					<ScriptName>WindowsServerCatA.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -227,7 +227,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.WindowsServerCatA']$")
         $CMDBQuery = "SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsServer' and Category ='CatA' and status = 'Active'"
         $SCOMQuery = "SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -245,7 +245,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatAContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.WindowsServerCatAContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -269,8 +269,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsServerCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsServerCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -289,13 +289,13 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--WindowsServerCatB-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatB" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.WindowsServerCatB" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsServerCatB"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>60</IntervalSeconds><!--14700-->
+					<IntervalSeconds>14700</IntervalSeconds>
 					<SyncTime/>
 					<ScriptName>WindowsServerCatB.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -352,7 +352,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.WindowsServerCatB']$")
         $CMDBQuery = "SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsServer' and Category ='CatB' and status = 'Active'"
         $SCOMQuery = "SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -370,7 +370,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatBContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.WindowsServerCatBContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -394,8 +394,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsServerCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsServerCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -414,13 +414,13 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--WindowsServerCatC-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatC" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.WindowsServerCatC" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsServerCatC"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>60</IntervalSeconds><!--15000-->
+					<IntervalSeconds>15000</IntervalSeconds>
 					<SyncTime/>
 					<ScriptName>WindowsServerCatC.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -477,7 +477,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.WindowsServerCatC']$")
         $CMDBQuery = "SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsServer' and Category ='CatC' and status = 'Active'"
         $SCOMQuery = "SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -495,7 +495,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsServerCatCContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.WindowsServerCatCContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -519,8 +519,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsServerCatC.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsServerCatC"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -539,14 +539,14 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--HealthServiceWatcherCatA-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatA" Enabled="true" Target="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatA" Enabled="true" Target="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
 					<DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
 					<RuleId>$MPElement$</RuleId>
-					<GroupInstanceId>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA"]$</GroupInstanceId>
+					<GroupInstanceId>$MPElement[Name="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA"]$</GroupInstanceId>
 					<MembershipRules>
 						<MembershipRule>
 							<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthServiceWatcher"]$</MonitoringClass>
@@ -556,7 +556,7 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 									<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthService"]$</MonitoringClass>
 									<Expression>
 										<Contained>
-											<MonitoringClass>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA"]$</MonitoringClass>
+											<MonitoringClass>$MPElement[Name="Microsoft.SCOM.CMDB.Group.WindowsServerCatA"]$</MonitoringClass>
 										</Contained>
 									</Expression>
 								</Contains>
@@ -566,14 +566,14 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--HealthServiceWatcherCatB-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatB" Enabled="true" Target="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatB" Enabled="true" Target="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
 					<DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
 					<RuleId>$MPElement$</RuleId>
-					<GroupInstanceId>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB"]$</GroupInstanceId>
+					<GroupInstanceId>$MPElement[Name="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB"]$</GroupInstanceId>
 					<MembershipRules>
 						<MembershipRule>
 							<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthServiceWatcher"]$</MonitoringClass>
@@ -583,7 +583,7 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 									<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthService"]$</MonitoringClass>
 									<Expression>
 										<Contained>
-											<MonitoringClass>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB"]$</MonitoringClass>
+											<MonitoringClass>$MPElement[Name="Microsoft.SCOM.CMDB.Group.WindowsServerCatB"]$</MonitoringClass>
 										</Contained>
 									</Expression>
 								</Contains>
@@ -593,14 +593,14 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--HealthServiceWatcherCatC-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatC" Enabled="true" Target="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatC" Enabled="true" Target="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
 					<DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
 					<RuleId>$MPElement$</RuleId>
-					<GroupInstanceId>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC"]$</GroupInstanceId>
+					<GroupInstanceId>$MPElement[Name="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC"]$</GroupInstanceId>
 					<MembershipRules>
 						<MembershipRule>
 							<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthServiceWatcher"]$</MonitoringClass>
@@ -610,7 +610,7 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 									<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthService"]$</MonitoringClass>
 									<Expression>
 										<Contained>
-											<MonitoringClass>$MPElement[Name="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC"]$</MonitoringClass>
+											<MonitoringClass>$MPElement[Name="Microsoft.SCOM.CMDB.Group.WindowsServerCatC"]$</MonitoringClass>
 										</Contained>
 									</Expression>
 								</Contains>
@@ -620,10 +620,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--ADDSCatA-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.ADDSCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.ADDSCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.ADDSCatA"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>15300</IntervalSeconds>
@@ -683,7 +683,7 @@ Function Set-GroupMembers {
 		$SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
 		$OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
 		$OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-		$SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA']$")
+		$SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.ADDSCatA']$")
 		$CmdbQuery = "SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='DomainController' and Category ='CatA' and status = 'Active'"
 		$ScomQuery = "SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
 		<# FOR TESTING
@@ -701,7 +701,7 @@ Function Set-GroupMembers {
 			If ($Match -eq $true) {
 				$ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
 				$ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-				$RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.ADDSCatAContainsWindowsComputers']$")
+				$RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.ADDSCatAContainsWindowsComputers']$")
 				$RelationshipInstance.Source = $SCOMGroupInstance
 				$RelationshipInstance.Target = $ObjectInstance
 				$DiscoveryData.AddInstance($RelationshipInstance)   
@@ -725,8 +725,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "ADDSCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.ADDSCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -745,10 +745,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--ADDSCatB-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.ADDSCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.ADDSCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.ADDSCatB"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>15600</IntervalSeconds>
@@ -808,7 +808,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.ADDSCatB']$")
         $CmdbQuery = "SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='DomainController' and Category ='CatB' and status = 'Active'"
         $ScomQuery = "SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -826,7 +826,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.ADDSCatBContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.ADDSCatBContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -850,8 +850,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "ADDSCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.ADDSCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -870,10 +870,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--DNSCatA-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.DNSCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.DNSCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatA"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.DNSCatA"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>15900</IntervalSeconds>
@@ -933,7 +933,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.DNSCatA']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.DNSCatA']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsDnsServer' and Category ='CatA' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -951,7 +951,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.DNSCatAContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.DNSCatAContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -975,8 +975,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "DNSCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.DNSCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -995,10 +995,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--DNSCatB-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.DNSCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.DNSCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatB"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.DNSCatB"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>16200</IntervalSeconds>
@@ -1058,7 +1058,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.DNSCatB']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.DNSCatB']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsDnsServer' and Category ='CatB' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -1076,7 +1076,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.DNSCatBContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.DNSCatBContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -1100,8 +1100,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "DNSCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.DNSCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1120,10 +1120,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--DHCPCatA-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.DHCPCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.DHCPCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.DHCPCatA"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>16500</IntervalSeconds>
@@ -1183,7 +1183,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.DHCPCatA']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsDHCPServer' and Category ='CatA' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -1201,7 +1201,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.DHCPCatAContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.DHCPCatAContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -1225,8 +1225,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "DHCPCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.DHCPCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1245,10 +1245,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--DHCPCatB-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.DHCPCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.DHCPCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.DHCPCatB"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>16800</IntervalSeconds>
@@ -1308,7 +1308,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.DHCPCatB']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsDHCPServer' and Category ='CatB' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -1326,7 +1326,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.DHCPCatBContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.DHCPCatBContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -1350,8 +1350,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "DHCPCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.DHCPCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1370,10 +1370,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--IISCatA-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.IISCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.IISCatA"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.IISCatA"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>17100</IntervalSeconds>
@@ -1433,7 +1433,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.IISCatA']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.IISCatA']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='IISWebServer' and Category ='CatA' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -1451,7 +1451,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.IISCatAContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.IISCatAContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -1475,8 +1475,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "IISCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.IISCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1495,10 +1495,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--IISCatB-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.IISCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.IISCatB"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.IISCatB"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>19500</IntervalSeconds>
@@ -1558,7 +1558,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.IISCatB']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.IISCatB']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='IISWebServer' and Category ='CatB' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -1576,7 +1576,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.IISCatBContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.IISCatBContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -1600,8 +1600,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "IISCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.IISCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1620,10 +1620,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--IISCatC-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatC" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.IISCatC" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.IISCatC"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.IISCatC"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>20100</IntervalSeconds>
@@ -1683,7 +1683,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.IISCatC']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.IISCatC']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='IISWebServer' and Category ='CatC' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -1701,7 +1701,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.IISCatCContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.IISCatCContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -1725,8 +1725,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "IISCatC.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.IISCatC"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1745,10 +1745,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--SQLCatA-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.SQLCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.SQLCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatA"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.SQLCatA"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>17400</IntervalSeconds>
@@ -1808,7 +1808,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.SQLCatA']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.SQLCatA']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='SqlServer' and Category ='CatA' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -1826,7 +1826,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.SQLCatAContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.SQLCatAContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -1850,8 +1850,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "SQLCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.SQLCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1870,10 +1870,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--SQLCatB-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.SQLCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.SQLCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatB"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.SQLCatB"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>17700</IntervalSeconds>
@@ -1933,7 +1933,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.SQLCatB']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.SQLCatB']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='SqlServer' and Category ='CatB' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -1951,7 +1951,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.SQLCatBContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.SQLCatBContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -1975,8 +1975,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "SQLCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.SQLCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1995,13 +1995,13 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--WindowsClusterCatA-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatA" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatA"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>18000</IntervalSeconds>
+					<IntervalSeconds>60</IntervalSeconds><!--18000-->
 					<SyncTime/>
 					<ScriptName>WindowsClusterCatA.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -2058,7 +2058,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.WindowsClusterCatA']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsCluster' and Category ='CatA' and status = 'Active'"
         $ScomQuery="SELECT DisplayName AS Name from [$OpsDbName].[dbo].[MT_Microsoft`$Windows`$Cluster]"
         <# FOR TESTING
@@ -2076,7 +2076,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance=$DiscoveryData.CreateClassInstance("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']/Name$", $Object)
-                $RelationshipInstance=$DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatAContainsWindowsClusters']$")
+                $RelationshipInstance=$DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatAContainsWindowsClusters']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -2100,8 +2100,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsClusterCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsClusterCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -2120,13 +2120,13 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--WindowsClusterCatB-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatB" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatB"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>18300</IntervalSeconds>
+					<IntervalSeconds>60</IntervalSeconds><!--18300-->
 					<SyncTime/>
 					<ScriptName>WindowsClusterCatB.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -2183,7 +2183,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.WindowsClusterCatB']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsCluster' and Category ='CatB' and status = 'Active'"
         $ScomQuery="SELECT DisplayName AS Name from [$OpsDbName].[dbo].[MT_Microsoft`$Windows`$Cluster]"
         <# FOR TESTING
@@ -2201,7 +2201,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance=$DiscoveryData.CreateClassInstance("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']/Name$", $Object)
-                $RelationshipInstance=$DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatBContainsWindowsClusters']$")
+                $RelationshipInstance=$DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatBContainsWindowsClusters']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -2225,8 +2225,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsClusterCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsClusterCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -2245,13 +2245,13 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--WindowsClusterCatC-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatC" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatC" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatC"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>18600</IntervalSeconds>
+					<IntervalSeconds>60</IntervalSeconds><!--18600-->
 					<SyncTime/>
 					<ScriptName>WindowsClusterCatC.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -2308,7 +2308,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.WindowsClusterCatC']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='WindowsCluster' and Category ='CatC' and status = 'Active'"
         $ScomQuery="SELECT DisplayName AS Name from [$OpsDbName].[dbo].[MT_Microsoft`$Windows`$Cluster]"
         <# FOR TESTING
@@ -2326,7 +2326,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance=$DiscoveryData.CreateClassInstance("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='ClusterLib!Microsoft.Windows.Cluster']/Name$", $Object)
-                $RelationshipInstance=$DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatCContainsWindowsClusters']$")
+                $RelationshipInstance=$DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.WindowsClusterCatCContainsWindowsClusters']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -2350,8 +2350,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsClusterCatC.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsClusterCatC"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -2370,10 +2370,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--ADFSCatA-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.ADFSCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.ADFSCatA" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.ADFSCatA"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>18900</IntervalSeconds>
@@ -2433,7 +2433,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.ADFSCatA']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='FederationServer' and Category ='CatA' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -2451,7 +2451,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.ADFSCatAContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.ADFSCatAContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -2475,8 +2475,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "ADFSCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.ADFSCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -2495,10 +2495,10 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 				</DataSource>
 			</Discovery>
 			<!--ADFSCatB-->
-			<Discovery ID="TestB.Microsoft.SCOM.CMDB.Discovery.ADFSCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.ADFSCatB" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
-					<DiscoveryClass TypeID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB"/>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.ADFSCatB"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
 					<IntervalSeconds>19200</IntervalSeconds>
@@ -2558,7 +2558,7 @@ Function Set-GroupMembers {
         $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
         $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
         $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
-        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB']$")
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.ADFSCatB']$")
         $CmdbQuery="SELECT Name from [SCOMCmdb].[dbo].[Configuration] where Class='FederationServer' and Category ='CatB' and status = 'Active'"
         $ScomQuery="SELECT principalname AS Name from [$OpsDbName].[dbo].[MTV_Microsoft`$Windows`$OperatingSystem]"
         <# FOR TESTING
@@ -2576,7 +2576,7 @@ Function Set-GroupMembers {
             If ($Match -eq $true) {
                 $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
                 $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
-                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='TestB.Microsoft.SCOM.CMDB.Relationship.ADFSCatBContainsWindowsComputers']$")
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.ADFSCatBContainsWindowsComputers']$")
                 $RelationshipInstance.Source = $SCOMGroupInstance
                 $RelationshipInstance.Target = $ObjectInstance
                 $DiscoveryData.AddInstance($RelationshipInstance)   
@@ -2600,8 +2600,8 @@ Function Set-GroupMembers {
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "ADFSCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$Mp = "TestB.Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.0"
+$Mp = "Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2023.10.23.2"
 $MpWorkflow = "Microsoft.SCOM.Discovery.ADFSCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -2624,194 +2624,194 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 	<LanguagePacks>
 		<LanguagePack ID="ENU" IsDefault="false">
 			<DisplayStrings>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Monitoring">
-					<Name>TestB Microsoft SCOM CMDB Monitoring</Name>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Monitoring">
+					<Name>Microsoft SCOM CMDB Monitoring</Name>
 					<Description>This management pack populates groups using SQL queries.</Description>
 				</DisplayString>
 				<!--WindowsServer-->
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA">
-					<Name>TestB CMDB Windows Server CatA</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.WindowsServerCatA">
+					<Name>CMDB Windows Server Cat A</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatA">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatA.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.WindowsServerCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.WindowsServerCatA</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.WindowsServerCatA.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB">
-					<Name>TestB CMDB Windows Server CatB</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.WindowsServerCatB">
+					<Name>CMDB Windows Server Cat B</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatB">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatB.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.WindowsServerCatB">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.WindowsServerCatB</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.WindowsServerCatB.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC">
-					<Name>TestB CMDB Windows Server CatC</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.WindowsServerCatC">
+					<Name>CMDB Windows Server Cat C</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsServerCatC">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsServerCatC.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.WindowsServerCatC">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.WindowsServerCatC</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.WindowsServerCatC.</Description>
 				</DisplayString>
 				<!--Health Service Watcher-->
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA">
-					<Name>TestB CMDB Health Service Watcher CatA</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA">
+					<Name>CMDB Health Service Watcher Cat A</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatA">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB">
-					<Name>TestB CMDB Health Service Watcher CatB</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB">
+					<Name>CMDB Health Service Watcher Cat B</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatB">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatB">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatB</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC">
-					<Name>TestB CMDB Health Service Watcher CatC</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC">
+					<Name>CMDB Health Service Watcher Cat C</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatC">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatC">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatC</Description>
 				</DisplayString>
 				<!--ADDS-->
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA">
-					<Name>TestB CMDB ADDS CatA</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.ADDSCatA">
+					<Name>CMDB ADDS Cat A</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.ADDSCatA">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.ADDSCatA.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.ADDSCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.ADDSCatA</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.ADDSCatA.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB">
-					<Name>TestB CMDB ADDS CatB</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.ADDSCatB">
+					<Name>CMDB ADDS Cat B</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.ADDSCatB">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.ADDSCatB.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.ADDSCatB">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.ADDSCatB</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.ADDSCatB.</Description>
 				</DisplayString>
 				<!--DNS-->
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatA">
-					<Name>TestB CMDB DNS CatA</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.DNSCatA">
+					<Name>CMDB DNS Cat A</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.DNSCatA">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.DNSCatA</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.DNSCatA.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.DNSCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.DNSCatA</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.DNSCatA.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.DNSCatB">
-					<Name>TestB CMDB DNS CatB</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.DNSCatB">
+					<Name>CMDB DNS Cat B</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.DNSCatB">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.DNSCatB</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.DNSCatB.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.DNSCatB">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.DNSCatB</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.DNSCatB.</Description>
 				</DisplayString>
 				<!--DHCP-->
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA">
-					<Name>TestB CMDB DHCP CatA</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.DHCPCatA">
+					<Name>CMDB DHCP Cat A</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.DHCPCatA">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.DHCPCatA.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.DHCPCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.DHCPCatA</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.DHCPCatA.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB">
-					<Name>TestB CMDB DHCP CatB</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.DHCPCatB">
+					<Name>CMDB DHCP Cat B</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.DHCPCatB">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.DHCPCatB.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.DHCPCatB">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.DHCPCatB</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.DHCPCatB.</Description>
 				</DisplayString>
 				<!--IIS-->
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.IISCatA">
-					<Name>TestB CMDB IIS CatA</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.IISCatA">
+					<Name>CMDB IIS Cat A</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatA">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.IISCatA</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.IISCatA.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.IISCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.IISCatA</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.IISCatA.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.IISCatB">
-					<Name>TestB CMDB IIS CatB</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.IISCatB">
+					<Name>CMDB IIS Cat B</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatB">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.IISCatB</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.IISCatB.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.IISCatB">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.IISCatB</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.IISCatB.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.IISCatC">
-					<Name>TestB CMDB IIS CatC</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.IISCatC">
+					<Name>CMDB IIS Cat C</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.IISCatC">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.IISCatC</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.IISCatC.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.IISCatC">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.IISCatC</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.IISCatC.</Description>
 				</DisplayString>
 				<!--SQL-->
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatA">
-					<Name>TestB CMDB SQL CatA</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.SQLCatA">
+					<Name>CMDB SQL Cat A</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.SQLCatA">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.SQLCatA</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.SQLCatA.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.SQLCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.SQLCatA</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.SQLCatA.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.SQLCatB">
-					<Name>TestB CMDB SQL CatB</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.SQLCatB">
+					<Name>CMDB SQL Cat B</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.SQLCatB">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.SQLCatB</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.SQLCatB.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.SQLCatB">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.SQLCatB</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.SQLCatB.</Description>
 				</DisplayString>
 				<!--WindowsCluster-->
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA">
-					<Name>TestB CMDB Windows Cluster CatA</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatA">
+					<Name>CMDB Windows Cluster Cat A</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatA">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatA.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.WindowsClusterCatA</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.WindowsClusterCatA.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB">
-					<Name>TestB CMDB Windows Cluster CatB</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatB">
+					<Name>CMDB Windows Cluster Cat B</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatB">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatB.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatB">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.WindowsClusterCatB</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.WindowsClusterCatB.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC">
-					<Name>TestB CMDB Windows Cluster CatC</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatC">
+					<Name>CMDB Windows Cluster Cat C</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatC">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.WindowsClusterCatC.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.WindowsClusterCatC">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.WindowsClusterCatC</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.WindowsClusterCatC.</Description>
 				</DisplayString>
 				<!--ADFS-->
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA">
-					<Name>TestB CMDB ADFS CatA</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.ADFSCatA">
+					<Name>CMDB ADFS Cat A</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.ADFSCatA">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.ADFSCatA.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.ADFSCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.ADFSCatA</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.ADFSCatA.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB">
-					<Name>TestB CMDB ADFS CatB</Name>
-					<Description>This group is in the TestB.Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.ADFSCatB">
+					<Name>CMDB ADFS Cat B</Name>
+					<Description>This group is in the Microsoft.SCOM.CMDB.Monitoring management pack and is populated by a SQL query.</Description>
 				</DisplayString>
-				<DisplayString ElementID="TestB.Microsoft.SCOM.CMDB.Discovery.ADFSCatB">
-					<Name>Populate TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB</Name>
-					<Description>This discovery rule populates the group TestB.Microsoft.SCOM.CMDB.Group.ADFSCatB.</Description>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.ADFSCatB">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.ADFSCatB</Name>
+					<Description>This discovery rule populates the group Microsoft.SCOM.CMDB.Group.ADFSCatB.</Description>
 				</DisplayString>
 			</DisplayStrings>
 		</LanguagePack>

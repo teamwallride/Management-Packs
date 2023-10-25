@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.AlertManagement.Monitoring</ID>
-            <Version>2023.10.6.0</Version>
+            <Version>2023.10.24.0</Version>
         </Identity>
         <Name>Microsoft.SCOM.AlertManagement.Monitoring</Name>
         <References>
@@ -32,7 +32,7 @@
     </Manifest>
     <TypeDefinitions>
         <ModuleTypes>
-            <DataSourceModuleType ID="Microsoft.SCOM.DataSource.AlertManagement" Accessibility="Public" Batching="false">
+            <DataSourceModuleType ID="Microsoft.SCOM.AlertManagement.DataSource.AlertManagement" Accessibility="Public" Batching="false">
                 <Configuration>
                     <IncludeSchemaTypes>
                         <SchemaType>System!System.ExpressionEvaluatorSchema</SchemaType>
@@ -66,7 +66,7 @@
                 </ModuleImplementation>
                 <OutputType>System!System.TriggerData</OutputType>
             </DataSourceModuleType>
-            <WriteActionModuleType ID="Microsoft.SCOM.WriteAction.AlertManagement" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.AlertManagement.WriteAction.AlertManagement" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -242,8 +242,8 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="Microsoft.SCOM.AlertManagement.Monitoring"
-$MpVersion="2023.10.6.0"
-$MpWorkflow="Microsoft.SCOM.Rule.AlertManagement"
+$MpVersion="2023.10.24.0"
+$MpWorkflow="Microsoft.SCOM.AlertManagement.Rule.AlertManagement"
 Set-AlertManagement
 ]]>
 
@@ -263,16 +263,16 @@ Set-AlertManagement
     </TypeDefinitions>
     <Monitoring>
         <Rules>
-            <Rule ID="Microsoft.SCOM.Rule.AlertManagement" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+            <Rule ID="Microsoft.SCOM.AlertManagement.Rule.AlertManagement" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
                 <Category>Maintenance</Category>
                 <DataSources>
-                    <DataSource ID="Scheduler" TypeID="Microsoft.SCOM.DataSource.AlertManagement">
+                    <DataSource ID="Scheduler" TypeID="Microsoft.SCOM.AlertManagement.DataSource.AlertManagement">
                         <IntervalSeconds>300</IntervalSeconds>
                         <SyncTime></SyncTime>
                     </DataSource>
                 </DataSources>
                 <WriteActions>
-                    <WriteAction ID="WA" TypeID="Microsoft.SCOM.WriteAction.AlertManagement">
+                    <WriteAction ID="WA" TypeID="Microsoft.SCOM.AlertManagement.WriteAction.AlertManagement">
                         <TimeoutSeconds>120</TimeoutSeconds>
                     </WriteAction>
                 </WriteActions>
@@ -286,7 +286,7 @@ Set-AlertManagement
                     <Name>Microsoft SCOM Alert Management Monitoring</Name>
                     <Description>Assigns alerts to support teams.</Description>
                 </DisplayString>
-                <DisplayString ElementID="Microsoft.SCOM.Rule.AlertManagement">
+                <DisplayString ElementID="Microsoft.SCOM.AlertManagement.Rule.AlertManagement">
                     <Name>Alert Management</Name>
                     <Description>This is a PowerShell script that runs every 5 minutes to assign alerts to support teams.</Description>
                 </DisplayString>

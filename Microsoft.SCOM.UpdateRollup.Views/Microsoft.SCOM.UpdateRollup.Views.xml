@@ -2,13 +2,13 @@
   <Manifest>
     <Identity>
       <ID>Microsoft.SCOM.UpdateRollup.Views</ID>
-      <Version>2023.10.13.1</Version>
+      <Version>2023.10.24.0</Version>
     </Identity>
     <Name>Microsoft.SCOM.UpdateRollup.Views</Name>
     <References>
       <Reference Alias="SCOM">
         <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
-        <Version>2023.10.9.4</Version>
+        <Version>2023.10.24.0</Version>
         <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
       </Reference>
       <Reference Alias="OpsManager2007">
@@ -35,7 +35,7 @@
   </Manifest>
   <Presentation>
     <Views>
-      <View ID="View_60fcfe334a4c423c8e0c634d9987e155" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.Class.WindowsUpdateRollup" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+      <View ID="View_60fcfe334a4c423c8e0c634d9987e155" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
         <Category>Operations</Category>
         <Criteria>
           <InMaintenanceMode>false</InMaintenanceMode>
@@ -47,7 +47,7 @@
         <Presentation>
           <ColumnInfo Index="0" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Descending">
             <Name>State</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
           </ColumnInfo>
           <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Maintenance Mode</Name>
@@ -67,176 +67,176 @@
           </ColumnInfo>
           <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Computer Type</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ComputerType</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ComputerType</Id>
           </ColumnInfo>
           <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Operating System</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OperatingSystem</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OperatingSystem</Id>
           </ColumnInfo>
           <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Product</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/Product</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/Product</Id>
           </ColumnInfo>
           <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Management Groups</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementGroups</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementGroups</Id>
           </ColumnInfo>
           <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Health Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/HealthServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/HealthServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Certificate Expiry (YMDT)</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/CertificateExpiry</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/CertificateExpiry</Id>
           </ColumnInfo>
           <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>AD Integration</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ADIntegration</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ADIntegration</Id>
           </ColumnInfo>
           <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>APM Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/APMServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/APMServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Forwarder Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSForwarderServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSForwarderServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Log Analytics Workspaces</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/LogAnalyticsWorkspaces</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/LogAnalyticsWorkspaces</Id>
           </ColumnInfo>
           <ColumnInfo Index="17" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Mgmt Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/MgmtServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/MgmtServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Mgmt Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/MgmtServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/MgmtServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Config Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConfigServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConfigServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="20" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Access Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DataAccessServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DataAccessServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DWDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DWDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="24" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="26" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>ACS Collector Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="25" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>ACS Collector Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="27" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>ACS Collector Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="28" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>RMS</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/RMS</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/RMS</Id>
           </ColumnInfo>
           <ColumnInfo Index="29" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="30" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="31" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="32" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="33" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Authentication Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AuthenticationMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AuthenticationMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="34" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Default Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DefaultServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DefaultServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="35" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="36" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Advisor Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmAdvisorUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmAdvisorUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="37" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Diagnostics Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmDiagnosticsUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmDiagnosticsUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="38" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="39" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="40" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="41" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDWDBName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDWDBName</Id>
           </ColumnInfo>
           <ColumnInfo Index="42" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="43" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>SRS Instance</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/SRSInstance</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/SRSInstance</Id>
           </ColumnInfo>
           <ColumnInfo Index="44" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="45" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="46" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleVersion</Id>
           </ColumnInfo>
         </Presentation>
         <Target />
       </View>
-      <View ID="View_6725521cb7cb4644a8c6fc9c17c7d441" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.Class.WindowsUpdateRollup" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+      <View ID="View_6725521cb7cb4644a8c6fc9c17c7d441" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
         <Category>Operations</Category>
         <Criteria>
           <InMaintenanceMode>false</InMaintenanceMode>
@@ -248,7 +248,7 @@
         <Presentation>
           <ColumnInfo Index="0" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Descending">
             <Name>State</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
           </ColumnInfo>
           <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Maintenance Mode</Name>
@@ -268,176 +268,176 @@
           </ColumnInfo>
           <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Computer Type</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ComputerType</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ComputerType</Id>
           </ColumnInfo>
           <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Operating System</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OperatingSystem</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OperatingSystem</Id>
           </ColumnInfo>
           <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Product</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/Product</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/Product</Id>
           </ColumnInfo>
           <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Management Groups</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementGroups</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementGroups</Id>
           </ColumnInfo>
           <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Health Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/HealthServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/HealthServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Certificate Expiry (YMDT)</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/CertificateExpiry</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/CertificateExpiry</Id>
           </ColumnInfo>
           <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>AD Integration</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ADIntegration</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ADIntegration</Id>
           </ColumnInfo>
           <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>APM Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/APMServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/APMServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Forwarder Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSForwarderServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSForwarderServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Log Analytics Workspaces</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/LogAnalyticsWorkspaces</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/LogAnalyticsWorkspaces</Id>
           </ColumnInfo>
           <ColumnInfo Index="17" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Mgmt Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/MgmtServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/MgmtServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Mgmt Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/MgmtServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/MgmtServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Config Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConfigServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConfigServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="20" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Access Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DataAccessServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DataAccessServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DWDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DWDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="24" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="25" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="26" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="27" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="28" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>RMS</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/RMS</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/RMS</Id>
           </ColumnInfo>
           <ColumnInfo Index="29" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="30" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="31" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="32" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="33" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Authentication Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AuthenticationMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AuthenticationMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="34" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Default Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DefaultServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DefaultServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="35" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="36" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Advisor Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmAdvisorUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmAdvisorUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="37" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Diagnostics Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmDiagnosticsUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmDiagnosticsUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="38" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="39" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="40" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="41" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDWDBName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDWDBName</Id>
           </ColumnInfo>
           <ColumnInfo Index="42" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="43" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>SRS Instance</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/SRSInstance</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/SRSInstance</Id>
           </ColumnInfo>
           <ColumnInfo Index="44" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="46" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="45" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleVersion</Id>
           </ColumnInfo>
         </Presentation>
         <Target />
       </View>
-      <View ID="View_2d8f9ac284fc403d9da9669a4391ca03" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.Class.WindowsUpdateRollup" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+      <View ID="View_2d8f9ac284fc403d9da9669a4391ca03" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
         <Category>Operations</Category>
         <Criteria>
           <InMaintenanceMode>false</InMaintenanceMode>
@@ -449,7 +449,7 @@
         <Presentation>
           <ColumnInfo Index="0" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Descending">
             <Name>State</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
           </ColumnInfo>
           <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Maintenance Mode</Name>
@@ -469,176 +469,176 @@
           </ColumnInfo>
           <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Computer Type</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ComputerType</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ComputerType</Id>
           </ColumnInfo>
           <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Operating System</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OperatingSystem</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OperatingSystem</Id>
           </ColumnInfo>
           <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Product</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/Product</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/Product</Id>
           </ColumnInfo>
           <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Management Groups</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementGroups</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementGroups</Id>
           </ColumnInfo>
           <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Health Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/HealthServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/HealthServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Certificate Expiry (YMDT)</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/CertificateExpiry</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/CertificateExpiry</Id>
           </ColumnInfo>
           <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>AD Integration</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ADIntegration</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ADIntegration</Id>
           </ColumnInfo>
           <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>APM Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/APMServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/APMServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="17" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>ACS Forwarder Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSForwarderServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSForwarderServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Log Analytics Workspaces</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/LogAnalyticsWorkspaces</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/LogAnalyticsWorkspaces</Id>
           </ColumnInfo>
           <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Mgmt Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/MgmtServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/MgmtServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="20" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Mgmt Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/MgmtServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/MgmtServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Config Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConfigServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConfigServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Access Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DataAccessServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DataAccessServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="24" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="25" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DWDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DWDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="26" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="27" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="28" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="29" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="30" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>RMS</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/RMS</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/RMS</Id>
           </ColumnInfo>
           <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Gateway Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Gateway Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="31" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="32" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="33" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Authentication Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AuthenticationMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AuthenticationMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="34" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Default Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DefaultServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DefaultServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="35" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="36" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Advisor Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmAdvisorUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmAdvisorUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="37" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Diagnostics Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmDiagnosticsUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmDiagnosticsUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="38" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="39" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="40" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="41" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDWDBName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDWDBName</Id>
           </ColumnInfo>
           <ColumnInfo Index="42" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="43" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>SRS Instance</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/SRSInstance</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/SRSInstance</Id>
           </ColumnInfo>
           <ColumnInfo Index="44" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="45" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="46" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleVersion</Id>
           </ColumnInfo>
         </Presentation>
         <Target />
       </View>
-      <View ID="View_c0f5a20432c84b06a0e9935fbc7bcc6e" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.Class.WindowsUpdateRollup" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+      <View ID="View_c0f5a20432c84b06a0e9935fbc7bcc6e" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
         <Category>Operations</Category>
         <Criteria>
           <InMaintenanceMode>false</InMaintenanceMode>
@@ -650,7 +650,7 @@
         <Presentation>
           <ColumnInfo Index="0" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Descending">
             <Name>State</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
           </ColumnInfo>
           <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Maintenance Mode</Name>
@@ -670,176 +670,176 @@
           </ColumnInfo>
           <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Computer Type</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ComputerType</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ComputerType</Id>
           </ColumnInfo>
           <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Operating System</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OperatingSystem</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OperatingSystem</Id>
           </ColumnInfo>
           <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Product</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/Product</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/Product</Id>
           </ColumnInfo>
           <ColumnInfo Index="17" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Management Groups</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementGroups</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementGroups</Id>
           </ColumnInfo>
           <ColumnInfo Index="20" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Health Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/HealthServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/HealthServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Certificate Expiry (YMDT)</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/CertificateExpiry</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/CertificateExpiry</Id>
           </ColumnInfo>
           <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>AD Integration</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ADIntegration</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ADIntegration</Id>
           </ColumnInfo>
           <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>APM Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/APMServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/APMServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="24" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>ACS Forwarder Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSForwarderServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSForwarderServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="25" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Log Analytics Workspaces</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/LogAnalyticsWorkspaces</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/LogAnalyticsWorkspaces</Id>
           </ColumnInfo>
           <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Management Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Management Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Config Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConfigServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConfigServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Data Access Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DataAccessServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DataAccessServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Operations Manager Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Operations Manager Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DWDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DWDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="26" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="27" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="28" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>RMS</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/RMS</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/RMS</Id>
           </ColumnInfo>
           <ColumnInfo Index="29" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="30" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="31" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="32" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="33" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Authentication Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AuthenticationMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AuthenticationMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="34" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Default Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DefaultServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DefaultServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="35" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="36" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Advisor Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmAdvisorUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmAdvisorUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="37" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Diagnostics Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmDiagnosticsUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmDiagnosticsUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="38" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="39" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="40" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="41" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDWDBName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDWDBName</Id>
           </ColumnInfo>
           <ColumnInfo Index="42" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="43" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>SRS Instance</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/SRSInstance</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/SRSInstance</Id>
           </ColumnInfo>
           <ColumnInfo Index="44" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="45" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="46" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleVersion</Id>
           </ColumnInfo>
         </Presentation>
         <Target />
       </View>
-      <View ID="View_839844019ce0442fb29f2d96e505beba" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.Class.WindowsUpdateRollup" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+      <View ID="View_839844019ce0442fb29f2d96e505beba" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
         <Category>Operations</Category>
         <Criteria>
           <InMaintenanceMode>false</InMaintenanceMode>
@@ -851,7 +851,7 @@
         <Presentation>
           <ColumnInfo Index="0" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Descending">
             <Name>State</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
           </ColumnInfo>
           <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Maintenance Mode</Name>
@@ -871,171 +871,171 @@
           </ColumnInfo>
           <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Computer Type</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ComputerType</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ComputerType</Id>
           </ColumnInfo>
           <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Operating System</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OperatingSystem</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OperatingSystem</Id>
           </ColumnInfo>
           <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Product</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/Product</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/Product</Id>
           </ColumnInfo>
           <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="17" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Management Groups</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementGroups</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementGroups</Id>
           </ColumnInfo>
           <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Health Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/HealthServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/HealthServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Certificate Expiry (YMDT)</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/CertificateExpiry</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/CertificateExpiry</Id>
           </ColumnInfo>
           <ColumnInfo Index="20" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>AD Integration</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ADIntegration</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ADIntegration</Id>
           </ColumnInfo>
           <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>APM Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/APMServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/APMServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>ACS Forwarder Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSForwarderServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSForwarderServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Log Analytics Workspaces</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/LogAnalyticsWorkspaces</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/LogAnalyticsWorkspaces</Id>
           </ColumnInfo>
           <ColumnInfo Index="24" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Management Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="25" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Management Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="26" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Config Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConfigServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConfigServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="27" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Access Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DataAccessServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DataAccessServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="28" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="29" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="30" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DWDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DWDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="31" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="32" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="33" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="34" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="35" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>RMS</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/RMS</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/RMS</Id>
           </ColumnInfo>
           <ColumnInfo Index="36" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="37" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="38" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="39" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="40" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Authentication Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AuthenticationMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AuthenticationMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="41" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Default Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DefaultServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DefaultServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="42" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="43" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Advisor Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmAdvisorUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmAdvisorUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="44" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Diagnostics Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmDiagnosticsUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmDiagnosticsUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Report Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Report Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDWDBName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDWDBName</Id>
           </ColumnInfo>
           <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Report Server Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>SRS Instance</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/SRSInstance</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/SRSInstance</Id>
           </ColumnInfo>
           <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Report Server Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="45" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="46" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleVersion</Id>
           </ColumnInfo>
         </Presentation>
         <Target />
@@ -1137,7 +1137,7 @@
         </Presentation>
         <Target />
       </View>
-      <View ID="View_ab2f6d1b669f47f28c131f950afca5f3" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.Class.WindowsUpdateRollup" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+      <View ID="View_ab2f6d1b669f47f28c131f950afca5f3" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
         <Category>Operations</Category>
         <Criteria>
           <InMaintenanceMode>false</InMaintenanceMode>
@@ -1149,7 +1149,7 @@
         <Presentation>
           <ColumnInfo Index="0" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Descending">
             <Name>State</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
           </ColumnInfo>
           <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Maintenance Mode</Name>
@@ -1169,176 +1169,176 @@
           </ColumnInfo>
           <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Computer Type</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ComputerType</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ComputerType</Id>
           </ColumnInfo>
           <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Operating System</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OperatingSystem</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OperatingSystem</Id>
           </ColumnInfo>
           <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Product</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/Product</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/Product</Id>
           </ColumnInfo>
           <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Agent Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="17" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Management Groups</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementGroups</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementGroups</Id>
           </ColumnInfo>
           <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Health Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/HealthServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/HealthServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Certificate Expiry (YMDT)</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/CertificateExpiry</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/CertificateExpiry</Id>
           </ColumnInfo>
           <ColumnInfo Index="20" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>AD Integration</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ADIntegration</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ADIntegration</Id>
           </ColumnInfo>
           <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>APM Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/APMServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/APMServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>ACS Forwarder Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSForwarderServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSForwarderServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Log Analytics Workspaces</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/LogAnalyticsWorkspaces</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/LogAnalyticsWorkspaces</Id>
           </ColumnInfo>
           <ColumnInfo Index="24" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Management Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="25" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Management Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="26" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Config Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConfigServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConfigServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="27" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Access Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DataAccessServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DataAccessServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="28" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="29" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="30" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DWDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DWDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="31" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="32" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="33" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="34" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="35" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>RMS</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/RMS</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/RMS</Id>
           </ColumnInfo>
           <ColumnInfo Index="36" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="37" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Web Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Web Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Authentication Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AuthenticationMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AuthenticationMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Default Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DefaultServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DefaultServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Web Console Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Apm Advisor Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmAdvisorUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmAdvisorUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Apm Diagnostics Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmDiagnosticsUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmDiagnosticsUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="38" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="39" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="40" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="41" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDWDBName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDWDBName</Id>
           </ColumnInfo>
           <ColumnInfo Index="42" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="43" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>SRS Instance</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/SRSInstance</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/SRSInstance</Id>
           </ColumnInfo>
           <ColumnInfo Index="44" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="45" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="46" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleVersion</Id>
           </ColumnInfo>
         </Presentation>
         <Target />
       </View>
-      <View ID="View_541e8e576f184fe8bd5752c283f9a80b" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.Class.WindowsUpdateRollup" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+      <View ID="View_541e8e576f184fe8bd5752c283f9a80b" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
         <Category>Operations</Category>
         <Criteria>
           <InMaintenanceMode>false</InMaintenanceMode>
@@ -1350,7 +1350,7 @@
         <Presentation>
           <ColumnInfo Index="0" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Descending">
             <Name>State</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
           </ColumnInfo>
           <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Maintenance Mode</Name>
@@ -1370,171 +1370,171 @@
           </ColumnInfo>
           <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Computer Type</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ComputerType</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ComputerType</Id>
           </ColumnInfo>
           <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Operating System</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OperatingSystem</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OperatingSystem</Id>
           </ColumnInfo>
           <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Product</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/Product</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/Product</Id>
           </ColumnInfo>
           <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Agent Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Agent Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AgentVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AgentVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Management Groups</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementGroups</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementGroups</Id>
           </ColumnInfo>
           <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Health Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/HealthServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/HealthServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Certificate Expiry (YMDT)</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/CertificateExpiry</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/CertificateExpiry</Id>
           </ColumnInfo>
           <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>AD Integration</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ADIntegration</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ADIntegration</Id>
           </ColumnInfo>
           <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>APM Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/APMServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/APMServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>ACS Forwarder Service Start Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSForwarderServiceStartMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSForwarderServiceStartMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Log Analytics Workspaces</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/LogAnalyticsWorkspaces</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/LogAnalyticsWorkspaces</Id>
           </ColumnInfo>
           <ColumnInfo Index="17" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Management Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Management Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ManagementServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ManagementServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Config Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConfigServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConfigServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="20" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Access Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DataAccessServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DataAccessServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Operations Manager Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/OpsDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/OpsDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DWDbName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DWDbName</Id>
           </ColumnInfo>
           <ColumnInfo Index="24" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="25" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="26" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="27" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>ACS Collector Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ACSCollectorServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ACSCollectorServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="28" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>RMS</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/RMS</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/RMS</Id>
           </ColumnInfo>
           <ColumnInfo Index="29" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="30" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Gateway Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/GatewayServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/GatewayServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="31" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="32" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="33" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Authentication Mode</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/AuthenticationMode</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/AuthenticationMode</Id>
           </ColumnInfo>
           <ColumnInfo Index="34" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Default Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/DefaultServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/DefaultServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="35" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Web Console Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/WebConsoleUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/WebConsoleUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="36" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Advisor Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmAdvisorUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmAdvisorUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="37" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Apm Diagnostics Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ApmDiagnosticsUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ApmDiagnosticsUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="38" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="39" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerVersion</Id>
           </ColumnInfo>
           <ColumnInfo Index="40" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Server</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDwDbServer</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDwDbServer</Id>
           </ColumnInfo>
           <ColumnInfo Index="41" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Data Warehouse Db Name</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerDWDBName</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerDWDBName</Id>
           </ColumnInfo>
           <ColumnInfo Index="42" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Url</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerUrl</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerUrl</Id>
           </ColumnInfo>
           <ColumnInfo Index="43" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>SRS Instance</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/SRSInstance</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/SRSInstance</Id>
           </ColumnInfo>
           <ColumnInfo Index="44" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Report Server Service Account</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ReportServerServiceAccount</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ReportServerServiceAccount</Id>
           </ColumnInfo>
           <ColumnInfo Index="45" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Install Directory</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleInstallDirectory</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleInstallDirectory</Id>
           </ColumnInfo>
           <ColumnInfo Index="46" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Console Version</Name>
-            <Id>Microsoft.SCOM.Class.WindowsUpdateRollup/ConsoleVersion</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer/ConsoleVersion</Id>
           </ColumnInfo>
         </Presentation>
         <Target />
