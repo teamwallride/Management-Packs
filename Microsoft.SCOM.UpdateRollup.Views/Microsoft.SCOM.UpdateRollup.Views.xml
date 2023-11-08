@@ -2,13 +2,13 @@
   <Manifest>
     <Identity>
       <ID>Microsoft.SCOM.UpdateRollup.Views</ID>
-      <Version>2023.10.24.0</Version>
+      <Version>2023.11.8.0</Version>
     </Identity>
     <Name>Microsoft.SCOM.UpdateRollup.Views</Name>
     <References>
       <Reference Alias="SCOM">
         <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
-        <Version>2023.10.24.0</Version>
+        <Version>2023.11.8.0</Version>
         <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
       </Reference>
       <Reference Alias="OpsManager2007">
@@ -28,7 +28,7 @@
       </Reference>
       <Reference Alias="Unix">
         <ID>Microsoft.Unix.Library</ID>
-        <Version>7.6.1064.0</Version>
+        <Version>7.6.1105.0</Version>
         <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
       </Reference>
     </References>
@@ -1338,7 +1338,20 @@
         </Presentation>
         <Target />
       </View>
-      <View ID="View_541e8e576f184fe8bd5752c283f9a80b" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+      <View ID="View_05b47d9943cd4078b110b43ff302e767" Accessibility="Public" Enabled="true" Target="A0cf47181eb46492eacb9b981af8f1ccd!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.DashboardViewType" Visible="true">
+        <Category>Operations</Category>
+        <PanelConfiguration Columns="3" Rows="3">
+          <Cell Column="1" Row="3" ViewID="View_6725521cb7cb4644a8c6fc9c17c7d441" />
+          <Cell Row="1" Column="1" ViewID="View_c0f5a20432c84b06a0e9935fbc7bcc6e" />
+          <Cell Row="1" Column="2" ViewID="View_2d8f9ac284fc403d9da9669a4391ca03" />
+          <Cell Row="1" Column="3" ViewID="View_de15c5a83b274896b793fbd7cca0b4ef" />
+          <Cell Row="2" Column="1" ViewID="View_ab2f6d1b669f47f28c131f950afca5f3" />
+          <Cell Row="2" Column="2" ViewID="View_839844019ce0442fb29f2d96e505beba" />
+          <Cell Row="2" Column="3" ViewID="View_60fcfe334a4c423c8e0c634d9987e155" />
+          <Cell Row="3" Column="2" ViewID="View_9e6522f7b0e44ce8aefc375a1d5171f5" />
+        </PanelConfiguration>
+      </View>
+      <View ID="View_de15c5a83b274896b793fbd7cca0b4ef" Accessibility="Public" Enabled="true" Target="SCOM!Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
         <Category>Operations</Category>
         <Criteria>
           <InMaintenanceMode>false</InMaintenanceMode>
@@ -1350,7 +1363,7 @@
         <Presentation>
           <ColumnInfo Index="0" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Descending">
             <Name>State</Name>
-            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer-*-03d9daa9-ed14-2cdf-1867-722a0e017dae-*-Health</Id>
+            <Id>Microsoft.SCOM.UpdateRollup.Class.WindowsComputer-*-9b30f204-e161-d455-ee0d-12cd57599eae-*-Health</Id>
           </ColumnInfo>
           <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Maintenance Mode</Name>
@@ -1364,7 +1377,7 @@
             <Name>Path</Name>
             <Id>Path</Id>
           </ColumnInfo>
-          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Display Name</Name>
             <Id>System.Entity/DisplayName</Id>
           </ColumnInfo>
@@ -1539,19 +1552,6 @@
         </Presentation>
         <Target />
       </View>
-      <View ID="View_05b47d9943cd4078b110b43ff302e767" Accessibility="Public" Enabled="true" Target="A0cf47181eb46492eacb9b981af8f1ccd!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.DashboardViewType" Visible="true">
-        <Category>Operations</Category>
-        <PanelConfiguration Columns="3" Rows="3">
-          <Cell Column="1" Row="3" ViewID="View_6725521cb7cb4644a8c6fc9c17c7d441" />
-          <Cell Row="1" Column="1" ViewID="View_c0f5a20432c84b06a0e9935fbc7bcc6e" />
-          <Cell Row="1" Column="2" ViewID="View_2d8f9ac284fc403d9da9669a4391ca03" />
-          <Cell Row="1" Column="3" ViewID="View_541e8e576f184fe8bd5752c283f9a80b" />
-          <Cell Row="2" Column="1" ViewID="View_ab2f6d1b669f47f28c131f950afca5f3" />
-          <Cell Row="2" Column="2" ViewID="View_839844019ce0442fb29f2d96e505beba" />
-          <Cell Row="2" Column="3" ViewID="View_60fcfe334a4c423c8e0c634d9987e155" />
-          <Cell Row="3" Column="2" ViewID="View_9e6522f7b0e44ce8aefc375a1d5171f5" />
-        </PanelConfiguration>
-      </View>
     </Views>
     <Folders>
       <Folder ID="Folder_50c746647832419ea58190b7cbe03215" Accessibility="Public" ParentFolder="OpsManager2007!Microsoft.SystemCenter.OperationsManager.ViewFolder.Root" />
@@ -1564,8 +1564,8 @@
       <FolderItem ElementID="View_839844019ce0442fb29f2d96e505beba" ID="i7434ccfefde24196ada1a88f613a4456" Folder="Folder_50c746647832419ea58190b7cbe03215" />
       <FolderItem ElementID="View_9e6522f7b0e44ce8aefc375a1d5171f5" ID="ia811ac00a24a417c85950c23b05103e3" Folder="Folder_50c746647832419ea58190b7cbe03215" />
       <FolderItem ElementID="View_ab2f6d1b669f47f28c131f950afca5f3" ID="ie9b5c6c40ecc4d9398d900e94841cca7" Folder="Folder_50c746647832419ea58190b7cbe03215" />
-      <FolderItem ElementID="View_541e8e576f184fe8bd5752c283f9a80b" ID="i9e5a475adc1d41e0ad8dd19d865e65ab" Folder="Folder_50c746647832419ea58190b7cbe03215" />
       <FolderItem ElementID="View_05b47d9943cd4078b110b43ff302e767" ID="i74ea46ffc5484468aaf0033290de79ed" Folder="Folder_50c746647832419ea58190b7cbe03215" />
+      <FolderItem ElementID="View_de15c5a83b274896b793fbd7cca0b4ef" ID="ifbe44115b53d4766aa3698094416be5b" Folder="Folder_50c746647832419ea58190b7cbe03215" />
     </FolderItems>
   </Presentation>
   <LanguagePacks>
@@ -1599,11 +1599,11 @@
         <DisplayString ElementID="View_ab2f6d1b669f47f28c131f950afca5f3">
           <Name>Web Consoles</Name>
         </DisplayString>
-        <DisplayString ElementID="View_541e8e576f184fe8bd5752c283f9a80b">
-          <Name>Agents</Name>
-        </DisplayString>
         <DisplayString ElementID="View_05b47d9943cd4078b110b43ff302e767">
           <Name>Dashboard</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_de15c5a83b274896b793fbd7cca0b4ef">
+          <Name>Agents</Name>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
