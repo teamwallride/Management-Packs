@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.AlertManagement.Monitoring</ID>
-            <Version>2023.10.24.0</Version>
+            <Version>2023.11.15.0</Version>
         </Identity>
         <Name>Microsoft.SCOM.AlertManagement.Monitoring</Name>
         <References>
@@ -190,7 +190,7 @@ Function Set-AlertManagement {
                     "Microsoft.Linux.*" { $Category="Linux Server"; $Owner=$ServerTeam; BREAK }
                     "Microsoft.Unix.*" { $Category="UNIX Server"; $Owner=$ServerTeam; BREAK }
                     # VMware Carbon Black
-                    "VMware.CB.Monitoring" { $Category="Carbon Black"; $Owner=$ServerTeam; BREAK }
+                    "VMware.C*.Monitoring" { $Category="Carbon Black"; $Owner=$ServerTeam; BREAK }
                     # VMware Workspace One
                     "VMware.WorkspaceOne.Monitoring" { $Category="VMware Workspace ONE"; $Owner=$ServerTeam; BREAK }
                     # Windows certificates
@@ -242,7 +242,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="Microsoft.SCOM.AlertManagement.Monitoring"
-$MpVersion="2023.10.24.0"
+$MpVersion="2023.11.15.0"
 $MpWorkflow="Microsoft.SCOM.AlertManagement.Rule.AlertManagement"
 Set-AlertManagement
 ]]>
