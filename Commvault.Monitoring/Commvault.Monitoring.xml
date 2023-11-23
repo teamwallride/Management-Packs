@@ -1,25 +1,8 @@
-<!--
-==========
-CHANGE LOG
-==========
-2023.8.4.1
--Change event IDs and Get-SQLData function name in Commvault.DataSourceModule.BackupStatus.
-2023.7.31.0
--Add total backups jobs to $Message in event.
-2023.7.27.0
--Add Commvault.Monitor.BackupStatus monitor.
-2023.7.17.0
--Remove {1} from Commvault.Monitor.AllServices.AlertMessage because it shows up in the notification.
-2023.2.20.1
--Add CommServe and MediaAgent groups.
-2023.2.16.0
--Initial release.
--->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<Manifest>
 		<Identity>
 			<ID>Commvault.Monitoring</ID>
-			<Version>2023.8.4.1</Version>
+			<Version>2023.11.23.0</Version>
 		</Identity>
 		<Name>Commvault.Monitoring</Name>
 		<References>
@@ -105,29 +88,21 @@ CHANGE LOG
 									<![CDATA[
 Function Write-Log {
     Param($ScriptState)
-    Switch ($ScriptState) {
-        "Information" {
-            $EventId = 17610
-            $EventLevel = 0 # 0=Info
-        }
-        "Warning" {
-            $EventId = 17611
-            $EventLevel = 2 # 2=Warning
-        }
-        "Error" {
-            $EventId = 17612
-            $EventLevel = 1 # 1=Error
-        }        
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
     }
     $End = Get-Date
     $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
-    $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`nOutput: $Message")
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
     Break
-}
-Function Set-TerminatingError {
-    $ScriptState = "Error"
-    $Message += $_.Exception.Message
-    Write-Log -ScriptState $ScriptState
 }
 Function Get-SQLData {
     param($DbServer, $DbName, $DbQuery)
@@ -144,8 +119,11 @@ Function Get-SQLData {
     Return $SqlTable
 }
 Function Get-BackupStatus {
-    $ErrorActionPreference = "Stop" # This works well. It still logs terminating and non-terminating events.
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference="Stop"
     Try {
+        # Set this here so info event is logged if there's no issues.
+        $ScriptState="Information"
         $PSVersion = $PSVersionTable.PSVersion
         [string]$PSMajor = $PSVersion.Major
         [string]$PSMinor = $PSVersion.Minor
@@ -198,23 +176,25 @@ write-host
 $MomApi.Return($Bag)
 #>
             $Bag
-            $Message += "$TotalBackupJobs total jobs. $UnsuccessfulBackupJobs unsuccessful jobs."
+            #$Message += "$TotalBackupJobs total jobs. $UnsuccessfulBackupJobs unsuccessful jobs."
             $ScriptState = "Information"
             Write-Log -ScriptState $ScriptState
         }
     } # end try
     Catch {
-        Set-TerminatingError
+        $ScriptState="Warning"
+        $Message+=$_.Exception.Message
+        Write-Log -ScriptState $ScriptState   
     }
 }
 # Declare all constants used by the script
-$MomApi = New-Object -comObject 'MOM.ScriptAPI'
-$ScriptName = "BackupStatus.ps1"
-$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$WorkflowName = "Commvault.DataSourceModule.BackupStatus"
-$MPName = "Commvault.Monitoring"
-$MpVersion = "2023.8.4.1"
-[datetime]$StartTime = Get-Date
+[datetime]$StartTime=Get-Date
+$MomApi=New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName="BackupStatus.ps1"
+$Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp="Commvault.Monitoring"
+$MpVersion="2023.11.23.0"
+$MpWorkflow="Commvault.DataSourceModule.BackupStatus"
 Get-BackupStatus							
 ]]>
 								</ScriptBody>
@@ -503,7 +483,7 @@ Get-BackupStatus
 										<Property>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Property>
 									</ValueExpression>
 									<Operator>MatchesRegularExpression</Operator>
-									<Pattern>(?i:^compname_starts_with)|(?i:comp_fqdn1)|(?i:comp_fqdn2)</Pattern>
+									<Pattern>(?i:^nasp)|(?i:SYD01H757PPN.prod.atonet.gov.au)|(?i:SYD01H758PPN.prod.atonet.gov.au)|(?i:SYD01H905PV.prod.atonet.gov.au)|(?i:SYD02H754PPN.prod.atonet.gov.au)|(?i:SYD02H755PPN.prod.atonet.gov.au)</Pattern>
 								</RegExExpression>
 							</Expression>
 						</MembershipRule>
