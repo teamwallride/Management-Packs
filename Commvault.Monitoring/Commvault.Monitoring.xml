@@ -458,7 +458,7 @@ Get-BackupStatus
 										<Property>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Property>
 									</ValueExpression>
 									<Operator>MatchesRegularExpression</Operator>
-									<Pattern>(?i:^comvmgt)</Pattern>
+									<Pattern>(?i:^comp1)</Pattern>
 								</RegExExpression>
 							</Expression>
 						</MembershipRule>
@@ -483,7 +483,7 @@ Get-BackupStatus
 										<Property>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Property>
 									</ValueExpression>
 									<Operator>MatchesRegularExpression</Operator>
-									<Pattern>(?i:^nasp)|(?i:SYD01H757PPN.prod.atonet.gov.au)|(?i:SYD01H758PPN.prod.atonet.gov.au)|(?i:SYD01H905PV.prod.atonet.gov.au)|(?i:SYD02H754PPN.prod.atonet.gov.au)|(?i:SYD02H755PPN.prod.atonet.gov.au)</Pattern>
+									<Pattern>(?i:^comp1)|(?i:comp2)</Pattern>
 								</RegExExpression>
 							</Expression>
 						</MembershipRule>
