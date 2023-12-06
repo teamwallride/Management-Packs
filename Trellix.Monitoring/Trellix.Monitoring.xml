@@ -2,14 +2,16 @@
 ==========
 CHANGE LOG
 ==========
-2023.5.16.4
+2023.5.30.1
+-Fix alert description typos.
+2023.5.30.0
 -Initial release.
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<Manifest>
 		<Identity>
 			<ID>Trellix.Monitoring</ID>
-			<Version>2023.5.16.4</Version>
+			<Version>2023.5.30.1</Version>
 		</Identity>
 		<Name>Trellix.Monitoring</Name>
 		<References>
@@ -60,6 +62,238 @@ CHANGE LOG
 				</ClassType>
 			</ClassTypes>
 		</EntityTypes>
+	    <ModuleTypes>
+<!-- Trellix.DataSource.LastUpdateCheck -->
+      <DataSourceModuleType ID="Trellix.DataSource.LastUpdateCheck" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                <Scheduler>
+                  <SimpleReccuringSchedule>
+                    <Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+                    <SyncTime>$Config/SyncTime$</SyncTime>
+                  </SimpleReccuringSchedule>
+                  <ExcludeDates />
+                </Scheduler>
+              </DataSource>
+              <ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>LastUpdateCheck.ps1</ScriptName>
+                <ScriptBody>
+<![CDATA[       
+Function Write-Log {
+    Param($ScriptState)
+    Switch ($ScriptState) {
+        "Information" {
+            $EventId = 17623
+            $EventLevel = 0 # 0=Info, 1=Error, 2=Warning
+        }
+        "Warning" {
+            $EventId = 17624
+            $EventLevel = 2 # 0=Info, 1=Error, 2=Warning
+        }
+        "Error" {
+            $EventId = 17625
+            $EventLevel = 1 # 0=Info, 1=Error, 2=Warning
+        }
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -ErrorAction Ignore -Start $StartTime -End $End)
+    $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`n$Message")
+}
+Function Set-TerminatingError {
+    $ScriptState = "Error"
+    $Message += "A terminating error occurred. Error output: (" + $_.Exception.Message + ").`n"
+    Write-Log -ScriptState $ScriptState
+}
+Function Get-LastUpdateCheck {
+    Try {
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        $Bag = $MomApi.CreatePropertyBag()
+        $RegKey = "HKLM:\SOFTWARE\WOW6432Node\Network Associates\TVD\Shared Components\Framework"
+        $RegValue = "LastUpdateCheck"
+        $ErrorThreshold = $StartTime.AddDays(-1)
+        $GetRegValue = ((Get-ItemProperty -ErrorAction Ignore -Path $RegKey).$RegValue)
+        If ($GetRegValue) {
+            $ConvertRegTime = [DateTime]::ParseExact($GetRegValue, 'yyyyMMddHHmmss', $null)
+            $FormatConvertRegTime = $ConvertRegTime.ToString("dd/MM/yyyy HH:mm:ss")
+            $TimeCount = (New-TimeSpan -Start $ConvertRegTime -End $StartTime)
+            If ($ConvertRegTime -lt $ErrorThreshold) {
+                $Bag.AddValue("Result", "BAD")
+                $Bag.AddValue("Message", "The Trellix agent's last security update time was $($TimeCount.Days) day(s) ago on $FormatConvertRegTime.")
+            }
+            else {
+                $Bag.AddValue("Result", "GOOD")
+                $Bag.AddValue("Message", "The Trellix agent's last security update time was $($TimeCount.Days) day(s) ago on $FormatConvertRegTime.")
+            }
+        } else {
+            $Bag.AddValue('Result', 'BAD')
+            $Bag.AddValue('Message', "Unable to get the Trellix agent's last security update time because this registry value is missing: $RegKey\$RegValue.")
+        }
+        $Bag
+        <# FOR TESTING
+        $MomApi.Return($Bag)
+        #>
+        # Can add functionality here to set warning state but there is no need in this script.
+        $ScriptState = "Information"
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        Set-TerminatingError
+    }
+}
+# Declare all constants used by the script
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "LastUpdateCheck.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$WorkflowName = "Trellix.Monitor.LastUpdateCheck"
+$MPName = "Trellix.Monitoring"
+$MpVersion = "2023.5.30.1"
+[DateTime]$StartTime = Get-Date
+Get-LastUpdateCheck
+]]>
+</ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PA">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+<!-- Trellix.DataSource.LastAgentServerCommunication -->
+      <DataSourceModuleType ID="Trellix.DataSource.LastAgentServerCommunication" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                <Scheduler>
+                  <SimpleReccuringSchedule>
+                    <Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+                    <SyncTime>$Config/SyncTime$</SyncTime>
+                  </SimpleReccuringSchedule>
+                  <ExcludeDates />
+                </Scheduler>
+              </DataSource>
+              <ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>LastASCI.ps1</ScriptName>
+                <ScriptBody>
+<![CDATA[       
+Function Write-Log {
+    Param($ScriptState)
+    Switch ($ScriptState) {
+        "Information" {
+            $EventId = 17623
+            $EventLevel = 0 # 0=Info, 1=Error, 2=Warning
+        }
+        "Warning" {
+            $EventId = 17624
+            $EventLevel = 2 # 0=Info, 1=Error, 2=Warning
+        }
+        "Error" {
+            $EventId = 17625
+            $EventLevel = 1 # 0=Info, 1=Error, 2=Warning
+        }
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -ErrorAction Ignore -Start $StartTime -End $End)
+    $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`n$Message")
+}
+Function Set-TerminatingError {
+    $ScriptState = "Error"
+    $Message += "A terminating error occurred. Error output: (" + $_.Exception.Message + ").`n"
+    Write-Log -ScriptState $ScriptState
+}
+Function Get-LastASCI {
+    Try {
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        $Bag = $MomApi.CreatePropertyBag()
+        $RegKey = "HKLM:\SOFTWARE\WOW6432Node\Network Associates\TVD\Shared Components\Framework"
+        $RegValue = "LastASCI"
+        $ErrorThreshold = $StartTime.AddDays(-1)
+        $GetRegValue = ((Get-ItemProperty -ErrorAction Ignore -Path $RegKey).$RegValue)
+        If ($GetRegValue) {
+            $ConvertRegTime = [DateTime]::ParseExact($GetRegValue, 'yyyyMMddHHmmss', $null)
+            $FormatConvertRegTime = $ConvertRegTime.ToString("dd/MM/yyyy HH:mm:ss")
+            $TimeCount = (New-TimeSpan -Start $ConvertRegTime -End $StartTime)
+            If ($ConvertRegTime -lt $ErrorThreshold) {
+                $Bag.AddValue("Result", "BAD")
+                $Bag.AddValue("Message", "The Trellix agent's last communication time with the server was $($TimeCount.Days) day(s) ago on $FormatConvertRegTime.")
+            }
+            else {
+                $Bag.AddValue("Result", "GOOD")
+                $Bag.AddValue("Message", "The Trellix agent's last communication time with the server was $($TimeCount.Days) day(s) ago on $FormatConvertRegTime.")
+            }
+        } else {
+            $Bag.AddValue('Result', 'BAD')
+            $Bag.AddValue('Message', "Unable to get the Trellix agent's last communication time with the server because this registry value is missing: $RegKey\$RegValue.")
+        }
+        $Bag
+        <# FOR TESTING
+        $MomApi.Return($Bag)
+        #>
+        # Can add functionality here to set warning state but there is no need in this script.
+        $ScriptState = "Information"
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        Set-TerminatingError
+    }
+}
+# Declare all constants used by the script
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "LastASCI.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$WorkflowName = "Trellix.Monitor.LastAgentServerCommunication"
+$MPName = "Trellix.Monitoring"
+$MpVersion = "2023.5.30.1"
+[DateTime]$StartTime = Get-Date
+Get-LastASCI
+]]>
+</ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PA">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+	    </ModuleTypes>
 		<MonitorTypes>
 			<!-- Trellix.MonitorType.AgentInstall -->
 			<UnitMonitorType ID="Trellix.MonitorType.AgentInstall" Accessibility="Public">
@@ -83,8 +317,7 @@ CHANGE LOG
 									<AttributeType>0</AttributeType>
 								</RegistryAttributeDefinition>
 							</RegistryAttributeDefinitions>
-							<!-- 12 hours. -->
-							<Frequency>43200</Frequency>
+							<Frequency>14160</Frequency>
 						</DataSource>
 						<ConditionDetection ID="CDExists" TypeID="System!System.ExpressionFilter">
 							<Expression>
@@ -158,8 +391,7 @@ CHANGE LOG
 									<AttributeType>1</AttributeType>
 								</RegistryAttributeDefinition>
 							</RegistryAttributeDefinitions>
-							<!-- 12 hours. -->
-							<Frequency>43200</Frequency>
+							<Frequency>13920</Frequency>
 						</DataSource>
 						<ConditionDetection ID="CDGood" TypeID="System!System.ExpressionFilter">
 							<Expression>
@@ -218,7 +450,7 @@ CHANGE LOG
 					</RegularDetections>
 				</MonitorImplementation>
 			</UnitMonitorType>
-			<!-- next one -->
+			<!-- Trellix.MonitorType.ServiceState -->
 			<UnitMonitorType ID="Trellix.MonitorType.ServiceState" Accessibility="Internal">
 				<MonitorTypeStates>
 					<MonitorTypeState ID="Running" NoDetection="false"/>
@@ -337,11 +569,139 @@ CHANGE LOG
 					</OnDemandDetections>
 				</MonitorImplementation>
 			</UnitMonitorType>
+			<!-- Trellix.MonitorType.LastUpdateCheck -->
+      <UnitMonitorType ID="Trellix.MonitorType.LastUpdateCheck" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="GOOD" NoDetection="false" />
+          <MonitorTypeState ID="BAD" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="Trellix.DataSource.LastUpdateCheck">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </DataSource>
+            <ConditionDetection ID="GoodFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">GOOD</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="BadFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">BAD</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="GOOD">
+              <Node ID="GoodFilter">
+                  <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="BAD">
+              <Node ID="BadFilter">
+                  <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+<!-- Trellix.MonitorType.LastAgentServerCommunication -->
+      <UnitMonitorType ID="Trellix.MonitorType.LastAgentServerCommunication" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="GOOD" NoDetection="false" />
+          <MonitorTypeState ID="BAD" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="Trellix.DataSource.LastAgentServerCommunication">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </DataSource>
+            <ConditionDetection ID="GoodFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">GOOD</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="BadFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">BAD</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="GOOD">
+              <Node ID="GoodFilter">
+                  <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="BAD">
+              <Node ID="BadFilter">
+                  <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
 		</MonitorTypes>
 	</TypeDefinitions>
 	<Monitoring>
 		<Discoveries>
-			<!-- ePolicyOrchestrator -->
+			<!-- Trellix.Discovery.ePolicyOrchestratorRegistry -->
 			<Discovery ID="Trellix.Discovery.ePolicyOrchestratorRegistry" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
@@ -357,8 +717,7 @@ CHANGE LOG
 							<AttributeType>1</AttributeType>
 						</RegistryAttributeDefinition>
 					</RegistryAttributeDefinitions>
-					<!-- 24 hours. -->
-					<Frequency>86400</Frequency>
+					<Frequency>86280</Frequency>
 					<ClassId>$MPElement[Name="Trellix.Class.ePolicyOrchestrator"]$</ClassId>
 					<InstanceSettings>
 						<Settings>
@@ -387,7 +746,7 @@ CHANGE LOG
 					</Expression>
 				</DataSource>
 			</Discovery>
-			<!-- AgentHandler -->
+			<!-- Trellix.Discovery.AgentHandlerRegistry -->
 			<Discovery ID="Trellix.Discovery.AgentHandlerRegistry" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
@@ -403,8 +762,7 @@ CHANGE LOG
 							<AttributeType>1</AttributeType>
 						</RegistryAttributeDefinition>
 					</RegistryAttributeDefinitions>
-					<!-- 24 hours. -->
-					<Frequency>86400</Frequency>
+					<Frequency>86160</Frequency>
 					<ClassId>$MPElement[Name="Trellix.Class.AgentHandler"]$</ClassId>
 					<InstanceSettings>
 						<Settings>
@@ -433,7 +791,7 @@ CHANGE LOG
 					</Expression>
 				</DataSource>
 			</Discovery>
-			<!-- Agent-->
+			<!-- Trellix.Discovery.AgentRegistry-->
 			<Discovery ID="Trellix.Discovery.AgentRegistry" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
@@ -461,8 +819,7 @@ CHANGE LOG
 							<AttributeType>1</AttributeType>
 						</RegistryAttributeDefinition>
 					</RegistryAttributeDefinitions>
-					<!-- 24 hours. -->
-					<Frequency>86400</Frequency>
+					<Frequency>86040</Frequency>
 					<ClassId>$MPElement[Name="Trellix.Class.Agent"]$</ClassId>
 					<InstanceSettings>
 						<Settings>
@@ -512,7 +869,7 @@ CHANGE LOG
 					</Expression>
 				</DataSource>
 			</Discovery>
-			<!-- Service discovery -->
+			<!-- Trellix.Discovery.Service -->
 			<Discovery ID="Trellix.Discovery.Service" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
 				<Category>Discovery</Category>
 				<DiscoveryTypes>
@@ -525,7 +882,6 @@ CHANGE LOG
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.WmiProviderWithClassSnapshotDataMapper">
 					<NameSpace>root\cimv2</NameSpace>
 					<Query>SELECT * FROM Win32_Service WHERE (displayname like '%mcafee%' or displayname like '%trellix%') and startmode='auto'</Query>
-					<!-- 24 hours. -->
 					<Frequency>86400</Frequency>
 					<ClassId>$MPElement[Name="Trellix.Class.Service"]$</ClassId>
 					<InstanceSettings>
@@ -557,6 +913,7 @@ CHANGE LOG
 			</Discovery>
 		</Discoveries>
 		<Monitors>
+			<!-- Trellix.Monitor.AgentInstall -->
 			<UnitMonitor ID="Trellix.Monitor.AgentInstall" Accessibility="Public" Enabled="true" Target="Trellix.Class.Agent" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="Trellix.MonitorType.AgentInstall" ConfirmDelivery="true">
 				<Category>Alert</Category>
 				<AlertSettings AlertMessage="Trellix.Monitor.AgentInstall.AlertMessage">
@@ -574,6 +931,7 @@ CHANGE LOG
 				</OperationalStates>
 				<Configuration/>
 			</UnitMonitor>
+			<!-- Trellix.Monitor.AgentVersion -->
 			<UnitMonitor ID="Trellix.Monitor.AgentVersion" Accessibility="Public" Enabled="true" Target="Trellix.Class.Agent" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="Trellix.MonitorType.AgentVersion" ConfirmDelivery="true">
 				<Category>Alert</Category>
 				<AlertSettings AlertMessage="Trellix.Monitor.AgentVersion.AlertMessage">
@@ -593,6 +951,7 @@ CHANGE LOG
 				</OperationalStates>
 				<Configuration/>
 			</UnitMonitor>
+			<!-- Trellix.Monitor.ServiceHealth -->
 			<UnitMonitor ID="Trellix.Monitor.ServiceHealth" Accessibility="Public" Enabled="true" Target="Trellix.Class.Service" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Trellix.MonitorType.ServiceState" ConfirmDelivery="false">
 				<Category>Alert</Category>
 				<AlertSettings AlertMessage="Trellix.Monitor.ServiceHealth.AlertMessage">
@@ -613,13 +972,59 @@ CHANGE LOG
 				<Configuration>
 					<ComputerName/>
 					<ServiceName>$Target/Property[Type="Trellix.Class.Service"]/ServiceName$</ServiceName>
-					<IntervalSeconds>120</IntervalSeconds>
+					<IntervalSeconds>14040</IntervalSeconds>
 					<Samples>1</Samples>
 				</Configuration>
 			</UnitMonitor>
+<!-- Trellix.Monitor.LastUpdateCheck -->
+      <UnitMonitor ID="Trellix.Monitor.LastUpdateCheck" Accessibility="Public" Enabled="true" Target="Trellix.Class.Agent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Trellix.MonitorType.LastUpdateCheck" ConfirmDelivery="true">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="Trellix.Monitor.LastUpdateCheck.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+            <AlertParameter2>$Data/Context/Property[@Name='Message']$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="GOOD" MonitorTypeStateID="GOOD" HealthState="Success" />
+          <OperationalState ID="BAD" MonitorTypeStateID="BAD" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>14280</IntervalSeconds>
+          <SyncTime />
+          <TimeoutSeconds>120</TimeoutSeconds>
+        </Configuration>
+      </UnitMonitor>
+<!-- Trellix.Monitor.LastAgentServerCommunication -->
+      <UnitMonitor ID="Trellix.Monitor.LastAgentServerCommunication" Accessibility="Public" Enabled="true" Target="Trellix.Class.Agent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Trellix.MonitorType.LastAgentServerCommunication" ConfirmDelivery="true">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="Trellix.Monitor.LastAgentServerCommunication.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+            <AlertParameter2>$Data/Context/Property[@Name='Message']$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="GOOD" MonitorTypeStateID="GOOD" HealthState="Success" />
+          <OperationalState ID="BAD" MonitorTypeStateID="BAD" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>14400</IntervalSeconds>
+          <SyncTime />
+          <TimeoutSeconds>120</TimeoutSeconds>
+        </Configuration>
+      </UnitMonitor>
 		</Monitors>
 		<Recoveries>
-			<!-- Disabled for testing -->
+			<!-- Trellix.Recovery.StartWindowsService -->
 			<Recovery ID="Trellix.Recovery.StartWindowsService" Accessibility="Public" Enabled="true" Target="Trellix.Class.Service" Monitor="Trellix.Monitor.ServiceHealth" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
 				<Category>Maintenance</Category>
 				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
@@ -637,6 +1042,8 @@ CHANGE LOG
 			<StringResource ID="Trellix.Monitor.AgentInstall.AlertMessage"/>
 			<StringResource ID="Trellix.Monitor.AgentVersion.AlertMessage"/>
 			<StringResource ID="Trellix.Monitor.ServiceHealth.AlertMessage"/>
+			<StringResource ID="Trellix.Monitor.LastUpdateCheck.AlertMessage"/>
+			<StringResource ID="Trellix.Monitor.LastAgentServerCommunication.AlertMessage" />
 		</StringResources>
 	</Presentation>
 	<LanguagePacks>
@@ -751,6 +1158,34 @@ CHANGE LOG
 					
 						See the knowledge section below for more information.</Description>
 				</DisplayString>
+				<DisplayString ElementID="Trellix.Monitor.LastUpdateCheck">
+				  <Name>Trellix Agent Last Update Check</Name>
+				  <Description />
+				</DisplayString>
+				<DisplayString ElementID="Trellix.Monitor.LastUpdateCheck" SubElementID="GOOD">
+				  <Name>Last Update Check OK</Name>
+				</DisplayString>
+				<DisplayString ElementID="Trellix.Monitor.LastUpdateCheck" SubElementID="BAD">
+				  <Name>Last Update Check Failed</Name>
+				</DisplayString>
+				<DisplayString ElementID="Trellix.Monitor.LastUpdateCheck.AlertMessage">
+				  <Name>Trellix Agent Update Check Failed</Name>
+				  <Description>{1}</Description>
+				</DisplayString>
+				<DisplayString ElementID="Trellix.Monitor.LastAgentServerCommunication">
+				  <Name>Trellix Agent To Server Communication</Name>
+				  <Description />
+				</DisplayString>
+				<DisplayString ElementID="Trellix.Monitor.LastAgentServerCommunication" SubElementID="GOOD">
+				  <Name>LastASCI Check OK</Name>
+				</DisplayString>
+				<DisplayString ElementID="Trellix.Monitor.LastAgentServerCommunication" SubElementID="BAD">
+				  <Name>LastASCI Check Failed</Name>
+				</DisplayString>
+				<DisplayString ElementID="Trellix.Monitor.LastAgentServerCommunication.AlertMessage">
+				  <Name>Trellix Agent To Server Communication Failed</Name>
+				  <Description>{1}</Description>
+				</DisplayString>
 				<!-- Recoveries -->
 				<DisplayString ElementID="Trellix.Recovery.StartWindowsService">
 					<Name>Trellix Start Windows Service Recovery</Name>
@@ -807,6 +1242,50 @@ CHANGE LOG
 						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
 							<maml:title>Resolutions</maml:title>
 							<maml:para>The monitor has a recovery task that will automatically try and start the service. If the service starts the alert will close, otherwise further investigation is required.</maml:para>
+						</maml:section>
+					</MamlContent>
+				</KnowledgeArticle>
+				
+				<KnowledgeArticle ElementID="Trellix.Monitor.LastUpdateCheck" Visible="true">
+					<MamlContent>
+						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+							<maml:title>Summary</maml:title>
+							<maml:para>This monitor gets the last security update time as shown in the Trellix Agent About... screen.</maml:para>
+						</maml:section>
+						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+							<maml:title>Causes</maml:title>
+							<maml:para>The time is collected from the below registry value, if it's older than 3 days or does not exist an alert is generated.</maml:para>
+							<maml:list>
+								<maml:listItem>
+									<maml:para>HKLM:\SOFTWARE\WOW6432Node\Network Associates\TVD\Shared Components\Framework\LastUpdateCheck</maml:para>
+								</maml:listItem>
+							</maml:list>
+						</maml:section>
+						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+							<maml:title>Resolutions</maml:title>
+							<maml:para>Confirm the agent is working properly.</maml:para>
+						</maml:section>
+					</MamlContent>
+				</KnowledgeArticle>
+				
+				<KnowledgeArticle ElementID="Trellix.Monitor.LastAgentServerCommunication" Visible="true">
+					<MamlContent>
+						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+							<maml:title>Summary</maml:title>
+							<maml:para>This monitor gets the last agent to server communication time as shown in the Trellix Agent About... screen.</maml:para>
+						</maml:section>
+						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+							<maml:title>Causes</maml:title>
+							<maml:para>The time is collected from the below registry value, if it's older than 3 days or does not exist an alert is generated.</maml:para>
+							<maml:list>
+								<maml:listItem>
+									<maml:para>HKLM:\SOFTWARE\WOW6432Node\Network Associates\TVD\Shared Components\Framework\LastASCI</maml:para>
+								</maml:listItem>
+							</maml:list>
+						</maml:section>
+						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+							<maml:title>Resolutions</maml:title>
+							<maml:para>Confirm the agent is working properly.</maml:para>
 						</maml:section>
 					</MamlContent>
 				</KnowledgeArticle>
