@@ -1,17 +1,8 @@
-<!--
-==========
-CHANGE LOG
-==========
-2023.5.30.1
--Fix alert description typos.
-2023.5.30.0
--Initial release.
--->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<Manifest>
 		<Identity>
 			<ID>Trellix.Monitoring</ID>
-			<Version>2023.5.30.1</Version>
+			<Version>2023.12.6.0</Version>
 		</Identity>
 		<Name>Trellix.Monitoring</Name>
 		<References>
@@ -91,33 +82,30 @@ CHANGE LOG
                 <ScriptName>LastUpdateCheck.ps1</ScriptName>
                 <ScriptBody>
 <![CDATA[       
-Function Write-Log {
-    Param($ScriptState)
-    Switch ($ScriptState) {
-        "Information" {
-            $EventId = 17623
-            $EventLevel = 0 # 0=Info, 1=Error, 2=Warning
-        }
-        "Warning" {
-            $EventId = 17624
-            $EventLevel = 2 # 0=Info, 1=Error, 2=Warning
-        }
-        "Error" {
-            $EventId = 17625
-            $EventLevel = 1 # 0=Info, 1=Error, 2=Warning
-        }
-    }
-    $End = Get-Date
-    $TimeCount = (New-TimeSpan -ErrorAction Ignore -Start $StartTime -End $End)
-    $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`n$Message")
-}
-Function Set-TerminatingError {
-    $ScriptState = "Error"
-    $Message += "A terminating error occurred. Error output: (" + $_.Exception.Message + ").`n"
-    Write-Log -ScriptState $ScriptState
-}
+	Function Write-Log {
+		Param($ScriptState)
+		if ($ScriptState -eq "Information") {
+			$EventId = 17609
+			$EventLevel = 0 # 0=Info
+		}
+		else {
+			$EventId = 17610
+			$EventLevel = 2 # 2=Warning
+		}
+		$End = Get-Date
+		$TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+		$Minutes = $TimeCount.Minutes
+		$Seconds = $TimeCount.Seconds
+		$Milliseconds = $TimeCount.Milliseconds
+		$MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+		Break
+	}
 Function Get-LastUpdateCheck {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference="Stop"
     Try {
+        # Set this here so info event is logged if there's no issues.
+        $ScriptState="Information"
         $PSVersion = $PSVersionTable.PSVersion
         [string]$PSMajor = $PSVersion.Major
         [string]$PSMinor = $PSVersion.Minor
@@ -148,21 +136,23 @@ Function Get-LastUpdateCheck {
         $MomApi.Return($Bag)
         #>
         # Can add functionality here to set warning state but there is no need in this script.
-        $ScriptState = "Information"
-        Write-Log -ScriptState $ScriptState
-    }
+		$ScriptState = "Information"
+		Write-Log -ScriptState $ScriptState
+}
     Catch {
-        Set-TerminatingError
+        $ScriptState="Warning"
+        $Message+=$_.Exception.Message
+        Write-Log -ScriptState $ScriptState   
     }
 }
 # Declare all constants used by the script
-$MomApi = New-Object -comObject 'MOM.ScriptAPI'
-$ScriptName = "LastUpdateCheck.ps1"
-$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$WorkflowName = "Trellix.Monitor.LastUpdateCheck"
-$MPName = "Trellix.Monitoring"
-$MpVersion = "2023.5.30.1"
-[DateTime]$StartTime = Get-Date
+[datetime]$StartTime=Get-Date
+$MomApi=New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName="LastUpdateCheck.ps1"
+$Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp="Trellix.Monitoring"
+$MpVersion="2023.12.6.0"
+$MpWorkflow="Trellix.Monitor.LastUpdateCheck"
 Get-LastUpdateCheck
 ]]>
 </ScriptBody>
@@ -206,33 +196,30 @@ Get-LastUpdateCheck
                 <ScriptName>LastASCI.ps1</ScriptName>
                 <ScriptBody>
 <![CDATA[       
-Function Write-Log {
-    Param($ScriptState)
-    Switch ($ScriptState) {
-        "Information" {
-            $EventId = 17623
-            $EventLevel = 0 # 0=Info, 1=Error, 2=Warning
-        }
-        "Warning" {
-            $EventId = 17624
-            $EventLevel = 2 # 0=Info, 1=Error, 2=Warning
-        }
-        "Error" {
-            $EventId = 17625
-            $EventLevel = 1 # 0=Info, 1=Error, 2=Warning
-        }
-    }
-    $End = Get-Date
-    $TimeCount = (New-TimeSpan -ErrorAction Ignore -Start $StartTime -End $End)
-    $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`n$Message")
-}
-Function Set-TerminatingError {
-    $ScriptState = "Error"
-    $Message += "A terminating error occurred. Error output: (" + $_.Exception.Message + ").`n"
-    Write-Log -ScriptState $ScriptState
-}
+	Function Write-Log {
+		Param($ScriptState)
+		if ($ScriptState -eq "Information") {
+			$EventId = 17609
+			$EventLevel = 0 # 0=Info
+		}
+		else {
+			$EventId = 17610
+			$EventLevel = 2 # 2=Warning
+		}
+		$End = Get-Date
+		$TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+		$Minutes = $TimeCount.Minutes
+		$Seconds = $TimeCount.Seconds
+		$Milliseconds = $TimeCount.Milliseconds
+		$MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+		Break
+	}
 Function Get-LastASCI {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference="Stop"
     Try {
+        # Set this here so info event is logged if there's no issues.
+        $ScriptState="Information"
         $PSVersion = $PSVersionTable.PSVersion
         [string]$PSMajor = $PSVersion.Major
         [string]$PSMinor = $PSVersion.Minor
@@ -263,21 +250,23 @@ Function Get-LastASCI {
         $MomApi.Return($Bag)
         #>
         # Can add functionality here to set warning state but there is no need in this script.
-        $ScriptState = "Information"
-        Write-Log -ScriptState $ScriptState
+		$ScriptState = "Information"
+		Write-Log -ScriptState $ScriptState
     }
     Catch {
-        Set-TerminatingError
+        $ScriptState="Warning"
+        $Message+=$_.Exception.Message
+        Write-Log -ScriptState $ScriptState   
     }
 }
 # Declare all constants used by the script
-$MomApi = New-Object -comObject 'MOM.ScriptAPI'
-$ScriptName = "LastASCI.ps1"
-$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$WorkflowName = "Trellix.Monitor.LastAgentServerCommunication"
-$MPName = "Trellix.Monitoring"
-$MpVersion = "2023.5.30.1"
-[DateTime]$StartTime = Get-Date
+[datetime]$StartTime=Get-Date
+$MomApi=New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName="LastASCI.ps1"
+$Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp="Trellix.Monitoring"
+$MpVersion="2023.12.6.0"
+$MpWorkflow="Trellix.Monitor.LastAgentServerCommunication"
 Get-LastASCI
 ]]>
 </ScriptBody>
@@ -401,7 +390,7 @@ Get-LastASCI
 									</ValueExpression>
 									<Operator>Equal</Operator>
 									<ValueExpression>
-										<Value Type="String">5.7.9.139</Value>
+										<Value Type="String">5.8.0.161</Value>
 									</ValueExpression>
 								</SimpleExpression>
 							</Expression>
@@ -417,7 +406,7 @@ Get-LastASCI
 											</ValueExpression>
 											<Operator>NotEqual</Operator>
 											<ValueExpression>
-												<Value Type="String">5.7.9.139</Value>
+												<Value Type="String">5.8.0.161</Value>
 											</ValueExpression>
 										</SimpleExpression>
 									</Expression>
@@ -1139,7 +1128,7 @@ Get-LastASCI
 				</DisplayString>
 				<DisplayString ElementID="Trellix.Monitor.AgentVersion.AlertMessage">
 					<Name>Trellix Agent Update Required</Name>
-					<Description>The Trellix agent on {0} needs to be upgraded to version 5.7.9.139. The installed version is {1}.
+					<Description>The Trellix agent on {0} needs to be upgraded to version 5.8.0.161. The installed version is {1}.
 					
 						See the knowledge section below for more information.</Description>
 				</DisplayString>
@@ -1221,7 +1210,7 @@ Get-LastASCI
 						</maml:section>
 						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
 							<maml:title>Causes</maml:title>
-							<maml:para>If the agent is not version 5.7.9.139 an alert is generated.</maml:para>
+							<maml:para>If the agent is not version 5.8.0.161 an alert is generated.</maml:para>
 						</maml:section>
 						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
 							<maml:title>Resolutions</maml:title>
