@@ -1,19 +1,8 @@
-<!--
-==========
-CHANGE LOG
-==========
-2023.9.12.1
--Add group VMware.Group.CBLinuxProcess for state views.
-2023.9.12.0
--Add group VMware.Group.CBWebConsole for state views.
-2x023.8.29.0
--Initial release.
--->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 	<Manifest>
 		<Identity>
 			<ID>VMware.CB.Monitoring</ID>
-			<Version>2023.9.12.1</Version>
+			<Version>2023.12.8.0</Version>
 		</Identity>
 		<Name>VMware.CB.Monitoring</Name>
 		<References>
@@ -523,7 +512,7 @@ CHANGE LOG
 				<AlertSettings AlertMessage="VMware.Monitor.EDRAgentInstall.AlertMessage">
 					<AlertOnState>Error</AlertOnState>
 					<AutoResolve>true</AutoResolve>
-					<AlertPriority>High</AlertPriority>
+					<AlertPriority>Normal</AlertPriority>
 					<AlertSeverity>MatchMonitorHealth</AlertSeverity>
 					<AlertParameters>
 						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
