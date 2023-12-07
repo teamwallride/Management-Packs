@@ -2,7 +2,7 @@
 	<Manifest>
 		<Identity>
 			<ID>Trellix.Monitoring</ID>
-			<Version>2023.12.6.0</Version>
+			<Version>2023.12.7.0</Version>
 		</Identity>
 		<Name>Trellix.Monitoring</Name>
 		<References>
@@ -151,7 +151,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="LastUpdateCheck.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="Trellix.Monitoring"
-$MpVersion="2023.12.6.0"
+$MpVersion="2023.12.7.0"
 $MpWorkflow="Trellix.Monitor.LastUpdateCheck"
 Get-LastUpdateCheck
 ]]>
@@ -265,7 +265,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="LastASCI.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="Trellix.Monitoring"
-$MpVersion="2023.12.6.0"
+$MpVersion="2023.12.7.0"
 $MpWorkflow="Trellix.Monitor.LastAgentServerCommunication"
 Get-LastASCI
 ]]>
@@ -908,7 +908,7 @@ Get-LastASCI
 				<AlertSettings AlertMessage="Trellix.Monitor.AgentInstall.AlertMessage">
 					<AlertOnState>Error</AlertOnState>
 					<AutoResolve>true</AutoResolve>
-					<AlertPriority>High</AlertPriority>
+					<AlertPriority>Normal</AlertPriority>
 					<AlertSeverity>MatchMonitorHealth</AlertSeverity>
 					<AlertParameters>
 						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
