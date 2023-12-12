@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.AlertManagement.Monitoring</ID>
-            <Version>2023.12.12.0</Version>
+            <Version>2023.12.12.2</Version>
         </Identity>
         <Name>Microsoft.SCOM.AlertManagement.Monitoring</Name>
         <References>
@@ -216,15 +216,13 @@ Function Set-AlertManagement {
                     "Microsoft.ActiveDirectoryFederationServices2012R2.FederationServerTrustsHaveExpiredCertsWarningMonitor" { $Category="Certificate"; BREAK }
                 }
                 # Assign alerts based on alert name.
-                switch ($AlertName) {
+                switch -wildcard ($AlertName) {
                     "Web Application Unavailable: Hitachi Management portal" { $Owner=$BackupStorageTeam; $Category="Hitachi"; BREAK } 
                     "Web Application Unavailable: NetApp Management portal" { $Owner=$BackupStorageTeam; $Category="NetApp"; BREAK } 
-                    "Web Application Unavailable: L3 Passwordstate portal" { $Owner=$SecurityTeam; $Category="Passwordstate"; BREAK } 
-                    "Web Application Unavailable: L5 Passwordstate portal" { $Owner=$SecurityTeam; $Category="Passwordstate"; BREAK } 
+                    "Web Application Unavailable: L* Passwordstate portal" { $Owner=$SecurityTeam; $Category="Passwordstate"; BREAK } 
                     "Web Application Unavailable: Carbon Black" { $Owner=$ServerTeam; $Category="Carbon Black"; BREAK } 
                     "Web Application Unavailable: VMware Workspace ONE" { $Owner=$ServerTeam; $Category="VMware Workspace ONE"; BREAK } 
-                    "Web Application Unavailable: Production PAC file availability" { $Owner=$ServerTeam; $Category="Proxy PAC"; BREAK } 
-                    "Web Application Unavailable: Pilot PAC file availability" { $Owner=$ServerTeam; $Category="Proxy PAC"; BREAK } 
+                    "Web Application Unavailable: *PAC file*" { $Owner=$ServerTeam; $Category="Proxy PAC"; BREAK } 
                 }
                 # Update alert properties and process next alert.
                 Set-SCOMAlert -Alert $Alert -Owner $Owner -CustomField1 $Category -CustomField2 $Source -ResolutionState 1
@@ -244,7 +242,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="Microsoft.SCOM.AlertManagement.Monitoring"
-$MpVersion="2023.12.12.0"
+$MpVersion="2023.12.12.2"
 $MpWorkflow="Microsoft.SCOM.AlertManagement.Rule.AlertManagement"
 Set-AlertManagement
 ]]>
