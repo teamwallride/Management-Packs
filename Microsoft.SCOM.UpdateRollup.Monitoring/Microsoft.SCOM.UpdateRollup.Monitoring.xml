@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
-            <Version>2024.1.5.0</Version>
+            <Version>2024.1.5.1</Version>
         </Identity>
         <Name>Microsoft.SCOM.UpdateRollup.Monitoring</Name>
         <References>
@@ -171,7 +171,7 @@
                                                 $CertificateExpiry = $Thumbprint.NotAfter.ToString("yyyy/MM/dd HH:mm:ss")
                                             }
                                             Else {
-                                                $CertificateExpiry = "n/a"
+                                                $CertificateExpiry = "None"
                                             }
                                             # Get AD Integration. This will be on every server so just see if it's enabled or disabled.
                                             $ADIntegRegKey = "HKLM:\SYSTEM\CurrentControlSet\Services\HealthService\Parameters\ConnectorManager"
@@ -211,7 +211,7 @@
                                                 $LogAnalyticsWorkspaces = $LogAnalyticsWorkspaces.TrimEnd(",")
                                             }
                                             Else {
-                                                $LogAnalyticsWorkspaces = "n/a"
+                                                $LogAnalyticsWorkspaces = "None"
                                             }
                                             <#
                                             AGENTS. This section only applies to agents.
@@ -759,7 +759,7 @@
                                     $ScriptName = "GetWindowsURInfo.ps1"
                                     $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
                                     $Mp = "Microsoft.SCOM.UpdateRollup.Monitoring"
-                                    $MpVersion = "2024.1.5.0"
+                                    $MpVersion = "2024.1.5.1"
                                     $MpWorkflow = "Microsoft.SCOM.UpdateRollup.Discovery.WindowsComputer"
                                     Get-URInfo -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
                                 ]]>
@@ -1080,7 +1080,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.1.5.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.1.5.1)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError {
@@ -1471,7 +1471,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MpBackup`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.1.5.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MpBackup`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.1.5.1)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -1602,7 +1602,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.1.5.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.1.5.1)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -2223,9 +2223,8 @@ Write-Host "Task: Get Windows services"
 Write-Host "Computer: $ComputerFqdn"
 Write-Host "====================================="
 Write-Host
-Write-Host "Note: Services have been sorted by the DisplayName property."
-Write-Host
-$Services = Get-WmiObject Win32_Service | Sort-Object DisplayName | Select-Object -Property DisplayName, Name, State, StartMode, StartName, ProcessId
+$Output+="SVC_DISPLAYNAME^SVC_NAME^SVC_STATE^SVC_STARTMODE^SVC_STARTNAME^SVC_PROCESSID`n"
+$Services=Get-WmiObject Win32_Service | Sort-Object DisplayName | Select-Object -Property DisplayName, Name, State, StartMode, StartName, ProcessId
 $Services | ForEach-Object {
     $DisplayName = $_.DisplayName
     $Name = $_.Name
@@ -2233,7 +2232,7 @@ $Services | ForEach-Object {
     $StartMode = $_.StartMode
     $StartName = $_.StartName
     $ProcessId = $_.ProcessId
-    $Output += "DISPLAY_NAME: $DisplayName`nSERVICE_NAME: $Name`nSTATUS: $State`nStartMode_TYPE: $StartMode`nLOG_ON_ACCOUNT: $StartName`nPROCESS_ID: $ProcessId`n`n"
+    $Output += "$DisplayName^$Name^$State^$StartMode^$StartName^$ProcessId`n"
 }
 $Output
 ]]>
@@ -2343,7 +2342,7 @@ try {
     $EventId = 17616
     $EventLevel = 0 # 0=Information, 1=Error, 2=Warning
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.1.5.0)")
+    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.1.5.1)")
     Write-Host Information event ID 17616 successfully written to the Operations Manager log.
     Write-Host
 }
