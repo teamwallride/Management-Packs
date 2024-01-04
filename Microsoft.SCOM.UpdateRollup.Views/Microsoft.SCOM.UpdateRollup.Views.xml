@@ -2,13 +2,13 @@
   <Manifest>
     <Identity>
       <ID>Microsoft.SCOM.UpdateRollup.Views</ID>
-      <Version>2023.11.8.0</Version>
+      <Version>2024.1.5.0</Version>
     </Identity>
     <Name>Microsoft.SCOM.UpdateRollup.Views</Name>
     <References>
       <Reference Alias="SCOM">
         <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
-        <Version>2023.11.8.0</Version>
+        <Version>2024.1.5.0</Version>
         <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
       </Reference>
       <Reference Alias="OpsManager2007">
@@ -1594,7 +1594,7 @@
           <Name>Report Servers</Name>
         </DisplayString>
         <DisplayString ElementID="View_9e6522f7b0e44ce8aefc375a1d5171f5">
-          <Name>UNIX/Linux Computers</Name>
+          <Name>UNIX/Linux Agents</Name>
         </DisplayString>
         <DisplayString ElementID="View_ab2f6d1b669f47f28c131f950afca5f3">
           <Name>Web Consoles</Name>
@@ -1603,7 +1603,7 @@
           <Name>Dashboard</Name>
         </DisplayString>
         <DisplayString ElementID="View_de15c5a83b274896b793fbd7cca0b4ef">
-          <Name>Agents</Name>
+          <Name>Windows Agents</Name>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
