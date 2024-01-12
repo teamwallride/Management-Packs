@@ -4,7 +4,7 @@
   <Manifest>
     <Identity>
       <ID>TestA.Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.1.11.3</Version>
+      <Version>2024.1.12.0</Version>
     </Identity>
     <Name>TestA.Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
@@ -41,6 +41,14 @@
         <ClassType ID="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false"/>
         <ClassType ID="TestA.Microsoft.Intune.ConfigurationManager.Class.Site" Accessibility="Public" Abstract="false" Base="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
           <Property ID="SiteName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="SiteServer" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="ParentServer" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="ParentSiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="InstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="DatabaseMachineName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="DatabaseName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
       </ClassTypes>
     </EntityTypes>
@@ -114,6 +122,54 @@
               <PathType>1</PathType>
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>SiteCode</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Identification\Site Code</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>SiteServer</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Identification\Site Server</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>ParentServer</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Identification\Parent Server</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>ParentSiteCode</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Identification\Parent Site Code</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>Version</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Setup\Full Version</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>InstallFolder</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Setup\Installation Directory</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>DatabaseMachineName</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Identification\DatabaseMachineName</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>DatabaseName</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Identification\DatabaseName</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
           <Frequency>60</Frequency>          <!-- 86400 in prod. -->
           <ClassId>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]$</ClassId>
@@ -123,9 +179,50 @@
                 <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
                 <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
               </Setting>
+
               <Setting>
                 <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]/SiteName$</Name>
                 <Value>$Data/Values/SiteName$</Value>
+              </Setting>
+
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]/SiteCode$</Name>
+                <Value>$Data/Values/SiteCode$</Value>
+              </Setting>
+
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]/SiteServer$</Name>
+                <Value>$Data/Values/SiteServer$</Value>
+              </Setting>
+
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]/ParentServer$</Name>
+                <Value>$Data/Values/ParentServer$</Value>
+              </Setting>
+
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]/ParentSiteCode$</Name>
+                <Value>$Data/Values/ParentSiteCode$</Value>
+              </Setting>
+
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]/Version$</Name>
+                <Value>$Data/Values/Version$</Value>
+              </Setting>
+
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]/InstallFolder$</Name>
+                <Value>$Data/Values/InstallFolder$</Value>
+              </Setting>
+
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]/DatabaseMachineName$</Name>
+                <Value>$Data/Values/DatabaseMachineName$</Value>
+              </Setting>
+
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]/DatabaseName$</Name>
+                <Value>$Data/Values/DatabaseName$</Value>
               </Setting>
 
               <Setting>
@@ -232,6 +329,39 @@
         <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Site" SubElementID="SiteName">
           <Name>Site Name</Name>
         </DisplayString>
+        
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Site" SubElementID="SiteCode">
+          <Name>Site Code</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Site" SubElementID="SiteServer">
+          <Name>Site Server</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Site" SubElementID="ParentServer">
+          <Name>Parent Server</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Site" SubElementID="ParentSiteCode">
+          <Name>Parent Site Code</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Site" SubElementID="Version">
+          <Name>Version</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Site" SubElementID="InstallFolder">
+          <Name>Install Folder</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Site" SubElementID="DatabaseMachineName">
+          <Name>Database Server</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Site" SubElementID="DatabaseName">
+          <Name>Database Name</Name>
+        </DisplayString>
+
         <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.Site">
           <Name>Configuration Manager Site Discovery</Name>
         </DisplayString>
