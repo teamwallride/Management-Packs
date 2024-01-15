@@ -4,7 +4,7 @@
   <Manifest>
     <Identity>
       <ID>TestA.Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.1.12.1</Version>
+      <Version>2024.1.15.4</Version>
     </Identity>
     <Name>TestA.Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
@@ -54,6 +54,26 @@
           <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
+        <ClassType ID="TestA.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint" Accessibility="Public" Abstract="false" Base="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+        </ClassType>
+        <ClassType ID="TestA.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint" Accessibility="Public" Abstract="false" Base="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+        </ClassType>
+        <ClassType ID="TestA.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint" Accessibility="Public" Abstract="false" Base="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+        </ClassType>
+        <ClassType ID="TestA.Microsoft.Intune.ConfigurationManager.Class.SrsReportingPoint" Accessibility="Public" Abstract="false" Base="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+        </ClassType>
+        <ClassType ID="TestA.Microsoft.Intune.ConfigurationManager.Class.Client" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+        </ClassType>
       </ClassTypes>
     </EntityTypes>
   </TypeDefinitions>
@@ -71,13 +91,14 @@
             <RegistryAttributeDefinition>
               <AttributeName>IsConfigurationManagerServer</AttributeName>
               <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role</Path>
-              <PathType>0</PathType>
               <!-- 0=regKey 1=regValue -->
-              <AttributeType>0</AttributeType>
+              <PathType>0</PathType>
               <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+              <AttributeType>0</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <Frequency>60</Frequency>          <!-- 86400 in prod. -->
+          <!-- 86400 in prod. -->
+          <Frequency>300</Frequency>
           <ClassId>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed"]$</ClassId>
           <InstanceSettings>
             <Settings>
@@ -116,10 +137,10 @@
             <RegistryAttributeDefinition>
               <AttributeName>IsConfigurationManagerSite</AttributeName>
               <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Site Server</Path>
-              <PathType>0</PathType>
               <!-- 0=regKey 1=regValue -->
-              <AttributeType>0</AttributeType>
+              <PathType>0</PathType>
               <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+              <AttributeType>0</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
               <AttributeName>SiteName</AttributeName>
@@ -176,7 +197,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <Frequency>60</Frequency>          <!-- 86400 in prod. -->
+          <!-- 86400 in prod. -->
+          <Frequency>300</Frequency>
           <ClassId>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Site"]$</ClassId>
           <InstanceSettings>
             <Settings>
@@ -251,10 +273,10 @@
             <RegistryAttributeDefinition>
               <AttributeName>IsConfigurationManagerDistributionPoint</AttributeName>
               <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Distribution Point</Path>
-              <PathType>0</PathType>
               <!-- 0=regKey 1=regValue -->
-              <AttributeType>0</AttributeType>
+              <PathType>0</PathType>
               <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+              <AttributeType>0</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
               <AttributeName>SiteCode</AttributeName>
@@ -269,7 +291,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <Frequency>60</Frequency>          <!-- 86400 in prod. -->
+          <!-- 86400 in prod. -->
+          <Frequency>300</Frequency>
           <ClassId>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"]$</ClassId>
           <InstanceSettings>
             <Settings>
@@ -295,6 +318,336 @@
             <SimpleExpression>
               <ValueExpression>
                 <XPathQuery Type="String">Values/IsConfigurationManagerDistributionPoint</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">True</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+      <!-- Management Point discovery -->
+      <Discovery ID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.ManagementPoint" Enabled="true" Target="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="TestA.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"/>
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>IsConfigurationManagerManagementPoint</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Management Point</Path>
+              <!-- 0=regKey 1=regValue -->
+              <PathType>0</PathType>
+              <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+              <AttributeType>0</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>SiteCode</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Management Point\Site Code</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>Version</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Management Point\Version</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <!-- 86400 in prod. -->
+          <Frequency>300</Frequency>
+          <ClassId>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]/SiteCode$</Name>
+                <Value>$Data/Values/SiteCode$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]/Version$</Name>
+                <Value>$Data/Values/Version$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="System!System.Entity"]/DisplayName$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Values/IsConfigurationManagerManagementPoint</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">True</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+      <!-- Service Connection Point discovery -->
+      <Discovery ID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPoint" Enabled="true" Target="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="TestA.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"/>
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>IsConfigurationManagerServiceConnectionPoint</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Dmp Connector</Path>
+              <!-- 0=regKey 1=regValue -->
+              <PathType>0</PathType>
+              <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+              <AttributeType>0</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>SiteCode</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Dmp Connector\Site Code</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>Version</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Dmp Connector\Version</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <!-- 86400 in prod. -->
+          <Frequency>300</Frequency>
+          <ClassId>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]/SiteCode$</Name>
+                <Value>$Data/Values/SiteCode$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]/Version$</Name>
+                <Value>$Data/Values/Version$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="System!System.Entity"]/DisplayName$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Values/IsConfigurationManagerServiceConnectionPoint</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">True</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+      <!-- Software Update Point discovery -->
+      <Discovery ID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePoint" Enabled="true" Target="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="TestA.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"/>
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>IsConfigurationManagerSoftwareUpdatePoint</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\Software Update Point</Path>
+              <!-- 0=regKey 1=regValue -->
+              <PathType>0</PathType>
+              <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+              <AttributeType>0</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>SiteCode</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\Software Update Point\Site Code</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>Version</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\Software Update Point\Version</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <!-- 86400 in prod. -->
+          <Frequency>300</Frequency>
+          <ClassId>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]/SiteCode$</Name>
+                <Value>$Data/Values/SiteCode$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]/Version$</Name>
+                <Value>$Data/Values/Version$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="System!System.Entity"]/DisplayName$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Values/IsConfigurationManagerSoftwareUpdatePoint</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">True</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+      <!-- Srs Reporting Point discovery -->
+      <Discovery ID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.SrsReportingPoint" Enabled="true" Target="TestA.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="TestA.Microsoft.Intune.ConfigurationManager.Class.SrsReportingPoint"/>
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>IsConfigurationManagerSrsReportingPoint</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS SRS Reporting Point</Path>
+              <!-- 0=regKey 1=regValue -->
+              <PathType>0</PathType>
+              <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+              <AttributeType>0</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>SiteCode</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS SRS Reporting Point\Site Code</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>Version</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS SRS Reporting Point\Version</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <!-- 86400 in prod. -->
+          <Frequency>300</Frequency>
+          <ClassId>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.SrsReportingPoint"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.SrsReportingPoint"]/SiteCode$</Name>
+                <Value>$Data/Values/SiteCode$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.SrsReportingPoint"]/Version$</Name>
+                <Value>$Data/Values/Version$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="System!System.Entity"]/DisplayName$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Values/IsConfigurationManagerSrsReportingPoint</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">True</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+      <!-- Client discovery -->
+      <Discovery ID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.Client" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="TestA.Microsoft.Intune.ConfigurationManager.Class.Client"/>
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>IsConfigurationManagerClient</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
+              <!-- 0=regKey 1=regValue -->
+              <PathType>0</PathType>
+              <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+              <AttributeType>0</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>SiteCode</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Mobile Client\AssignedSiteCode</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>Version</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Mobile Client\SmsClientVersion</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <!-- 86400 in prod. -->
+          <Frequency>300</Frequency>
+          <ClassId>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Client"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Client"]/SiteCode$</Name>
+                <Value>$Data/Values/SiteCode$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestA.Microsoft.Intune.ConfigurationManager.Class.Client"]/Version$</Name>
+                <Value>$Data/Values/Version$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="System!System.Entity"]/DisplayName$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Values/IsConfigurationManagerClient</XPathQuery>
               </ValueExpression>
               <Operator>Equal</Operator>
               <ValueExpression>
@@ -403,6 +756,51 @@
         <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint" SubElementID="Version">
           <Name>Version</Name>
         </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint">
+          <Name>Configuration Manager Management Point</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint" SubElementID="SiteCode">
+          <Name>Site Code</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint" SubElementID="Version">
+          <Name>Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint">
+          <Name>Configuration Manager Service Connection Point</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint" SubElementID="SiteCode">
+          <Name>Site Code</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint" SubElementID="Version">
+          <Name>Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint">
+          <Name>Configuration Manager Software Update Point</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint" SubElementID="SiteCode">
+          <Name>Site Code</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint" SubElementID="Version">
+          <Name>Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.SrsReportingPoint">
+          <Name>Configuration Manager SRS Reporting Point</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.SrsReportingPoint" SubElementID="SiteCode">
+          <Name>Site Code</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.SrsReportingPoint" SubElementID="Version">
+          <Name>Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Client">
+          <Name>Configuration Manager Client</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Client" SubElementID="SiteCode">
+          <Name>Site Code</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Class.Client" SubElementID="Version">
+          <Name>Version</Name>
+        </DisplayString>
         <!-- Discoveries -->
         <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.ServerSeed">
           <Name>Configuration Manager Server Seed Discovery</Name>
@@ -412,6 +810,21 @@
         </DisplayString>
         <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.DistributionPoint">
           <Name>Configuration Manager Distribution Point Discovery</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.ManagementPoint">
+          <Name>Configuration Manager Management Point Discovery</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPoint">
+          <Name>Configuration Manager Service Connection Point Discovery</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePoint">
+          <Name>Configuration Manager Software Update Point Discovery</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.SrsReportingPoint">
+          <Name>Configuration Manager SRS Reporting Point Discovery</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Discovery.Client">
+          <Name>Configuration Manager Client Discovery</Name>
         </DisplayString>
         <!-- Monitors -->
         <DisplayString ElementID="TestA.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService">
