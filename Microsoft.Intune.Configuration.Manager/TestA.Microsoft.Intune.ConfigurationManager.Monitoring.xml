@@ -1,10 +1,11 @@
+<!-- This version has all 8 discoveries and is working. -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
       <ID>TestA.Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.1.15.4</Version>
+      <Version>2024.1.17.0</Version>
     </Identity>
     <Name>TestA.Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
