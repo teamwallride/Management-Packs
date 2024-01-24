@@ -1,11 +1,15 @@
-<!-- This version has all 8 discoveries and is working. -->
+<!--
+  All discoveries are working.
+  Testing monitors. When finished set "unfriendly" monitors to enable/disable by default, whatever is best to reduce overrides required.
+  Need to add this mp to alert.management mp.
+-->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
       <ID>TestD.Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.1.24.3</Version>
+      <Version>2024.1.24.11</Version>
     </Identity>
     <Name>TestD.Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
@@ -79,7 +83,80 @@
         </ClassType>
       </ClassTypes>
     </EntityTypes>
+
+    <MonitorTypes>
+      <!-- TestD.Microsoft.Intune.ConfigurationManager.MonitorType.ClientInstall -->
+      <UnitMonitorType ID="TestD.Microsoft.Intune.ConfigurationManager.MonitorType.ClientInstall" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="RegKeyExists" NoDetection="false"/>
+          <MonitorTypeState ID="RegKeyMissing" NoDetection="false"/>
+        </MonitorTypeStates>
+        <Configuration/>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="RegDS" TypeID="Windows!Microsoft.Windows.RegistryProvider">
+              <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+              <RegistryAttributeDefinitions>
+                <RegistryAttributeDefinition>
+                  <AttributeName>ConfigurationManagerClientInstalled</AttributeName>
+                  <Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
+                  <!-- For testing.
+									<Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
+									-->
+                  <PathType>0</PathType>
+                  <!-- 0=regKey 1=regValue -->
+                  <AttributeType>0</AttributeType>
+                  <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+                </RegistryAttributeDefinition>
+              </RegistryAttributeDefinitions>
+              <!-- 86400 in prod. -->
+              <Frequency>60</Frequency>
+              <!-- change in prod -->
+            </DataSource>
+            <ConditionDetection ID="CDExists" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Boolean">Values/ConfigurationManagerClientInstalled</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="Boolean">true</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CDMissing" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Boolean">Values/ConfigurationManagerClientInstalled</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="Boolean">false</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="RegKeyExists">
+              <Node ID="CDExists">
+                <Node ID="RegDS"/>
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="RegKeyMissing">
+              <Node ID="CDMissing">
+                <Node ID="RegDS"/>
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
   </TypeDefinitions>
+
   <Monitoring>
     <Discoveries>
       <!-- Seed discovery -->
@@ -188,7 +265,7 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
-            <!-- Getting version from here for consistency only. It's also in SOFTWARE\Microsoft\SMS\Setup but I don't know if it's valid. -->
+              <!-- Getting version from here for consistency only. It's also in SOFTWARE\Microsoft\SMS\Setup but I don't know if it's valid. -->
               <AttributeName>Version</AttributeName>
               <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Site Server\Version</Path>
               <PathType>1</PathType>
@@ -669,15 +746,31 @@
             </Settings>
           </InstanceSettings>
           <Expression>
-            <SimpleExpression>
-              <ValueExpression>
-                <XPathQuery Type="String">Values/IsConfigurationManagerClient</XPathQuery>
-              </ValueExpression>
-              <Operator>Equal</Operator>
-              <ValueExpression>
-                <Value Type="String">True</Value>
-              </ValueExpression>
-            </SimpleExpression>
+            <!-- OR expression used as it allows us to alert if the client isn't installed. This is used by TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall. -->
+            <Or>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Values/IsConfigurationManagerClient</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">True</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Values/IsConfigurationManagerClient</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">False</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </Or>
           </Expression>
         </DataSource>
       </Discovery>
@@ -685,8 +778,10 @@
     </Discoveries>
 
     <Monitors>
-      <!-- SMS_SITE_SQL_BACKUP service -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <!-- Not all CM services match nicely to a class. For ones that don't you need to look at your environment and enable/disable the monitor by default to keep overrides to a minimum. -->
+
+      <!-- SMS_SITE_SQL_BACKUP service. Only runs on site servers. -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
         <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
@@ -707,15 +802,338 @@
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
+      <!-- SMS_SITE_COMPONENT_MANAGER service. Only runs on site servers. -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>SMS_SITE_COMPONENT_MANAGER</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+      <!-- SMS_SITE_VSS_WRITER service. Only runs on site servers. -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>SMS_SITE_VSS_WRITER</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+      <!-- CONFIGURATION_MANAGER_UPDATE service. Only runs on site servers. -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>CONFIGURATION_MANAGER_UPDATE</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+
+      <!-- WSUS Service. Only runs on site servers. -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>WsusService</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+      <!-- SQL Server VSS Writer service. Only runs on site servers. -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>SQLWriter</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+
+      <!-- AI_UPDATE_SERVICE_POINT service. Only runs on selected site servers. Disabled by default. -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>AI_UPDATE_SERVICE_POINT</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+
+      <!-- SMS_EXECUTIVE service. Only runs on selected seed servers. Disabled by default. -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>SMS_EXECUTIVE</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+
+      <!-- Windows Deployment Services Server service. Only runs on selected seed servers. Enabled default. -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>WDSServer</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+
+      <!-- SMS Agent Host service. Runs on all Windows Computers. Enabled default. -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.Client" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>CcmExec</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+      <!-- TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall -->
+      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.Client" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="TestD.Microsoft.Intune.ConfigurationManager.MonitorType.ClientInstall" ConfirmDelivery="true">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Success" MonitorTypeStateID="RegKeyExists" HealthState="Success"/>
+          <OperationalState ID="Error" MonitorTypeStateID="RegKeyMissing" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration/>
+      </UnitMonitor>
+
 
     </Monitors>
     <Recoveries>
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <!-- All recoveries are enabled by default. -->
+      <!-- SMS_SITE_SQL_BACKUP service. Only runs on site servers. -->
+      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
           <WorkingDirectory/>
           <CommandLine>start "SMS_SITE_SQL_BACKUP"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <!-- SMS_SITE_COMPONENT_MANAGER service. Only runs on site servers. -->
+      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteComponentManagerService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "SMS_SITE_COMPONENT_MANAGER"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <!-- SMS_SITE_VSS_WRITER service. Only runs on site servers. -->
+      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteVssWriterService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "SMS_SITE_VSS_WRITER"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <!-- CONFIGURATION_MANAGER_UPDATE service. Only runs on site servers. -->
+      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.ConfigurationManagerUpdateService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "CONFIGURATION_MANAGER_UPDATE"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <!-- WSUS Service. Only runs on site servers. -->
+      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.WsusService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "WsusService"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <!-- SQL Server VSS Writer. Only runs on site servers. -->
+      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SqlServerVssWriterService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "SQLWriter"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <!-- AI_UPDATE_SERVICE_POINT service. Only runs on selected site servers. -->
+      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.AiUpdateServicePointService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "AI_UPDATE_SERVICE_POINT"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <!-- SMS_EXECUTIVE service. Only runs on selected seed servers. -->
+      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsExecutiveService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "SMS_EXECUTIVE"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <!-- Windows Deployment Services Server service. Only runs on selected seed servers. -->
+      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.WdsServerService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "WDSServer"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <!-- SMS Agent Host service. Only runs on selected seed servers. Disabled by default. -->
+      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.CcmExecService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.Client" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "CcmExec"</CommandLine>
           <TimeoutSeconds>60</TimeoutSeconds>
           <RequireOutput>true</RequireOutput>
         </WriteAction>
@@ -727,6 +1145,17 @@
   <Presentation>
     <StringResources>
       <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage"/>
+      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService.AlertMessage"/>
+      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService.AlertMessage"/>
+      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService.AlertMessage"/>
+      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService.AlertMessage"/>
+      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService.AlertMessage"/>
+      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService.AlertMessage"/>
+      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService.AlertMessage"/>
+      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService.AlertMessage"/>
+      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService.AlertMessage"/>
+      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall.AlertMessage"/>
+
     </StringResources>
   </Presentation>
 
@@ -836,7 +1265,7 @@
           <Name>Configuration Manager Server Seed Discovery</Name>
         </DisplayString>
         <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SiteServer">
-          <Name>Configuration Manager Site Discovery</Name>
+          <Name>Configuration Manager Site Server Discovery</Name>
         </DisplayString>
         <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.DistributionPoint">
           <Name>Configuration Manager Distribution Point Discovery</Name>
@@ -870,12 +1299,215 @@
         <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService">
+          <Name>SMS_SITE_COMPONENT_MANAGER Service Monitor</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService.AlertMessage">
+          <Name>SMS_SITE_COMPONENT_MANAGER Service Not Running</Name>
+          <Description>The 'SMS_SITE_COMPONENT_MANAGER' service on {0} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService">
+          <Name>SMS_SITE_VSS_WRITER Service Monitor</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService.AlertMessage">
+          <Name>SMS_SITE_VSS_WRITER Service Not Running</Name>
+          <Description>The 'SMS_SITE_VSS_WRITER' service on {0} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService">
+          <Name>CONFIGURATION_MANAGER_UPDATE Service Monitor</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService.AlertMessage">
+          <Name>CONFIGURATION_MANAGER_UPDATE Service Not Running</Name>
+          <Description>The 'CONFIGURATION_MANAGER_UPDATE' service on {0} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService">
+          <Name>WSUS Service Monitor</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService.AlertMessage">
+          <Name>WSUS Service Not Running</Name>
+          <Description>The 'WSUS Service' service on {0} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService">
+          <Name>SQL Server VSS Writer Service Monitor</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService.AlertMessage">
+          <Name>SQL Server VSS Writer Service Not Running</Name>
+          <Description>The 'SQL Server VSS Writer' service on {0} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService">
+          <Name>AI_UPDATE_SERVICE_POINT Service Monitor</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService.AlertMessage">
+          <Name>AI_UPDATE_SERVICE_POINT Service Not Running</Name>
+          <Description>The 'AI_UPDATE_SERVICE_POINT' service on {0} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService">
+          <Name>SMS_EXECUTIVE Service Monitor</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService.AlertMessage">
+          <Name>SMS_EXECUTIVE Service Not Running</Name>
+          <Description>The 'SMS_EXECUTIVE' service on {0} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService">
+          <Name>Windows Deployment Services Server Service Monitor</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService.AlertMessage">
+          <Name>Windows Deployment Services Server Service Not Running</Name>
+          <Description>The 'Windows Deployment Services Server' service on {0} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService">
+          <Name>SMS Agent Host Service Monitor</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService.AlertMessage">
+          <Name>SMS Agent Host Service Not Running</Name>
+          <Description>The 'SMS Agent Host' service on {0} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall">
+          <Name>Configuration Manager Client Install</Name>
+          <Description/>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" SubElementID="Success">
+          <Name>RegKeyExists</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" SubElementID="Error">
+          <Name>RegKeyMissing</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall.AlertMessage">
+          <Name>Configuration Manager Client Not Installed</Name>
+          <Description>The Configuration Manager client is not installed on {0}.
+						See the knowledge section below for more information.</Description>
+        </DisplayString>
+
+
         <!-- Recoveries -->
         <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteComponentManagerService">
+          <Name></Name>
+          <Description>Start Windows service</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteVssWriterService">
+          <Name></Name>
+          <Description>Start Windows service</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.ConfigurationManagerUpdateService">
+          <Name></Name>
+          <Description>Start Windows service</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.WsusService">
+          <Name></Name>
+          <Description>Start Windows service</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SqlServerVssWriterService">
+          <Name></Name>
+          <Description>Start Windows service</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.AiUpdateServicePointService">
+          <Name></Name>
+          <Description>Start Windows service</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsExecutiveService">
+          <Name></Name>
+          <Description>Start Windows service</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.WdsServerService">
+          <Name></Name>
+          <Description>Start Windows service</Description>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.CcmExecService">
+          <Name></Name>
+          <Description>Start Windows service</Description>
+        </DisplayString>
       </DisplayStrings>
+      <KnowledgeArticles>
+        <KnowledgeArticle ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" Visible="true">
+          <MamlContent>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Summary</maml:title>
+              <maml:para>This monitor checks if the Configuration Manager client is installed.</maml:para>
+            </maml:section>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Causes</maml:title>
+              <maml:para>If the below registry key is not found, it's assumed the client is not installed and an alert is generated.</maml:para>
+              <maml:list>
+                <maml:listItem>
+                  <maml:para>HKLM\SYSTEM\CurrentControlSet\Services\CcmExec</maml:para>
+                </maml:listItem>
+              </maml:list>
+            </maml:section>
+            <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+              <maml:title>Resolutions</maml:title>
+              <maml:para>Install the client software and the alert will automatically close.</maml:para>
+            </maml:section>
+          </MamlContent>
+        </KnowledgeArticle>
+      </KnowledgeArticles>
     </LanguagePack>
   </LanguagePacks>
 </ManagementPack>
