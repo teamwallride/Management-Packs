@@ -1,15 +1,8 @@
-<!--
-==========
-CHANGE LOG
-==========
-2023.3.21.0
--Initial release.
--->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
       <ID>Certificate.Views</ID>
-      <Version>2023.3.21.0</Version>
+      <Version>2024.1.22.0</Version>
     </Identity>
     <Name>Certificate.Views</Name>
     <References>
@@ -352,6 +345,51 @@ CHANGE LOG
           <Cell Row="3" Column="1" ViewID="View_5fd2a7d4acd84154b7e538d54c612785" />
         </PanelConfiguration>
       </View>
+      <View ID="View_9b499660bc754c66aa7ded3d732a1391" Accessibility="Public" Enabled="true" Target="Monitoring!Certificate.Class.WindowsCertificate" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Certificate.Class.WindowsCertificate-*-0e471a91-d46f-3ef6-1575-3025b0439965-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued To</Name>
+            <Id>Certificate.Class.WindowsCertificate/IssuedTo</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued On (YMDT)</Name>
+            <Id>Certificate.Class.WindowsCertificate/NotBefore</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Expires On (YMDT)</Name>
+            <Id>Certificate.Class.WindowsCertificate/NotAfter</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Thumbprint</Name>
+            <Id>Certificate.Class.WindowsCertificate/Thumbprint</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
     </Views>
     <Folders>
       <Folder ID="Folder_eb557630ee2647b4b49c702c0fb8358f" Accessibility="Public" ParentFolder="SystemCenter!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
@@ -363,6 +401,7 @@ CHANGE LOG
       <FolderItem ElementID="View_2fdaa89b228145d4bac5678466050c7e" ID="i784b7ab14e0d4f92a4f1e0060bdff122" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
       <FolderItem ElementID="View_5fd2a7d4acd84154b7e538d54c612785" ID="i7384d83c64cb4db6b805fb8169c78776" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
       <FolderItem ElementID="View_aa122f5e7f734111b4d30c74ce8d3922" ID="ic83ed46063eb47cfbb0c90ef416522f9" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
+      <FolderItem ElementID="View_9b499660bc754c66aa7ded3d732a1391" ID="i3322f05f63a044438c6132bd0fd706d3" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
     </FolderItems>
   </Presentation>
   <LanguagePacks>
@@ -392,6 +431,10 @@ CHANGE LOG
         </DisplayString>
         <DisplayString ElementID="View_aa122f5e7f734111b4d30c74ce8d3922">
           <Name>Dashboard</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_9b499660bc754c66aa7ded3d732a1391">
+          <Name>All Certificates</Name>
+          <Description />
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
