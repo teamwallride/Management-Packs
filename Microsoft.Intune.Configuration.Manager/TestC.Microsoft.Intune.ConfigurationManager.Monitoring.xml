@@ -45,10 +45,12 @@
     <EntityTypes>
       <ClassTypes>
         <!-- One class to collect all CM server properties.
-        There are many site codes and versions for CM servers and roles, to help distinguish these in the console, role-related properties have the role prefix.
+        There are many site codes and versions for CM servers and roles, to help distinguish these in the console,
+        role-related properties have the role prefix.
         I.e. DistributionPointVersion, DistributionPointSiteCode etc. -->
         <ClassType ID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
-          <Property ID="SiteName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <!-- do we need? -->
+          <Property ID="SiteServerSiteName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="SiteServer" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="ParentServer" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
@@ -56,16 +58,16 @@
           <Property ID="SiteVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="DatabaseMachineName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="DatabaseName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-          <Property ID="DistributionPointVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="DistributionPointSiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-          <Property ID="ManagementPointVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="DistributionPointVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="ManagementPointSiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-          <Property ID="ServiceConnectionPointVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="ManagementPointVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="ServiceConnectionPointSiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-          <Property ID="SoftwareUpdatePointVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="ServiceConnectionPointVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="SoftwareUpdatePointSiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-          <Property ID="SRSReportingPointVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="SoftwareUpdatePointVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="SRSReportingPointSiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="SRSReportingPointVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
         <!-- Agent class. There is no need to add a prefix here because we have a separate class. -->
         <ClassType ID="TestC.Microsoft.Intune.ConfigurationManager.Class.Client" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
@@ -98,7 +100,7 @@
               <AttributeType>0</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
-              <AttributeName>SiteName</AttributeName>
+              <AttributeName>SiteServerSiteName</AttributeName>
               <Path>SOFTWARE\Microsoft\SMS\Identification\Site Name</Path>
               <PathType>1</PathType>
               <AttributeType>1</AttributeType>
@@ -147,20 +149,14 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
-              <AttributeName>DistributionPointVersion</AttributeName>
-              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Distribution Point\Version</Path>
-              <PathType>1</PathType>
-              <AttributeType>1</AttributeType>
-            </RegistryAttributeDefinition>
-            <RegistryAttributeDefinition>
               <AttributeName>DistributionPointSiteCode</AttributeName>
               <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Distribution Point\Site Code</Path>
               <PathType>1</PathType>
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
-              <AttributeName>ManagementPointVersion</AttributeName>
-              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Management Point\Version</Path>
+              <AttributeName>DistributionPointVersion</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Distribution Point\Version</Path>
               <PathType>1</PathType>
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
@@ -171,8 +167,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
-              <AttributeName>ServiceConnectionPointVersion</AttributeName>
-              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Dmp Connector\Version</Path>
+              <AttributeName>ManagementPointVersion</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Management Point\Version</Path>
               <PathType>1</PathType>
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
@@ -183,8 +179,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
-              <AttributeName>SoftwareUpdatePointVersion</AttributeName>
-              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\Software Update Point\Version</Path>
+              <AttributeName>ServiceConnectionPointVersion</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Dmp Connector\Version</Path>
               <PathType>1</PathType>
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
@@ -195,14 +191,20 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
-              <AttributeName>SRSReportingPointVersion</AttributeName>
-              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS SRS Reporting Point\Version</Path>
+              <AttributeName>SoftwareUpdatePointVersion</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\Software Update Point\Version</Path>
               <PathType>1</PathType>
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
               <AttributeName>SRSReportingPointSiteCode</AttributeName>
               <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS SRS Reporting Point\Site Code</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>SRSReportingPointVersion</AttributeName>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS SRS Reporting Point\Version</Path>
               <PathType>1</PathType>
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
@@ -217,8 +219,8 @@
                 <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/SiteName$</Name>
-                <Value>$Data/Values/SiteName$</Value>
+                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/SiteServerSiteName$</Name>
+                <Value>$Data/Values/SiteServerSiteName$</Value>
               </Setting>
               <Setting>
                 <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/SiteCode$</Name>
@@ -249,44 +251,44 @@
                 <Value>$Data/Values/DatabaseName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/DistributionPointVersion$</Name>
-                <Value>$Data/Values/DistributionPointVersion$</Value>
-              </Setting>
-              <Setting>
                 <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/DistributionPointSiteCode$</Name>
                 <Value>$Data/Values/DistributionPointSiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/ManagementPointVersion$</Name>
-                <Value>$Data/Values/ManagementPointVersion$</Value>
+                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/DistributionPointVersion$</Name>
+                <Value>$Data/Values/DistributionPointVersion$</Value>
               </Setting>
               <Setting>
                 <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/ManagementPointSiteCode$</Name>
                 <Value>$Data/Values/ManagementPointSiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/ServiceConnectionPointVersion$</Name>
-                <Value>$Data/Values/ServiceConnectionPointVersion$</Value>
+                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/ManagementPointVersion$</Name>
+                <Value>$Data/Values/ManagementPointVersion$</Value>
               </Setting>
               <Setting>
                 <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/ServiceConnectionPointSiteCode$</Name>
                 <Value>$Data/Values/ServiceConnectionPointSiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/SoftwareUpdatePointVersion$</Name>
-                <Value>$Data/Values/SoftwareUpdatePointVersion$</Value>
+                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/ServiceConnectionPointVersion$</Name>
+                <Value>$Data/Values/ServiceConnectionPointVersion$</Value>
               </Setting>
               <Setting>
                 <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/SoftwareUpdatePointSiteCode$</Name>
                 <Value>$Data/Values/SoftwareUpdatePointSiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/SRSReportingPointVersion$</Name>
-                <Value>$Data/Values/SRSReportingPointVersion$</Value>
+                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/SoftwareUpdatePointVersion$</Name>
+                <Value>$Data/Values/SoftwareUpdatePointVersion$</Value>
               </Setting>
               <Setting>
                 <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/SRSReportingPointSiteCode$</Name>
                 <Value>$Data/Values/SRSReportingPointSiteCode$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="TestC.Microsoft.Intune.ConfigurationManager.Class.Server"]/SRSReportingPointVersion$</Name>
+                <Value>$Data/Values/SRSReportingPointVersion$</Value>
               </Setting>
               <Setting>
                 <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
@@ -509,8 +511,8 @@
         <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server">
           <Name>Configuration Manager Server</Name>
         </DisplayString>
-        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="SiteName">
-          <Name>Site Name</Name>
+        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="SiteServerSiteName">
+          <Name>Site Server Site Name</Name>
         </DisplayString>
         <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="SiteCode">
           <Name>Site Code</Name>
@@ -533,35 +535,35 @@
         <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="DatabaseName">
           <Name>Database Name</Name>
         </DisplayString>
-        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="DistributionPointVersion">
-          <Name>Distribution Point Version</Name>
-        </DisplayString>
         <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="DistributionPointSiteCode">
           <Name>Distribution Point Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="ManagementPointVersion">
-          <Name>Management Point Version</Name>
+        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="DistributionPointVersion">
+          <Name>Distribution Point Version</Name>
         </DisplayString>
         <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="ManagementPointSiteCode">
           <Name>Management Point Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="ServiceConnectionPointVersion">
-          <Name>Service Connection Point Version</Name>
+        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="ManagementPointVersion">
+          <Name>Management Point Version</Name>
         </DisplayString>
         <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="ServiceConnectionPointSiteCode">
           <Name>Service Connection Point Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="SoftwareUpdatePointVersion">
-          <Name>Software Update Point Version</Name>
+        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="ServiceConnectionPointVersion">
+          <Name>Service Connection Point Version</Name>
         </DisplayString>
         <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="SoftwareUpdatePointSiteCode">
           <Name>Software Update Point Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="SRSReportingPointVersion">
-          <Name>SRS Reporting Point Version</Name>
+        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="SoftwareUpdatePointVersion">
+          <Name>Software Update Point Version</Name>
         </DisplayString>
         <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="SRSReportingPointSiteCode">
           <Name>SRS Reporting Point Site Code</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Server" SubElementID="SRSReportingPointVersion">
+          <Name>SRS Reporting Point Version</Name>
         </DisplayString>
         <DisplayString ElementID="TestC.Microsoft.Intune.ConfigurationManager.Class.Client">
           <Name>Configuration Manager Client</Name>
