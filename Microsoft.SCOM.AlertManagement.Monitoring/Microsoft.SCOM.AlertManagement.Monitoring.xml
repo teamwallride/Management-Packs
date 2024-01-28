@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.AlertManagement.Monitoring</ID>
-            <Version>2023.12.12.2</Version>
+            <Version>2024.1.29.0</Version>
         </Identity>
         <Name>Microsoft.SCOM.AlertManagement.Monitoring</Name>
         <References>
@@ -179,7 +179,7 @@ Function Set-AlertManagement {
                     "Microsoft.SystemCenter.*" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
                     "Microsoft.SCOM.UpdateRollup.Monitoring" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
                     # SCCM
-                    "Microsoft.SystemCenter2012.ConfigurationManager.*" { $Category="SCCM"; $Owner=$SccmTeam; BREAK }
+                    "*.ConfigurationManager.*" { $Category="Configuration Manager"; $Owner=$SccmTeam; BREAK }
                     # SharePoint
                     "Microsoft.SharePoint.*" { $Category="SharePoint"; $Owner=$SharePointTeam; BREAK }
                     # SQL
@@ -242,7 +242,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="Microsoft.SCOM.AlertManagement.Monitoring"
-$MpVersion="2023.12.12.2"
+$MpVersion="2024.1.29.0"
 $MpWorkflow="Microsoft.SCOM.AlertManagement.Rule.AlertManagement"
 Set-AlertManagement
 ]]>
