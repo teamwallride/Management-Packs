@@ -1,7 +1,8 @@
 <!--
   All discoveries are working.
   Testing monitors. When finished set "unfriendly" monitors to enable/disable by default, whatever is best to reduce overrides required.
-  Need to add this mp to alert.management mp.
+  Need to add this mp to alert.management mp. I've update mine but not work one.
+  Look into: the SQLWriter service might already be monitored.
 -->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -9,7 +10,7 @@
   <Manifest>
     <Identity>
       <ID>TestD.Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.1.24.11</Version>
+      <Version>2024.1.29.4</Version>
     </Identity>
     <Name>TestD.Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
@@ -81,6 +82,15 @@
           <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
+        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.ServerSeed" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.SiteServer" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.DistributionPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.ManagementPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.Client" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+
       </ClassTypes>
     </EntityTypes>
 
@@ -99,9 +109,9 @@
               <RegistryAttributeDefinitions>
                 <RegistryAttributeDefinition>
                   <AttributeName>ConfigurationManagerClientInstalled</AttributeName>
-                  <Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
+                  <Path>SYSTEM\CurrentControlSet\Services\CcmExec</Path>
                   <!-- For testing.
-									<Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
+									<Path>SYSTEM\CurrentControlSet\Services\CcmExec</Path>
 									-->
                   <PathType>0</PathType>
                   <!-- 0=regKey 1=regValue -->
@@ -775,6 +785,150 @@
         </DataSource>
       </Discovery>
 
+      <!-- Seed group discovery -->
+      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServerSeedGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.ServerSeed"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+      <!-- Site server group discovery -->
+      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SiteServerGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.SiteServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.SiteServer"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+
+      <!-- Distribution Point group discovery -->
+      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.DistributionPointGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.DistributionPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.DistributionPoint"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+
+      <!-- Management Point group discovery -->
+      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ManagementPointGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.ManagementPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.ManagementPoint"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+
+      <!-- Service Connection Point group discovery -->
+      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPointGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+
+      <!-- Software Update Point group discovery -->
+      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePointGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+
+      <!-- Reporting Services Point group discovery -->
+      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ReportingServicesPointGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+
+      <!-- Client group discovery -->
+      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ClientGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.Client" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.Client"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.Client"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+
+
     </Discoveries>
 
     <Monitors>
@@ -1083,7 +1237,9 @@
           <RequireOutput>true</RequireOutput>
         </WriteAction>
       </Recovery>
-      <!-- SQL Server VSS Writer. Only runs on site servers. -->
+      <!-- SQL Server VSS Writer. Only runs on site servers. 
+      to test alert: set to disabled
+      -->
       <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SqlServerVssWriterService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
@@ -1285,6 +1441,39 @@
         <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.Client">
           <Name>Configuration Manager Client Discovery</Name>
         </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServerSeedGroup">
+          <Name>Configuration Manager Server Seed Group Discovery</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SiteServerGroup">
+          <Name>Configuration Manager Site Server Group Discovery</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.DistributionPointGroup">
+          <Name>Configuration Manager Distribution Point Group Discovery</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ManagementPointGroup">
+          <Name>Configuration Manager Management Point Group Discovery</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPointGroup">
+          <Name>Configuration Manager Service Connection Point Group Discovery</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePointGroup">
+          <Name>Configuration Manager Software Update Point Group Discovery</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ReportingServicesPointGroup">
+          <Name>Configuration Manager Reporting Services Point Group Discovery</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ClientGroup">
+          <Name>Configuration Manager Client Group Discovery</Name>
+        </DisplayString>
+
         <!-- Monitors -->
         <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService">
           <Name>SMS_SITE_SQL_BACKUP Service Monitor</Name>
@@ -1438,10 +1627,8 @@
         </DisplayString>
         <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall.AlertMessage">
           <Name>Configuration Manager Client Not Installed</Name>
-          <Description>The Configuration Manager client is not installed on {0}.
-						See the knowledge section below for more information.</Description>
+          <Description>The Configuration Manager client is not installed on {0}. See the knowledge section below for more information.</Description>
         </DisplayString>
-
 
         <!-- Recoveries -->
         <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService">
@@ -1484,6 +1671,39 @@
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
+
+        <!-- Groups -->
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.ServerSeed">
+          <Name>Configuration Manager Server Seed</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.SiteServer">
+          <Name>Configuration Manager Site Servers</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.DistributionPoint">
+          <Name>Configuration Manager Distribution Points</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.ManagementPoint">
+          <Name>Configuration Manager Management Points</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint">
+          <Name>Configuration Manager Service Connection Points</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint">
+          <Name>Configuration Manager Software Update Points</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint">
+          <Name>Configuration Manager Reporting Services Points</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.Client">
+          <Name>Configuration Manager Clients</Name>
+        </DisplayString>
+
       </DisplayStrings>
       <KnowledgeArticles>
         <KnowledgeArticle ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" Visible="true">
