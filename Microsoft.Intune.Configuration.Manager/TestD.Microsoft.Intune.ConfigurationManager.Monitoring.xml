@@ -10,7 +10,7 @@
   <Manifest>
     <Identity>
       <ID>TestD.Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.1.29.4</Version>
+      <Version>2024.1.30.2</Version>
     </Identity>
     <Name>TestD.Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
@@ -109,9 +109,10 @@
               <RegistryAttributeDefinitions>
                 <RegistryAttributeDefinition>
                   <AttributeName>ConfigurationManagerClientInstalled</AttributeName>
-                  <Path>SYSTEM\CurrentControlSet\Services\CcmExec</Path>
+                  <!-- I think for monitor types, only HKLM\SOFTWARE is valid. HKLM\SYSTEM\CurrentControlSet\Services\CcmExec didn't work. -->
+                  <Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
                   <!-- For testing.
-									<Path>SYSTEM\CurrentControlSet\Services\CcmExec</Path>
+									<Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
 									-->
                   <PathType>0</PathType>
                   <!-- 0=regKey 1=regValue -->
@@ -1717,7 +1718,7 @@
               <maml:para>If the below registry key is not found, it's assumed the client is not installed and an alert is generated.</maml:para>
               <maml:list>
                 <maml:listItem>
-                  <maml:para>HKLM\SYSTEM\CurrentControlSet\Services\CcmExec</maml:para>
+                  <maml:para>HKLM\SOFTWARE\Microsoft\SMS\Mobile Client</maml:para>
                 </maml:listItem>
               </maml:list>
             </maml:section>
