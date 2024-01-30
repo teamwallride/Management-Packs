@@ -1,18 +1,12 @@
-<!--
-  All discoveries are working.
-  Testing monitors. When finished set "unfriendly" monitors to enable/disable by default, whatever is best to reduce overrides required.
-  Need to add this mp to alert.management mp. I've update mine but not work one.
-  Look into: the SQLWriter service might already be monitored.
--->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
-      <ID>TestD.Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.1.30.2</Version>
+      <ID>Microsoft.Intune.ConfigurationManager.Monitoring</ID>
+      <Version>2024.1.31.0</Version>
     </Identity>
-    <Name>TestD.Microsoft.Intune.ConfigurationManager.Monitoring</Name>
+    <Name>Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
       <Reference Alias="Windows">
         <ID>Microsoft.Windows.Library</ID>
@@ -44,8 +38,8 @@
   <TypeDefinitions>
     <EntityTypes>
       <ClassTypes>
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false"/>
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Accessibility="Public" Abstract="false" Base="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false"/>
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Accessibility="Public" Abstract="false" Base="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
           <Property ID="SiteName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="CentralSite" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
@@ -58,45 +52,42 @@
           <Property ID="DatabaseMachineName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="DatabaseName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint" Accessibility="Public" Abstract="false" Base="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Class.DistributionPoint" Accessibility="Public" Abstract="false" Base="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
           <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint" Accessibility="Public" Abstract="false" Base="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Class.ManagementPoint" Accessibility="Public" Abstract="false" Base="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
           <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint" Accessibility="Public" Abstract="false" Base="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint" Accessibility="Public" Abstract="false" Base="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
           <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint" Accessibility="Public" Abstract="false" Base="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint" Accessibility="Public" Abstract="false" Base="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
           <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint" Accessibility="Public" Abstract="false" Base="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint" Accessibility="Public" Abstract="false" Base="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Hosted="true" Singleton="false" Extension="false">
           <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Class.Client" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Class.Client" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
           <Property ID="SiteCode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
           <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
         </ClassType>
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.ServerSeed" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.SiteServer" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.DistributionPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.ManagementPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-        <ClassType ID="TestD.Microsoft.Intune.ConfigurationManager.Group.Client" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Group.ServerSeed" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Group.SiteServer" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Group.DistributionPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Group.ManagementPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="Microsoft.Intune.ConfigurationManager.Group.Client" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
       </ClassTypes>
     </EntityTypes>
-
     <MonitorTypes>
-      <!-- TestD.Microsoft.Intune.ConfigurationManager.MonitorType.ClientInstall -->
-      <UnitMonitorType ID="TestD.Microsoft.Intune.ConfigurationManager.MonitorType.ClientInstall" Accessibility="Public">
+      <UnitMonitorType ID="Microsoft.Intune.ConfigurationManager.MonitorType.ClientInstall" Accessibility="Public">
         <MonitorTypeStates>
           <MonitorTypeState ID="RegKeyExists" NoDetection="false"/>
           <MonitorTypeState ID="RegKeyMissing" NoDetection="false"/>
@@ -109,7 +100,7 @@
               <RegistryAttributeDefinitions>
                 <RegistryAttributeDefinition>
                   <AttributeName>ConfigurationManagerClientInstalled</AttributeName>
-                  <!-- I think for monitor types, only HKLM\SOFTWARE is valid. HKLM\SYSTEM\CurrentControlSet\Services\CcmExec didn't work. -->
+                  <!-- HKLM\SYSTEM\CurrentControlSet\Services\CcmExec doesn't work so using this key. -->
                   <Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
                   <!-- For testing.
 									<Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
@@ -120,8 +111,7 @@
                   <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
                 </RegistryAttributeDefinition>
               </RegistryAttributeDefinitions>
-              <!-- 86400 in prod. -->
-              <Frequency>60</Frequency>
+              <Frequency>86400</Frequency>
               <!-- change in prod -->
             </DataSource>
             <ConditionDetection ID="CDExists" TypeID="System!System.ExpressionFilter">
@@ -167,14 +157,13 @@
       </UnitMonitorType>
     </MonitorTypes>
   </TypeDefinitions>
-
   <Monitoring>
     <Discoveries>
       <!-- Seed discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServerSeed" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.ServerSeed" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed"/>
+          <DiscoveryClass TypeID="Microsoft.Intune.ConfigurationManager.Class.ServerSeed"/>
         </DiscoveryTypes>
         <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
           <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
@@ -188,9 +177,8 @@
               <AttributeType>0</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <!-- 86400 in prod. -->
-          <Frequency>60</Frequency>
-          <ClassId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed"]$</ClassId>
+          <Frequency>86400</Frequency>
+          <ClassId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ServerSeed"]$</ClassId>
           <InstanceSettings>
             <Settings>
               <Setting>
@@ -217,10 +205,10 @@
         </DataSource>
       </Discovery>
       <!-- Site server discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SiteServer" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.SiteServer" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"/>
+          <DiscoveryClass TypeID="Microsoft.Intune.ConfigurationManager.Class.SiteServer"/>
         </DiscoveryTypes>
         <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
           <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
@@ -276,7 +264,6 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
-              <!-- Getting version from here for consistency only. It's also in SOFTWARE\Microsoft\SMS\Setup but I don't know if it's valid. -->
               <AttributeName>Version</AttributeName>
               <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Site Server\Version</Path>
               <PathType>1</PathType>
@@ -301,9 +288,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <!-- 86400 in prod. -->
-          <Frequency>60</Frequency>
-          <ClassId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]$</ClassId>
+          <Frequency>86400</Frequency>
+          <ClassId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]$</ClassId>
           <InstanceSettings>
             <Settings>
               <Setting>
@@ -311,47 +297,47 @@
                 <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/SiteName$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/SiteName$</Name>
                 <Value>$Data/Values/SiteName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/SiteCode$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/SiteCode$</Name>
                 <Value>$Data/Values/SiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/CentralSite$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/CentralSite$</Name>
                 <Value>$Data/Values/CentralSite$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/SiteType$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/SiteType$</Name>
                 <Value>$Data/Values/SiteType$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/SiteServer$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/SiteServer$</Name>
                 <Value>$Data/Values/SiteServer$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/ParentServer$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/ParentServer$</Name>
                 <Value>$Data/Values/ParentServer$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/ParentSiteCode$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/ParentSiteCode$</Name>
                 <Value>$Data/Values/ParentSiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/Version$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/Version$</Name>
                 <Value>$Data/Values/Version$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/InstallFolder$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/InstallFolder$</Name>
                 <Value>$Data/Values/InstallFolder$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/DatabaseMachineName$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/DatabaseMachineName$</Name>
                 <Value>$Data/Values/DatabaseMachineName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/DatabaseName$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]/DatabaseName$</Name>
                 <Value>$Data/Values/DatabaseName$</Value>
               </Setting>
               <Setting>
@@ -374,10 +360,10 @@
         </DataSource>
       </Discovery>
       <!-- Distribution Point discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.DistributionPoint" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.DistributionPoint" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="TestD.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"/>
+          <DiscoveryClass TypeID="Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"/>
         </DiscoveryTypes>
         <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
           <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
@@ -403,9 +389,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <!-- 86400 in prod. -->
-          <Frequency>60</Frequency>
-          <ClassId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"]$</ClassId>
+          <Frequency>86400</Frequency>
+          <ClassId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"]$</ClassId>
           <InstanceSettings>
             <Settings>
               <Setting>
@@ -413,11 +398,11 @@
                 <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"]/SiteCode$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"]/SiteCode$</Name>
                 <Value>$Data/Values/SiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"]/Version$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"]/Version$</Name>
                 <Value>$Data/Values/Version$</Value>
               </Setting>
               <Setting>
@@ -440,10 +425,10 @@
         </DataSource>
       </Discovery>
       <!-- Management Point discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ManagementPoint" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.ManagementPoint" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="TestD.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"/>
+          <DiscoveryClass TypeID="Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"/>
         </DiscoveryTypes>
         <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
           <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
@@ -469,9 +454,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <!-- 86400 in prod. -->
-          <Frequency>60</Frequency>
-          <ClassId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]$</ClassId>
+          <Frequency>86400</Frequency>
+          <ClassId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]$</ClassId>
           <InstanceSettings>
             <Settings>
               <Setting>
@@ -479,11 +463,11 @@
                 <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]/SiteCode$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]/SiteCode$</Name>
                 <Value>$Data/Values/SiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]/Version$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]/Version$</Name>
                 <Value>$Data/Values/Version$</Value>
               </Setting>
               <Setting>
@@ -506,10 +490,10 @@
         </DataSource>
       </Discovery>
       <!-- Service Connection Point discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPoint" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPoint" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="TestD.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"/>
+          <DiscoveryClass TypeID="Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"/>
         </DiscoveryTypes>
         <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
           <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
@@ -535,9 +519,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <!-- 86400 in prod. -->
-          <Frequency>60</Frequency>
-          <ClassId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]$</ClassId>
+          <Frequency>86400</Frequency>
+          <ClassId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]$</ClassId>
           <InstanceSettings>
             <Settings>
               <Setting>
@@ -545,11 +528,11 @@
                 <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]/SiteCode$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]/SiteCode$</Name>
                 <Value>$Data/Values/SiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]/Version$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]/Version$</Name>
                 <Value>$Data/Values/Version$</Value>
               </Setting>
               <Setting>
@@ -572,10 +555,10 @@
         </DataSource>
       </Discovery>
       <!-- Software Update Point discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePoint" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePoint" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="TestD.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"/>
+          <DiscoveryClass TypeID="Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"/>
         </DiscoveryTypes>
         <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
           <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
@@ -601,9 +584,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <!-- 86400 in prod. -->
-          <Frequency>60</Frequency>
-          <ClassId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]$</ClassId>
+          <Frequency>86400</Frequency>
+          <ClassId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]$</ClassId>
           <InstanceSettings>
             <Settings>
               <Setting>
@@ -611,11 +593,11 @@
                 <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]/SiteCode$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]/SiteCode$</Name>
                 <Value>$Data/Values/SiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]/Version$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]/Version$</Name>
                 <Value>$Data/Values/Version$</Value>
               </Setting>
               <Setting>
@@ -638,10 +620,10 @@
         </DataSource>
       </Discovery>
       <!-- Reporting Services Point discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ReportingServicesPoint" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.ReportingServicesPoint" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="TestD.Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"/>
+          <DiscoveryClass TypeID="Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"/>
         </DiscoveryTypes>
         <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
           <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
@@ -667,9 +649,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <!-- 86400 in prod. -->
-          <Frequency>60</Frequency>
-          <ClassId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"]$</ClassId>
+          <Frequency>86400</Frequency>
+          <ClassId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"]$</ClassId>
           <InstanceSettings>
             <Settings>
               <Setting>
@@ -677,11 +658,11 @@
                 <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"]/SiteCode$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"]/SiteCode$</Name>
                 <Value>$Data/Values/SiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"]/Version$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"]/Version$</Name>
                 <Value>$Data/Values/Version$</Value>
               </Setting>
               <Setting>
@@ -704,10 +685,10 @@
         </DataSource>
       </Discovery>
       <!-- Client discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.Client" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.Client" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="TestD.Microsoft.Intune.ConfigurationManager.Class.Client"/>
+          <DiscoveryClass TypeID="Microsoft.Intune.ConfigurationManager.Class.Client"/>
         </DiscoveryTypes>
         <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
           <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
@@ -733,9 +714,8 @@
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
-          <!-- 86400 in prod. -->
-          <Frequency>60</Frequency>
-          <ClassId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.Client"]$</ClassId>
+          <Frequency>86400</Frequency>
+          <ClassId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.Client"]$</ClassId>
           <InstanceSettings>
             <Settings>
               <Setting>
@@ -743,11 +723,11 @@
                 <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.Client"]/SiteCode$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.Client"]/SiteCode$</Name>
                 <Value>$Data/Values/SiteCode$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.Client"]/Version$</Name>
+                <Name>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.Client"]/Version$</Name>
                 <Value>$Data/Values/Version$</Value>
               </Setting>
               <Setting>
@@ -757,7 +737,7 @@
             </Settings>
           </InstanceSettings>
           <Expression>
-            <!-- OR expression used as it allows us to alert if the client isn't installed. This is used by TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall. -->
+            <!-- OR expression allows us to alert with other monitoring if the client isn't installed. This is used by Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall. -->
             <Or>
               <Expression>
                 <SimpleExpression>
@@ -785,160 +765,148 @@
           </Expression>
         </DataSource>
       </Discovery>
-
-      <!-- Seed group discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServerSeedGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <!-- Server seed group discovery -->
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.ServerSeedGroup" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Group.ServerSeed" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
           <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
         </DiscoveryTypes>
         <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
           <RuleId>$MPElement$</RuleId>
-          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.ServerSeed"]$</GroupInstanceId>
+          <GroupInstanceId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Group.ServerSeed"]$</GroupInstanceId>
           <MembershipRules>
             <MembershipRule>
-              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed"]$</MonitoringClass>
+              <MonitoringClass>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ServerSeed"]$</MonitoringClass>
               <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
             </MembershipRule>
           </MembershipRules>
         </DataSource>
       </Discovery>
       <!-- Site server group discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SiteServerGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.SiteServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.SiteServerGroup" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Group.SiteServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
           <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
         </DiscoveryTypes>
         <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
           <RuleId>$MPElement$</RuleId>
-          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.SiteServer"]$</GroupInstanceId>
+          <GroupInstanceId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Group.SiteServer"]$</GroupInstanceId>
           <MembershipRules>
             <MembershipRule>
-              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer"]$</MonitoringClass>
+              <MonitoringClass>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SiteServer"]$</MonitoringClass>
               <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
             </MembershipRule>
           </MembershipRules>
         </DataSource>
       </Discovery>
-
       <!-- Distribution Point group discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.DistributionPointGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.DistributionPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.DistributionPointGroup" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Group.DistributionPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
           <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
         </DiscoveryTypes>
         <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
           <RuleId>$MPElement$</RuleId>
-          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.DistributionPoint"]$</GroupInstanceId>
+          <GroupInstanceId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Group.DistributionPoint"]$</GroupInstanceId>
           <MembershipRules>
             <MembershipRule>
-              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"]$</MonitoringClass>
+              <MonitoringClass>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.DistributionPoint"]$</MonitoringClass>
               <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
             </MembershipRule>
           </MembershipRules>
         </DataSource>
       </Discovery>
-
       <!-- Management Point group discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ManagementPointGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.ManagementPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.ManagementPointGroup" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Group.ManagementPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
           <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
         </DiscoveryTypes>
         <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
           <RuleId>$MPElement$</RuleId>
-          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.ManagementPoint"]$</GroupInstanceId>
+          <GroupInstanceId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Group.ManagementPoint"]$</GroupInstanceId>
           <MembershipRules>
             <MembershipRule>
-              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]$</MonitoringClass>
+              <MonitoringClass>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ManagementPoint"]$</MonitoringClass>
               <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
             </MembershipRule>
           </MembershipRules>
         </DataSource>
       </Discovery>
-
       <!-- Service Connection Point group discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPointGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPointGroup" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
           <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
         </DiscoveryTypes>
         <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
           <RuleId>$MPElement$</RuleId>
-          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint"]$</GroupInstanceId>
+          <GroupInstanceId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint"]$</GroupInstanceId>
           <MembershipRules>
             <MembershipRule>
-              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]$</MonitoringClass>
+              <MonitoringClass>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint"]$</MonitoringClass>
               <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
             </MembershipRule>
           </MembershipRules>
         </DataSource>
       </Discovery>
-
       <!-- Software Update Point group discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePointGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePointGroup" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
           <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
         </DiscoveryTypes>
         <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
           <RuleId>$MPElement$</RuleId>
-          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint"]$</GroupInstanceId>
+          <GroupInstanceId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint"]$</GroupInstanceId>
           <MembershipRules>
             <MembershipRule>
-              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]$</MonitoringClass>
+              <MonitoringClass>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint"]$</MonitoringClass>
               <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
             </MembershipRule>
           </MembershipRules>
         </DataSource>
       </Discovery>
-
       <!-- Reporting Services Point group discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ReportingServicesPointGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.ReportingServicesPointGroup" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
           <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
         </DiscoveryTypes>
         <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
           <RuleId>$MPElement$</RuleId>
-          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint"]$</GroupInstanceId>
+          <GroupInstanceId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint"]$</GroupInstanceId>
           <MembershipRules>
             <MembershipRule>
-              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"]$</MonitoringClass>
+              <MonitoringClass>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint"]$</MonitoringClass>
               <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
             </MembershipRule>
           </MembershipRules>
         </DataSource>
       </Discovery>
-
       <!-- Client group discovery -->
-      <Discovery ID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ClientGroup" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Group.Client" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="Microsoft.Intune.ConfigurationManager.Discovery.ClientGroup" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Group.Client" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
           <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
         </DiscoveryTypes>
         <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
           <RuleId>$MPElement$</RuleId>
-          <GroupInstanceId>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Group.Client"]$</GroupInstanceId>
+          <GroupInstanceId>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Group.Client"]$</GroupInstanceId>
           <MembershipRules>
             <MembershipRule>
-              <MonitoringClass>$MPElement[Name="TestD.Microsoft.Intune.ConfigurationManager.Class.Client"]$</MonitoringClass>
+              <MonitoringClass>$MPElement[Name="Microsoft.Intune.ConfigurationManager.Class.Client"]$</MonitoringClass>
               <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
             </MembershipRule>
           </MembershipRules>
         </DataSource>
       </Discovery>
-
-
     </Discoveries>
-
     <Monitors>
-      <!-- Not all CM services match nicely to a class. For ones that don't you need to look at your environment and enable/disable the monitor by default to keep overrides to a minimum. -->
-
       <!-- SMS_SITE_SQL_BACKUP service. Only runs on site servers. -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -958,9 +926,9 @@
         </Configuration>
       </UnitMonitor>
       <!-- SMS_SITE_COMPONENT_MANAGER service. Only runs on site servers. -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -979,10 +947,10 @@
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
-      <!-- SMS_SITE_VSS_WRITER service. Only runs on site servers. -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <!-- SMS_SITE_VSS_WRITER service. Only runs on site servers. Confirmed SQL mp doesn't monitor it. -->
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -1002,9 +970,9 @@
         </Configuration>
       </UnitMonitor>
       <!-- CONFIGURATION_MANAGER_UPDATE service. Only runs on site servers. -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -1023,11 +991,10 @@
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
-
       <!-- WSUS Service. Only runs on site servers. -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.WsusService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.WsusService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -1046,10 +1013,10 @@
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
-      <!-- SQL Server VSS Writer service. Only runs on site servers. -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <!-- SQL Server VSS Writer service. Only runs on site servers. Confirmed SQL mp doesn't monitor it. -->
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -1068,11 +1035,10 @@
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
-
       <!-- AI_UPDATE_SERVICE_POINT service. Only runs on selected site servers. Disabled by default. -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -1091,11 +1057,10 @@
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
-
       <!-- SMS_EXECUTIVE service. Only runs on selected seed servers. Disabled by default. -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -1114,11 +1079,10 @@
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
-
-      <!-- Windows Deployment Services Server service. Only runs on selected seed servers. Enabled default. -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <!-- Windows Deployment Services Server service. Only runs on selected seed servers but no site servers. Enabled default. -->
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -1137,11 +1101,10 @@
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
-
       <!-- SMS Agent Host service. Runs on all Windows Computers. Enabled default. -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.Client" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.Client" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -1160,10 +1123,10 @@
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
-      <!-- TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall -->
-      <UnitMonitor ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.Client" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="TestD.Microsoft.Intune.ConfigurationManager.MonitorType.ClientInstall" ConfirmDelivery="true">
+      <!-- Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall -->
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.Client" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="Microsoft.Intune.ConfigurationManager.MonitorType.ClientInstall" ConfirmDelivery="true">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall.AlertMessage">
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -1178,13 +1141,11 @@
         </OperationalStates>
         <Configuration/>
       </UnitMonitor>
-
-
     </Monitors>
     <Recoveries>
       <!-- All recoveries are enabled by default. -->
       <!-- SMS_SITE_SQL_BACKUP service. Only runs on site servers. -->
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1195,7 +1156,7 @@
         </WriteAction>
       </Recovery>
       <!-- SMS_SITE_COMPONENT_MANAGER service. Only runs on site servers. -->
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteComponentManagerService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteComponentManagerService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1206,7 +1167,7 @@
         </WriteAction>
       </Recovery>
       <!-- SMS_SITE_VSS_WRITER service. Only runs on site servers. -->
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteVssWriterService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteVssWriterService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1217,7 +1178,7 @@
         </WriteAction>
       </Recovery>
       <!-- CONFIGURATION_MANAGER_UPDATE service. Only runs on site servers. -->
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.ConfigurationManagerUpdateService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.ConfigurationManagerUpdateService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1228,7 +1189,7 @@
         </WriteAction>
       </Recovery>
       <!-- WSUS Service. Only runs on site servers. -->
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.WsusService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.WsusService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.WsusService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1241,7 +1202,7 @@
       <!-- SQL Server VSS Writer. Only runs on site servers. 
       to test alert: set to disabled
       -->
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SqlServerVssWriterService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SqlServerVssWriterService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1252,7 +1213,7 @@
         </WriteAction>
       </Recovery>
       <!-- AI_UPDATE_SERVICE_POINT service. Only runs on selected site servers. -->
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.AiUpdateServicePointService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.AiUpdateServicePointService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1263,7 +1224,7 @@
         </WriteAction>
       </Recovery>
       <!-- SMS_EXECUTIVE service. Only runs on selected seed servers. -->
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsExecutiveService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsExecutiveService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1273,8 +1234,8 @@
           <RequireOutput>true</RequireOutput>
         </WriteAction>
       </Recovery>
-      <!-- Windows Deployment Services Server service. Only runs on selected seed servers. -->
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.WdsServerService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <!-- Windows Deployment Services Server service. Only runs on selected seed servers but no site servers. -->
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.WdsServerService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1284,8 +1245,8 @@
           <RequireOutput>true</RequireOutput>
         </WriteAction>
       </Recovery>
-      <!-- SMS Agent Host service. Only runs on selected seed servers. Disabled by default. -->
-      <Recovery ID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.CcmExecService" Accessibility="Public" Enabled="true" Target="TestD.Microsoft.Intune.ConfigurationManager.Class.Client" Monitor="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <!-- SMS Agent Host service. Runs on all Windows Computers. Enabled default. -->
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.CcmExecService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.Client" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1296,418 +1257,386 @@
         </WriteAction>
       </Recovery>
     </Recoveries>
-
-
   </Monitoring>
   <Presentation>
     <StringResources>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage"/>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService.AlertMessage"/>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService.AlertMessage"/>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService.AlertMessage"/>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService.AlertMessage"/>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService.AlertMessage"/>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService.AlertMessage"/>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService.AlertMessage"/>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService.AlertMessage"/>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService.AlertMessage"/>
-      <StringResource ID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall.AlertMessage"/>
-
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage"/>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService.AlertMessage"/>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService.AlertMessage"/>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService.AlertMessage"/>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.WsusService.AlertMessage"/>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService.AlertMessage"/>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService.AlertMessage"/>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService.AlertMessage"/>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService.AlertMessage"/>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService.AlertMessage"/>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall.AlertMessage"/>
     </StringResources>
   </Presentation>
-
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="false">
       <DisplayStrings>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitoring">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitoring">
           <Name>Microsoft Configuration Manager</Name>
-          <Description></Description>
+          <Description>Custom monitoring for Microsoft Configuration Manager.</Description>
         </DisplayString>
         <!-- Classes -->
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.ServerSeed">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.ServerSeed">
           <Name>Configuration Manager Server Seed</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer">
           <Name>Configuration Manager Site Server</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="SiteName">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="SiteName">
           <Name>Site Name</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="SiteCode">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="SiteCode">
           <Name>Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="CentralSite">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="CentralSite">
           <Name>Central Site</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="SiteType">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="SiteType">
           <Name>Site Type</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="SiteServer">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="SiteServer">
           <Name>Site Server</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="ParentServer">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="ParentServer">
           <Name>Parent Server</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="ParentSiteCode">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="ParentSiteCode">
           <Name>Parent Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="Version">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="Version">
           <Name>Version</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="InstallFolder">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="InstallFolder">
           <Name>Install Folder</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="DatabaseMachineName">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="DatabaseMachineName">
           <Name>Database Server</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="DatabaseName">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SiteServer" SubElementID="DatabaseName">
           <Name>Database Name</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.DistributionPoint">
           <Name>Configuration Manager Distribution Point</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint" SubElementID="SiteCode">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.DistributionPoint" SubElementID="SiteCode">
           <Name>Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.DistributionPoint" SubElementID="Version">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.DistributionPoint" SubElementID="Version">
           <Name>Version</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.ManagementPoint">
           <Name>Configuration Manager Management Point</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint" SubElementID="SiteCode">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.ManagementPoint" SubElementID="SiteCode">
           <Name>Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.ManagementPoint" SubElementID="Version">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.ManagementPoint" SubElementID="Version">
           <Name>Version</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint">
           <Name>Configuration Manager Service Connection Point</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint" SubElementID="SiteCode">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint" SubElementID="SiteCode">
           <Name>Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint" SubElementID="Version">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint" SubElementID="Version">
           <Name>Version</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint">
           <Name>Configuration Manager Software Update Point</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint" SubElementID="SiteCode">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint" SubElementID="SiteCode">
           <Name>Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint" SubElementID="Version">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint" SubElementID="Version">
           <Name>Version</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint">
           <Name>Configuration Manager Reporting Services Point</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint" SubElementID="SiteCode">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint" SubElementID="SiteCode">
           <Name>Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint" SubElementID="Version">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint" SubElementID="Version">
           <Name>Version</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.Client">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.Client">
           <Name>Configuration Manager Client</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.Client" SubElementID="SiteCode">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.Client" SubElementID="SiteCode">
           <Name>Site Code</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Class.Client" SubElementID="Version">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Class.Client" SubElementID="Version">
           <Name>Version</Name>
         </DisplayString>
         <!-- Discoveries -->
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServerSeed">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.ServerSeed">
           <Name>Configuration Manager Server Seed Discovery</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SiteServer">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.SiteServer">
           <Name>Configuration Manager Site Server Discovery</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.DistributionPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.DistributionPoint">
           <Name>Configuration Manager Distribution Point Discovery</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ManagementPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.ManagementPoint">
           <Name>Configuration Manager Management Point Discovery</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPoint">
           <Name>Configuration Manager Service Connection Point Discovery</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePoint">
           <Name>Configuration Manager Software Update Point Discovery</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ReportingServicesPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.ReportingServicesPoint">
           <Name>Configuration Manager Reporting Services Point Discovery</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.Client">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.Client">
           <Name>Configuration Manager Client Discovery</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServerSeedGroup">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.ServerSeedGroup">
           <Name>Configuration Manager Server Seed Group Discovery</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SiteServerGroup">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.SiteServerGroup">
           <Name>Configuration Manager Site Server Group Discovery</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.DistributionPointGroup">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.DistributionPointGroup">
           <Name>Configuration Manager Distribution Point Group Discovery</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ManagementPointGroup">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.ManagementPointGroup">
           <Name>Configuration Manager Management Point Group Discovery</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPointGroup">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.ServiceConnectionPointGroup">
           <Name>Configuration Manager Service Connection Point Group Discovery</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePointGroup">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.SoftwareUpdatePointGroup">
           <Name>Configuration Manager Software Update Point Group Discovery</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ReportingServicesPointGroup">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.ReportingServicesPointGroup">
           <Name>Configuration Manager Reporting Services Point Group Discovery</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Discovery.ClientGroup">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Discovery.ClientGroup">
           <Name>Configuration Manager Client Group Discovery</Name>
         </DisplayString>
-
         <!-- Monitors -->
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService">
           <Name>SMS_SITE_SQL_BACKUP Service Monitor</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage">
           <Name>SMS_SITE_SQL_BACKUP Service Not Running</Name>
           <Description>The 'SMS_SITE_SQL_BACKUP' service on {0} is not running.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" SubElementID="Healthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" SubElementID="Healthy">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" SubElementID="Unhealthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService">
           <Name>SMS_SITE_COMPONENT_MANAGER Service Monitor</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService.AlertMessage">
           <Name>SMS_SITE_COMPONENT_MANAGER Service Not Running</Name>
           <Description>The 'SMS_SITE_COMPONENT_MANAGER' service on {0} is not running.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" SubElementID="Healthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" SubElementID="Healthy">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" SubElementID="Unhealthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService">
           <Name>SMS_SITE_VSS_WRITER Service Monitor</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService.AlertMessage">
           <Name>SMS_SITE_VSS_WRITER Service Not Running</Name>
           <Description>The 'SMS_SITE_VSS_WRITER' service on {0} is not running.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" SubElementID="Healthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" SubElementID="Healthy">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" SubElementID="Unhealthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService">
           <Name>CONFIGURATION_MANAGER_UPDATE Service Monitor</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService.AlertMessage">
           <Name>CONFIGURATION_MANAGER_UPDATE Service Not Running</Name>
           <Description>The 'CONFIGURATION_MANAGER_UPDATE' service on {0} is not running.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" SubElementID="Healthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" SubElementID="Healthy">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" SubElementID="Unhealthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.WsusService">
           <Name>WSUS Service Monitor</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.WsusService.AlertMessage">
           <Name>WSUS Service Not Running</Name>
           <Description>The 'WSUS Service' service on {0} is not running.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService" SubElementID="Healthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.WsusService" SubElementID="Healthy">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WsusService" SubElementID="Unhealthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.WsusService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService">
           <Name>SQL Server VSS Writer Service Monitor</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService.AlertMessage">
           <Name>SQL Server VSS Writer Service Not Running</Name>
           <Description>The 'SQL Server VSS Writer' service on {0} is not running.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" SubElementID="Healthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" SubElementID="Healthy">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" SubElementID="Unhealthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService">
           <Name>AI_UPDATE_SERVICE_POINT Service Monitor</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService.AlertMessage">
           <Name>AI_UPDATE_SERVICE_POINT Service Not Running</Name>
           <Description>The 'AI_UPDATE_SERVICE_POINT' service on {0} is not running.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" SubElementID="Healthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" SubElementID="Healthy">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" SubElementID="Unhealthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService">
           <Name>SMS_EXECUTIVE Service Monitor</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService.AlertMessage">
           <Name>SMS_EXECUTIVE Service Not Running</Name>
           <Description>The 'SMS_EXECUTIVE' service on {0} is not running.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" SubElementID="Healthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" SubElementID="Healthy">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" SubElementID="Unhealthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService">
           <Name>Windows Deployment Services Server Service Monitor</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService.AlertMessage">
           <Name>Windows Deployment Services Server Service Not Running</Name>
           <Description>The 'Windows Deployment Services Server' service on {0} is not running.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" SubElementID="Healthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" SubElementID="Healthy">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" SubElementID="Unhealthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService">
           <Name>SMS Agent Host Service Monitor</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService.AlertMessage">
           <Name>SMS Agent Host Service Not Running</Name>
           <Description>The 'SMS Agent Host' service on {0} is not running.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" SubElementID="Healthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" SubElementID="Healthy">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" SubElementID="Unhealthy">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" SubElementID="Unhealthy">
           <Name>Not running</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall">
           <Name>Configuration Manager Client Install</Name>
           <Description/>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" SubElementID="Success">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" SubElementID="Success">
           <Name>RegKeyExists</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" SubElementID="Error">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" SubElementID="Error">
           <Name>RegKeyMissing</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall.AlertMessage">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall.AlertMessage">
           <Name>Configuration Manager Client Not Installed</Name>
           <Description>The Configuration Manager client is not installed on {0}. See the knowledge section below for more information.</Description>
         </DisplayString>
-
         <!-- Recoveries -->
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteComponentManagerService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteComponentManagerService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteVssWriterService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteVssWriterService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.ConfigurationManagerUpdateService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.ConfigurationManagerUpdateService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.WsusService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.WsusService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SqlServerVssWriterService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.SqlServerVssWriterService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.AiUpdateServicePointService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.AiUpdateServicePointService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.SmsExecutiveService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.SmsExecutiveService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.WdsServerService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.WdsServerService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Recovery.CcmExecService">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.CcmExecService">
           <Name></Name>
           <Description>Start Windows service</Description>
         </DisplayString>
-
         <!-- Groups -->
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.ServerSeed">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Group.ServerSeed">
           <Name>Configuration Manager Server Seed</Name>
         </DisplayString>
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.SiteServer">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Group.SiteServer">
           <Name>Configuration Manager Site Servers</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.DistributionPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Group.DistributionPoint">
           <Name>Configuration Manager Distribution Points</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.ManagementPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Group.ManagementPoint">
           <Name>Configuration Manager Management Points</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Group.ServiceConnectionPoint">
           <Name>Configuration Manager Service Connection Points</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Group.SoftwareUpdatePoint">
           <Name>Configuration Manager Software Update Points</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Group.ReportingServicesPoint">
           <Name>Configuration Manager Reporting Services Points</Name>
         </DisplayString>
-
-        <DisplayString ElementID="TestD.Microsoft.Intune.ConfigurationManager.Group.Client">
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Group.Client">
           <Name>Configuration Manager Clients</Name>
         </DisplayString>
-
       </DisplayStrings>
       <KnowledgeArticles>
-        <KnowledgeArticle ElementID="TestD.Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" Visible="true">
+        <KnowledgeArticle ElementID="Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall" Visible="true">
           <MamlContent>
             <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
               <maml:title>Summary</maml:title>
