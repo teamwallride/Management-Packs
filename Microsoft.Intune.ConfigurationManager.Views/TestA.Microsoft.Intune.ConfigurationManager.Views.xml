@@ -6,14 +6,19 @@
     </Identity>
     <Name>TestA.Microsoft.Intune.ConfigurationManager.Views</Name>
     <References>
-      <Reference Alias="SystemCenter">
-        <ID>Microsoft.SystemCenter.Library</ID>
-        <Version>7.0.8437.17</Version>
-        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      <Reference Alias="Intune">
+        <ID>Microsoft.Intune.ConfigurationManager.Monitoring</ID>
+        <Version>2024.1.31.1</Version>
+        <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
       </Reference>
       <Reference Alias="System">
         <ID>System.Library</ID>
         <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8437.17</Version>
         <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
       </Reference>
     </References>
@@ -188,12 +193,344 @@
         </Presentation>
         <Target />
       </View>
+      <View ID="View_9527946357cc44a7b2a4de52ffcad5dc" Accessibility="Public" Enabled="true" Target="Intune!Microsoft.Intune.ConfigurationManager.Class.ServerSeed" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.ServerSeed-*-3881d980-0bf5-b6bd-5f82-53c1cd3ab2ce-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_d9ab75126fbb4d2ea5735cae3dabca67" Accessibility="Public" Enabled="true" Target="Intune!Microsoft.Intune.ConfigurationManager.Class.Client" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.Client-*-f23c24c6-7c9b-a3c1-a247-0d5d7dfa0d74-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Site Code</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.Client/SiteCode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Version</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.Client/Version</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_da44b8394e2e4dbbab08551622734a20" Accessibility="Public" Enabled="true" Target="Intune!Microsoft.Intune.ConfigurationManager.Class.DistributionPoint" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.DistributionPoint-*-6a7f3c58-e893-7e10-3e7a-9054586438c0-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Site Code</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.DistributionPoint/SiteCode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Version</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.DistributionPoint/Version</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_13ca34a5a56b4b1fb90b31b4e950e499" Accessibility="Public" Enabled="true" Target="Intune!Microsoft.Intune.ConfigurationManager.Class.SiteServer" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer-*-d7dc1efd-d371-7bab-a147-f6de0828896b-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Site Name</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/SiteName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Site Code</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/SiteCode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Central Site</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/CentralSite</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Site Type</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/SiteType</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Site Server</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/SiteServer</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Parent Server</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/ParentServer</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Parent Site Code</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/ParentSiteCode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Version</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/Version</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Install Folder</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/InstallFolder</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Database Server</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/DatabaseMachineName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Database Name</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SiteServer/DatabaseName</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_6f3eb17deb334215835d80237bc20b4a" Accessibility="Public" Enabled="true" Target="Intune!Microsoft.Intune.ConfigurationManager.Class.ManagementPoint" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.ManagementPoint-*-a8107ed4-0e57-fd83-4254-d4044b083b03-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Site Code</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.ManagementPoint/SiteCode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Version</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.ManagementPoint/Version</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_e8c9e371052a445285f0219e1686fb07" Accessibility="Public" Enabled="true" Target="Intune!Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint-*-940203ba-f94c-1990-d56f-d4592cfd19a8-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Site Code</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint/SiteCode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Version</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.ServiceConnectionPoint/Version</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_29ad45c960494216bc6fa58fde5ac685" Accessibility="Public" Enabled="true" Target="Intune!Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint-*-0baf9492-7cbd-f1d8-ed09-8bbcbfba9f70-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Site Code</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint/SiteCode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Version</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.SoftwareUpdatePoint/Version</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_dc1cffbbf90c47e2bbb4d4157422fb1f" Accessibility="Public" Enabled="true" Target="Intune!Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint-*-edfce0c7-7eb3-e864-5c48-e40f1967051a-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Site Code</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint/SiteCode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Version</Name>
+            <Id>Microsoft.Intune.ConfigurationManager.Class.ReportingServicesPoint/Version</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
     </Views>
     <Folders>
       <Folder ID="Folder_0ea946968dc949b9818670215a746a5d" Accessibility="Public" ParentFolder="SystemCenter!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
     </Folders>
     <FolderItems>
       <FolderItem ElementID="View_7b5c396e66da4af18714e4d5e2db949f" ID="id75e3c6eaaf44558b6f80275675a30a4" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
+      <FolderItem ElementID="View_9527946357cc44a7b2a4de52ffcad5dc" ID="i88412a0277924f44b9538ed777c12056" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
+      <FolderItem ElementID="View_d9ab75126fbb4d2ea5735cae3dabca67" ID="i793891b7e3f74c63947d956d795f2bb6" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
+      <FolderItem ElementID="View_da44b8394e2e4dbbab08551622734a20" ID="i2a041e655f1e4ce8aab89e2b5ce0797e" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
+      <FolderItem ElementID="View_13ca34a5a56b4b1fb90b31b4e950e499" ID="i90bf951980bd40bfa87a13cf4e41653d" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
+      <FolderItem ElementID="View_6f3eb17deb334215835d80237bc20b4a" ID="ie1e2b2d3456749b5a9ab1466b59f62da" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
+      <FolderItem ElementID="View_e8c9e371052a445285f0219e1686fb07" ID="i217b896338264f34b0fc66549dddaaaa" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
+      <FolderItem ElementID="View_29ad45c960494216bc6fa58fde5ac685" ID="i3cd6732f6ccf486dbf394ad7e1cd46e9" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
+      <FolderItem ElementID="View_dc1cffbbf90c47e2bbb4d4157422fb1f" ID="i50a7fb40f80d4ab3b8388505df861aa9" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
     </FolderItems>
   </Presentation>
   <LanguagePacks>
@@ -208,6 +545,30 @@
         </DisplayString>
         <DisplayString ElementID="View_7b5c396e66da4af18714e4d5e2db949f">
           <Name>Active Alerts</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_9527946357cc44a7b2a4de52ffcad5dc">
+          <Name>All Servers</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_d9ab75126fbb4d2ea5735cae3dabca67">
+          <Name>Clients</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_da44b8394e2e4dbbab08551622734a20">
+          <Name>Distribution Points</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_13ca34a5a56b4b1fb90b31b4e950e499">
+          <Name>Site Servers</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_6f3eb17deb334215835d80237bc20b4a">
+          <Name>Management Points</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_e8c9e371052a445285f0219e1686fb07">
+          <Name>Service Connection Points</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_29ad45c960494216bc6fa58fde5ac685">
+          <Name>Software Update Points</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_dc1cffbbf90c47e2bbb4d4157422fb1f">
+          <Name>Reporting Services Points</Name>
           <Description />
         </DisplayString>
       </DisplayStrings>
