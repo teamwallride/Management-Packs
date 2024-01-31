@@ -517,6 +517,20 @@
         </Presentation>
         <Target />
       </View>
+      <View ID="View_191a3098ca7c4969bbf8d4c4dd0c690f" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.DashboardViewType" Visible="true">
+        <Category>Operations</Category>
+        <PanelConfiguration Columns="3" Rows="3">
+          <Cell Column="1" Row="3" ViewID="View_e8c9e371052a445285f0219e1686fb07" />
+          <Cell Row="1" Column="1" ViewID="View_7b5c396e66da4af18714e4d5e2db949f" />
+          <Cell Row="1" Column="2" ViewID="View_9527946357cc44a7b2a4de52ffcad5dc" />
+          <Cell Row="1" Column="3" ViewID="View_13ca34a5a56b4b1fb90b31b4e950e499" />
+          <Cell Row="2" Column="1" ViewID="View_da44b8394e2e4dbbab08551622734a20" />
+          <Cell Row="2" Column="2" ViewID="View_6f3eb17deb334215835d80237bc20b4a" />
+          <Cell Row="2" Column="3" ViewID="View_29ad45c960494216bc6fa58fde5ac685" />
+          <Cell Row="3" Column="2" ViewID="View_dc1cffbbf90c47e2bbb4d4157422fb1f" />
+          <Cell Row="3" Column="3" ViewID="View_d9ab75126fbb4d2ea5735cae3dabca67" />
+        </PanelConfiguration>
+      </View>
     </Views>
     <Folders>
       <Folder ID="Folder_0ea946968dc949b9818670215a746a5d" Accessibility="Public" ParentFolder="SystemCenter!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
@@ -531,6 +545,7 @@
       <FolderItem ElementID="View_e8c9e371052a445285f0219e1686fb07" ID="i217b896338264f34b0fc66549dddaaaa" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
       <FolderItem ElementID="View_29ad45c960494216bc6fa58fde5ac685" ID="i3cd6732f6ccf486dbf394ad7e1cd46e9" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
       <FolderItem ElementID="View_dc1cffbbf90c47e2bbb4d4157422fb1f" ID="i50a7fb40f80d4ab3b8388505df861aa9" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
+      <FolderItem ElementID="View_191a3098ca7c4969bbf8d4c4dd0c690f" ID="if9563408a197442d8b60b8b30ca25d56" Folder="Folder_0ea946968dc949b9818670215a746a5d" />
     </FolderItems>
   </Presentation>
   <LanguagePacks>
@@ -569,7 +584,9 @@
         </DisplayString>
         <DisplayString ElementID="View_dc1cffbbf90c47e2bbb4d4157422fb1f">
           <Name>Reporting Services Points</Name>
-          <Description />
+        </DisplayString>
+        <DisplayString ElementID="View_191a3098ca7c4969bbf8d4c4dd0c690f">
+          <Name>Dashboard</Name>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
