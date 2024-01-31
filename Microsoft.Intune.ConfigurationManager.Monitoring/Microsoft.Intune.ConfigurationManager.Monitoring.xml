@@ -4,7 +4,7 @@
   <Manifest>
     <Identity>
       <ID>Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.1.31.0</Version>
+      <Version>2024.1.31.1</Version>
     </Identity>
     <Name>Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
@@ -1277,7 +1277,7 @@
     <LanguagePack ID="ENU" IsDefault="false">
       <DisplayStrings>
         <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitoring">
-          <Name>Microsoft Configuration Manager</Name>
+          <Name>Microsoft Configuration Manager Monitoring</Name>
           <Description>Custom monitoring for Microsoft Configuration Manager.</Description>
         </DisplayString>
         <!-- Classes -->
