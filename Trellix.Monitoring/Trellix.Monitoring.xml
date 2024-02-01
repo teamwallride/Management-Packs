@@ -114,7 +114,7 @@ Function Get-LastUpdateCheck {
         $RegKey = "HKLM:\SOFTWARE\WOW6432Node\Network Associates\TVD\Shared Components\Framework"
         $RegValue = "LastUpdateCheck"
         $ErrorThreshold = $StartTime.AddDays(-1)
-        $GetRegValue = ((Get-ItemProperty -ErrorAction Ignore -Path $RegKey).$RegValue)
+        $GetRegValue = ((Get-ItemProperty -ErrorAction SilentlyContinue -Path $RegKey).$RegValue)
         If ($GetRegValue) {
             $ConvertRegTime = [DateTime]::ParseExact($GetRegValue, 'yyyyMMddHHmmss', $null)
             $FormatConvertRegTime = $ConvertRegTime.ToString("dd/MM/yyyy HH:mm:ss")
@@ -228,7 +228,7 @@ Function Get-LastASCI {
         $RegKey = "HKLM:\SOFTWARE\WOW6432Node\Network Associates\TVD\Shared Components\Framework"
         $RegValue = "LastASCI"
         $ErrorThreshold = $StartTime.AddDays(-1)
-        $GetRegValue = ((Get-ItemProperty -ErrorAction Ignore -Path $RegKey).$RegValue)
+        $GetRegValue = ((Get-ItemProperty -ErrorAction SilentlyContinue -Path $RegKey).$RegValue)
         If ($GetRegValue) {
             $ConvertRegTime = [DateTime]::ParseExact($GetRegValue, 'yyyyMMddHHmmss', $null)
             $FormatConvertRegTime = $ConvertRegTime.ToString("dd/MM/yyyy HH:mm:ss")

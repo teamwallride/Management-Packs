@@ -165,7 +165,7 @@
                                             $HealthServiceAccount = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\HealthService").ObjectName
                                             # Get certificate.
                                             $CertRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Machine Settings"
-                                            If ((Get-ItemProperty -Path $CertRegKey -ErrorAction Ignore).ChannelCertificateHash) {
+                                            If ((Get-ItemProperty -Path $CertRegKey -ErrorAction SilentlyContinue).ChannelCertificateHash) {
                                                 $Hash = (Get-ItemProperty -Path $CertRegKey).ChannelCertificateHash
                                                 $Thumbprint = Get-ChildItem -Path cert:\LocalMachine\My | Where-Object { $_.Thumbprint -eq $Hash }
                                                 $CertificateExpiry = $Thumbprint.NotAfter.ToString("yyyy/MM/dd HH:mm:ss")
@@ -175,15 +175,15 @@
                                             }
                                             # Get AD Integration. This will be on every server so just see if it's enabled or disabled.
                                             $ADIntegRegKey = "HKLM:\SYSTEM\CurrentControlSet\Services\HealthService\Parameters\ConnectorManager"
-                                            $ADIntegration = (Get-ItemProperty -Path $ADIntegRegKey -ErrorAction Ignore).EnableADIntegration
+                                            $ADIntegration = (Get-ItemProperty -Path $ADIntegRegKey -ErrorAction SilentlyContinue).EnableADIntegration
                                             Switch ($ADIntegration) {
                                                 "0" { $ADIntegration = "Disabled"; BREAK }
                                                 "1" { $ADIntegration = "Enabled"; BREAK }
                                             }
                                             # Get APM status. This may not be on every server so just get service state otherwise set to Not installed.
                                             $APMServiceRegKey = "HKLM:\SYSTEM\CurrentControlSet\Services\System Center Management APM"
-                                            If (Get-Item -Path $APMServiceRegKey -ErrorAction Ignore) {
-                                                $APMServiceStartMode = (Get-ItemProperty -Path $APMServiceRegKey -ErrorAction Ignore).Start
+                                            If (Get-Item -Path $APMServiceRegKey -ErrorAction SilentlyContinue) {
+                                                $APMServiceStartMode = (Get-ItemProperty -Path $APMServiceRegKey -ErrorAction SilentlyContinue).Start
                                                 Switch ($APMServiceStartMode) {
                                                     "2" { $APMServiceStartMode = "Automatic"; BREAK }
                                                     "3" { $APMServiceStartMode = "Manual"; BREAK }
@@ -195,7 +195,7 @@
                                             }
                                             # Get ACS forwarder. This will be on every server so just get the service status.
                                             $ACSForwarderServiceRegKey = "HKLM:SYSTEM\CurrentControlSet\Services\AdtAgent"
-                                            $ACSForwarderServiceStartMode = (Get-ItemProperty -Path $ACSForwarderServiceRegKey -ErrorAction Ignore).Start
+                                            $ACSForwarderServiceStartMode = (Get-ItemProperty -Path $ACSForwarderServiceRegKey -ErrorAction SilentlyContinue).Start
                                             Switch ($ACSForwarderServiceStartMode) {
                                                 "2" { $ACSForwarderServiceStartMode = "Automatic"; BREAK }
                                                 "3" { $ACSForwarderServiceStartMode = "Manual"; BREAK }
@@ -203,7 +203,7 @@
                                             }
                                             # Get Log Analytics workspaces. Use the registry as it's more reliable than AgentConfigManager.MgmtSvcCfg.
                                             $LAWorkspaceRegKey = "HKLM:\SYSTEM\CurrentControlSet\Services\HealthService\Parameters\Service Connector Services"
-                                            If ((Get-Item -Path $LAWorkspaceRegKey -ErrorAction Ignore).SubKeyCount -gt 0) {
+                                            If ((Get-Item -Path $LAWorkspaceRegKey -ErrorAction SilentlyContinue).SubKeyCount -gt 0) {
                                                 (Get-Item $LAWorkspaceRegKey).GetSubKeyNames() | ForEach-Object {
                                                     $LAWorkspaceId = $_.Substring(16) # Remove "Log Analytics - " from the key name so we just have the workspace id.
                                                     $LogAnalyticsWorkspaces += "$LAWorkspaceId,"
@@ -216,7 +216,7 @@
                                             <#
                                             AGENTS. This section only applies to agents.
                                             #>
-                                            If ((Get-ItemProperty -Path $SetupRegKey -ErrorAction Ignore).AgentVersion) {
+                                            If ((Get-ItemProperty -Path $SetupRegKey -ErrorAction SilentlyContinue).AgentVersion) {
                                                 $AgentInstallDirectory = (Get-ItemProperty -Path $SetupRegKey).InstallDirectory.TrimEnd("\")
                                                 $AgentVersion = (Get-Item "$AgentInstallDirectory\Tools\TMF\OMAgentTraceTMFVer.Dll").VersionInfo.FileVersion
                                                 Switch ($AgentVersion) {
@@ -262,7 +262,7 @@
                                             <#
                                             MANAGEMENT SERVERS. This section only applies to management servers.
                                             #>
-                                            If ((Get-ItemProperty -Path $SetupRegKey -ErrorAction Ignore).ServerVersion) {
+                                            If ((Get-ItemProperty -Path $SetupRegKey -ErrorAction SilentlyContinue).ServerVersion) {
                                                 $ManagementServerInstallDirectory = (Get-ItemProperty -Path $SetupRegKey).InstallDirectory.TrimEnd("\")
                                                 $ManagementServerVersion = (Get-Item "$ManagementServerInstallDirectory\Tools\TMF\OMTraceTMFVer.Dll").VersionInfo.FileVersion
                                                 Switch ($ManagementServerVersion) {
@@ -349,7 +349,7 @@
                                             ACS COLLECTORS. This section only applies to ACS collectors.
                                             #>
                                             $ACSCollectorServiceRegKey = "HKLM:SYSTEM\CurrentControlSet\Services\AdtServer"
-                                            If ((Get-ItemProperty -Path $ACSCollectorServiceRegKey -ErrorAction Ignore).DisplayName) {
+                                            If ((Get-ItemProperty -Path $ACSCollectorServiceRegKey -ErrorAction SilentlyContinue).DisplayName) {
                                                 $ACSCollectorInstallDirectory = (Get-ItemProperty -Path "$ACSCollectorServiceRegKey\Parameters\").ScriptFilePath.TrimEnd("\")
                                                 $ACSCollectorVersion = (Get-Item "$WinDir\System32\Security\AdtServer\OmacAdmn.dll").VersionInfo.FileVersion
                                                 Switch ($ACSCollectorVersion) {
@@ -386,7 +386,7 @@
                                             <#
                                             GATEWAY SERVERS. This section only applies to gateway servers.
                                             #>
-                                            If ((Get-ItemProperty -Path $SetupRegKey -ErrorAction Ignore).MOMGatewayVersion) {
+                                            If ((Get-ItemProperty -Path $SetupRegKey -ErrorAction SilentlyContinue).MOMGatewayVersion) {
                                                 $GatewayServerInstallDirectory = (Get-ItemProperty -Path $SetupRegKey).InstallDirectory.TrimEnd("\")
                                                 # Get Gateway UR info. Dropped logic for 2012/R2. Need to test 1801-2022.
                                                 # If 2016 UR3 has been installed MomWsManModules.dll version is 8.0.10970.0 so check it first. Use HealthService.dll for remaining URs.
@@ -441,7 +441,7 @@
                                             WEB CONSOLE SERVER. This section only applies to web console servers.
                                             #>
                                             $WebConsoleRegKey = "HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\WebConsole"
-                                            If ((Get-ItemProperty -Path $WebConsoleRegKey -ErrorAction Ignore).WEB_CONSOLE_URL) {
+                                            If ((Get-ItemProperty -Path $WebConsoleRegKey -ErrorAction SilentlyContinue).WEB_CONSOLE_URL) {
                                                 $WebConsoleInstallDirectory = (Get-ItemProperty -Path $WebConsoleRegKey).InstallDirectory.TrimEnd("\")
                                                 # Is SCOM 2016 CVE-2020-1331 hotfix installed?
                                                 $WebConsoleHotFixFile = (Get-Item "$WebConsoleInstallDirectory\MonitoringView\bin\Microsoft.EnterpriseManagement.OperationsManager.MonitoringViews.dll").VersionInfo.FileVersion
@@ -541,7 +541,7 @@
                                             REPORT SERVER. This section only applies to report servers.
                                             #>
                                             $ReportServerRegKey = "HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\Reporting"
-                                            If ((Get-ItemProperty -Path $ReportServerRegKey -ErrorAction Ignore).InstallDirectory) {
+                                            If ((Get-ItemProperty -Path $ReportServerRegKey -ErrorAction SilentlyContinue).InstallDirectory) {
                                                 $ReportServerInstallDirectory = (Get-ItemProperty -Path $ReportServerRegKey).InstallDirectory.TrimEnd("\")
                                                 # 2016, 1801.
                                                 If (Test-Path "$ReportServerInstallDirectory\Microsoft.Mom.Common.dll") {
@@ -601,7 +601,7 @@
                                             CONSOLES. This section only applies to operations manager consoles.
                                             #>
                                             $ConsoleRegKey = "HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\Console"
-                                            If ((Get-ItemProperty -Path $ConsoleRegKey -ErrorAction Ignore).InstallDirectory) {
+                                            If ((Get-ItemProperty -Path $ConsoleRegKey -ErrorAction SilentlyContinue).InstallDirectory) {
                                                 $ConsoleInstallDirectory = (Get-ItemProperty -Path $ConsoleRegKey).InstallDirectory.TrimEnd("\")
                                                 $ConsoleVersion = (Get-Item "$ConsoleInstallDirectory\Tools\TMF\OMTraceTMFVer.Dll").VersionInfo.FileVersion
                                                 Switch ($ConsoleVersion) {
