@@ -2,7 +2,7 @@
 	<Manifest>
 		<Identity>
 			<ID>Microsoft.SCOM.CMDB.Monitoring</ID>
-			<Version>2023.10.23.3</Version>
+			<Version>2024.2.1.0</Version>
 		</Identity>
 		<Name>Microsoft.SCOM.CMDB.Monitoring</Name>
 		<References>
@@ -170,7 +170,7 @@
 					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsServerCatA"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>60</IntervalSeconds><!--14400-->
+					<IntervalSeconds>14400</IntervalSeconds>
 					<SyncTime/>
 					<ScriptName>WindowsServerCatA.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -270,7 +270,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsServerCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsServerCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -295,7 +295,7 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsServerCatB"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>70</IntervalSeconds><!--14700-->
+					<IntervalSeconds>14700</IntervalSeconds>
 					<SyncTime/>
 					<ScriptName>WindowsServerCatB.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -395,7 +395,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsServerCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsServerCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -420,7 +420,7 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsServerCatC"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>80</IntervalSeconds><!--15000-->
+					<IntervalSeconds>15000</IntervalSeconds>
 					<SyncTime/>
 					<ScriptName>WindowsServerCatC.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -520,7 +520,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsServerCatC.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsServerCatC"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -726,7 +726,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "ADDSCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.ADDSCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -851,7 +851,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "ADDSCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.ADDSCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -976,7 +976,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "DNSCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.DNSCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1101,7 +1101,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "DNSCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.DNSCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1226,7 +1226,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "DHCPCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.DHCPCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1351,7 +1351,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "DHCPCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.DHCPCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1476,7 +1476,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "IISCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.IISCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1601,7 +1601,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "IISCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.IISCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1726,7 +1726,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "IISCatC.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.IISCatC"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1851,7 +1851,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "SQLCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.SQLCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -1976,7 +1976,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "SQLCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.SQLCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -2001,7 +2001,7 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatA"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>60</IntervalSeconds><!--18000-->
+					<IntervalSeconds>18000</IntervalSeconds>
 					<SyncTime/>
 					<ScriptName>WindowsClusterCatA.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -2101,7 +2101,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsClusterCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsClusterCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -2126,7 +2126,7 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatB"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>60</IntervalSeconds><!--18300-->
+					<IntervalSeconds>18300</IntervalSeconds>
 					<SyncTime/>
 					<ScriptName>WindowsClusterCatB.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -2226,7 +2226,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsClusterCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsClusterCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -2251,7 +2251,7 @@ Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
 					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsClusterCatC"/>
 				</DiscoveryTypes>
 				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
-					<IntervalSeconds>60</IntervalSeconds><!--18600-->
+					<IntervalSeconds>18600</IntervalSeconds>
 					<SyncTime/>
 					<ScriptName>WindowsClusterCatC.ps1</ScriptName>
 					<ScriptBody><![CDATA[
@@ -2351,7 +2351,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "WindowsClusterCatC.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.WindowsClusterCatC"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -2476,7 +2476,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "ADFSCatA.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.ADFSCatA"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
@@ -2601,7 +2601,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "ADFSCatB.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.CMDB.Monitoring"
-$MpVersion = "2023.10.23.3"
+$MpVersion = "2024.2.1.0"
 $MpWorkflow = "Microsoft.SCOM.Discovery.ADFSCatB"
 # Run script.
 Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
