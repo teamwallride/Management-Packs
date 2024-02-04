@@ -1,15 +1,8 @@
-<!--
-==========
-CHANGE LOG
-==========
-2023.3.22.0
--Initial release.
--->
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
       <ID>Certificate.Monitoring</ID>
-      <Version>2023.3.22.0</Version>
+      <Version>2023.3.23.0</Version>
     </Identity>
     <Name>Certificate.Monitoring</Name>
     <References>
@@ -68,92 +61,87 @@ CHANGE LOG
                 <ScriptName>CertificateDiscovery.ps1</ScriptName>
                 <ScriptBody>
 <![CDATA[
-  # Need this line to pass params in properly.
-  Param ($SourceId, $ManagedEntityId, $ComputerName)
-  Function Write-Log {
-      Param($ScriptState)
-      Switch ($ScriptState) {
-          "Information" {
-              $EventId = 17623
-              $EventLevel = 0 # 0=Info, 1=Error, 2=Warning
-          }
-          "Warning" {
-              $EventId = 17624
-              $EventLevel = 2 # 0=Info, 1=Error, 2=Warning
-          }
-          "Error" {
-              $EventId = 17625
-              $EventLevel = 1 # 0=Info, 1=Error, 2=Warning
-          }
-      }
-      $End = Get-Date
-      $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
-      $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`n$Message")
+# Need this line to pass params in properly.
+Param ($SourceId, $ManagedEntityId, $ComputerName)
+Function Write-Log {
+  Param($ScriptState)
+  if ($ScriptState -eq "Information") {
+    $EventId = 17609
+    $EventLevel = 0 # 0=Info
   }
-  Function Set-TerminatingError {
-      $ScriptState = "Error"
-      $Message += "A terminating error occurred. Error output: (" + $_.Exception.Message + ").`n"
-      Write-Log -ScriptState $ScriptState
+  else {
+    $EventId = 17610
+    $EventLevel = 2 # 2=Warning
   }
-  Function Get-CertificateDiscovery {
-      try {
-          <# FOR TESTING
-          $SourceId='{00000000-0000-0000-0000-000000000000}'
-          $ManagedEntityId='{00000000-0000-0000-0000-000000000000}'
-          $ComputerName='agent.scomtest.local'
-          #>
-          $PSVersion = $PSVersionTable.PSVersion
-          [string]$PSMajor = $PSVersion.Major
-          [string]$PSMinor = $PSVersion.Minor
-          $PSVersion = $PSMajor + "." + $PSMinor
-          $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
-          $CertStore = "Cert:\LocalMachine\My\"
-		  # There can be duplicates certificates (even at thumbprint level) and we only want unique certificates. 
-          $Certificates = Get-ChildItem -Path $CertStore | Sort-Object -Unique
-          $CertCount = $Certificates.Count
-          foreach ($Certificate in $Certificates) {
-              [DateTime]$NotAfter = $Certificate.NotAfter
-              [int]$CountCerts = $CountCerts + 1
-              $Thumbprint = $Certificate.Thumbprint
-              [DateTime]$NotBefore = $Certificate.NotBefore
-              # $True maps to IssuedBy column, $False maps to IssuedTo column in the Certificates mmc console.
-              $IssuedTo = $Certificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
-              $FormatNotBefore = $NotBefore.ToString("yyyy/MM/dd HH:mm:ss")
-              $FormatNotAfter = $NotAfter.ToString("yyyy/MM/dd HH:mm:ss")
-              $Instance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Certificate.Class.WindowsCertificate']$")
-              $Instance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $ComputerName)
-              $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/IssuedTo$", $IssuedTo)
-              $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/NotBefore$", $FormatNotBefore)
-              $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/NotAfter$", $FormatNotAfter)
-              $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/Thumbprint$", $Thumbprint)
-              $DiscoveryData.AddInstance($Instance)
-          }
-          <# FOR TESTING
-          $MomApi.Return($DiscoveryData)
-          #>
-          # Submit discovery data back to Operations Manager and complete the script.
-          $DiscoveryData
-          <#
-          Can add functionality here to set warning state but there is no need in this script.
-          #>
-          $Message += "Certificates: $CertCount"
-          $ScriptState = "Information"
-          Write-Log -ScriptState $ScriptState
-      }
-      Catch {
-          Set-TerminatingError
-      }
+  $End = Get-Date
+  $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+  $Minutes = $TimeCount.Minutes
+  $Seconds = $TimeCount.Seconds
+  $Milliseconds = $TimeCount.Milliseconds
+  $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+  Break
+}
+Function Get-CertificateDiscovery {
+  # This logs terminating and non-terminating events.
+  $ErrorActionPreference = "Stop"
+  Try {
+    <# FOR TESTING
+$SourceId='{00000000-0000-0000-0000-000000000000}'
+$ManagedEntityId='{00000000-0000-0000-0000-000000000000}'
+$ComputerName='agent.scomtest.local'
+#>
+    # Set this here so info event is logged if there's no issues.
+    $ScriptState = "Information"
+    $PSVersion = $PSVersionTable.PSVersion
+    [string]$PSMajor = $PSVersion.Major
+    [string]$PSMinor = $PSVersion.Minor
+    $PSVersion = $PSMajor + "." + $PSMinor
+    $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+    $CertStore = "Cert:\LocalMachine\My\"
+    # There can be duplicates certificates (even at thumbprint level) and we only want unique certificates. 
+    $Certificates = Get-ChildItem -Path $CertStore | Sort-Object -Unique
+    $CertCount = $Certificates.Count
+    foreach ($Certificate in $Certificates) {
+      [DateTime]$NotAfter = $Certificate.NotAfter
+      [int]$CountCerts = $CountCerts + 1
+      $Thumbprint = $Certificate.Thumbprint
+      [DateTime]$NotBefore = $Certificate.NotBefore
+      # $True maps to IssuedBy column, $False maps to IssuedTo column in the Certificates mmc console.
+      $IssuedTo = $Certificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
+      $FormatNotBefore = $NotBefore.ToString("yyyy/MM/dd HH:mm:ss")
+      $FormatNotAfter = $NotAfter.ToString("yyyy/MM/dd HH:mm:ss")
+      $Instance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Certificate.Class.WindowsCertificate']$")
+      $Instance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $ComputerName)
+      $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/IssuedTo$", $IssuedTo)
+      $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/NotBefore$", $FormatNotBefore)
+      $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/NotAfter$", $FormatNotAfter)
+      $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/Thumbprint$", $Thumbprint)
+      $DiscoveryData.AddInstance($Instance)
+    }
+    <# FOR TESTING
+$MomApi.Return($DiscoveryData)
+#>
+    # Submit discovery data back to Operations Manager and complete the script.
+    $DiscoveryData
+    # Can add functionality here to set warning state but there is no need in this script.
+    $ScriptState = "Information"
+    Write-Log -ScriptState $ScriptState
   }
-  # Declare all constants used by the script
-  $MomApi = New-Object -comObject 'MOM.ScriptAPI' # MOMScriptAPI object.
-  $ScriptName = "CertificateDiscovery.ps1"
-  $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-  $WorkflowName = "Certificates.Discovery.WindowsCertificate"
-  $MPName = "Certificate.Monitoring"
-  $MpVersion = "2023.3.22.0"
-  $CountCerts = 0
-  $StartTime = Get-Date
-  Get-CertificateDiscovery -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName # Need this to pass params in properly.
+  Catch {
+    $ScriptState = "Warning"
+    $Message += $_.Exception.Message
+    Write-Log -ScriptState $ScriptState   
+  }
+}
+# Declare all constants used by the script
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "CertificateDiscovery.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "Certificate.Monitoring"
+$MpVersion = "2023.3.23.0"
+$MpWorkflow = "Certificates.Discovery.WindowsCertificate"
+Get-CertificateDiscovery -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName # Need this to pass params in properly.
     ]]>
 </ScriptBody>
                 <Parameters>
@@ -207,92 +195,87 @@ CHANGE LOG
                 <ScriptName>CertificateExpiry.ps1</ScriptName>
                 <ScriptBody>
 <![CDATA[       
-  Function Write-Log {
+Function Write-Log {
     Param($ScriptState)
-    Switch ($ScriptState) {
-        "Information" {
-            $EventId=17623
-            $EventLevel=0 # 0=Info, 1=Error, 2=Warning
-        }
-        "Warning" {
-            $EventId=17624
-            $EventLevel=2 # 0=Info, 1=Error, 2=Warning
-        }
-        "Error" {
-            $EventId=17625
-            $EventLevel=1 # 0=Info, 1=Error, 2=Warning
-        }
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
     }
-    $End=Get-Date
-    $TimeCount=(New-TimeSpan -Start $StartTime -End $End)
-    $MomApi.LogScriptEvent("$ScriptName executed in $($TimeCount.Minutes)`m $($TimeCount.Seconds)`s $($TimeCount.Milliseconds)`ms", $EventId, $EventLevel, "`nRunning as: $Account`nWorkflow Name: $WorkflowName`nManagement Pack: $($MPName) $("($MpVersion)")`nPowerShell Version: $PSVersion`n$Message")
-}
-Function Set-TerminatingError {
-    $ScriptState="Error"
-    $Message+="A terminating error occurred. Error output: (" + $_.Exception.Message + ").`n"
-    Write-Log -ScriptState $ScriptState
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
 }
 Function Get-CertificateExpiry {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
     Try {
-        $PSVersion=$PSVersionTable.PSVersion
-        [string]$PSMajor=$PSVersion.Major
-        [string]$PSMinor=$PSVersion.Minor
-        $PSVersion=$PSMajor + "." + $PSMinor
-        $MomApi=New-Object -comObject "MOM.ScriptAPI"
-        $CertStore="Cert:\LocalMachine\My\"
-		# There can be duplicates certificates (even at thumbprint level) and we only want unique certificates. 
-        $Certificates=Get-ChildItem -Path $CertStore | Sort-Object -Unique
-        $CertCount=$Certificates.Count
+        # Set this here so info event is logged if there's no issues.
+        $ScriptState = "Information"
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        $CertStore = "Cert:\LocalMachine\My\"
+        # There can be duplicates certificates (even at thumbprint level) and we only want unique certificates. 
+        $Certificates = Get-ChildItem -Path $CertStore | Sort-Object -Unique
+        $CertCount = $Certificates.Count
         # The certificate threshold to generate a warning alert is deliberatley placed in the script. If this is done as an overridable parameter it will break cookdown.
-        $WarningThreshold=$StartTime.AddDays(31)
+        $WarningThreshold = $StartTime.AddDays(31)
         foreach ($Certificate in $Certificates) {
-            $Bag=$MomApi.CreatePropertyBag()
-            $IssuedTo=$Certificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
-            $Thumbprint=$Certificate.Thumbprint
-            [DateTime]$NotBefore=$Certificate.NotBefore
-            [DateTime]$NotAfter=$Certificate.NotAfter
-            $FormatNotBefore=$NotBefore.ToString("dd/MM/yyyy HH:mm:ss")
-            $FormatNotAfter=$NotAfter.ToString("dd/MM/yyyy HH:mm:ss")
+            $Bag = $MomApi.CreatePropertyBag()
+            $IssuedTo = $Certificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
+            $Thumbprint = $Certificate.Thumbprint
+            [DateTime]$NotBefore = $Certificate.NotBefore
+            [DateTime]$NotAfter = $Certificate.NotAfter
+            $FormatNotBefore = $NotBefore.ToString("dd/MM/yyyy HH:mm:ss")
+            $FormatNotAfter = $NotAfter.ToString("dd/MM/yyyy HH:mm:ss")
             # Add general info to bag
             $Bag.AddValue('CertStore', $CertStore)
             $Bag.AddValue('IssuedTo', $IssuedTo)
             $Bag.AddValue('Thumbprint', $Thumbprint)
             $Bag.AddValue('NotBefore', $FormatNotBefore)
             $Bag.AddValue('NotAfter', $FormatNotAfter)
-                If ($NotAfter -lt $StartTime) {
-                    $Bag.AddValue('CertificateExpiry', 'CertificateExpiryCritical')
-                }
-                ElseIf ($NotAfter -gt $StartTime -and $NotAfter -lt $WarningThreshold) {
-                    $Bag.AddValue('CertificateExpiry', 'CertificateExpiryWarning')
-                }
-                Else {
-                    $Bag.AddValue('CertificateExpiry', 'CertificateExpiryOK')
-                }
+            If ($NotAfter -lt $StartTime) {
+                $Bag.AddValue('CertificateExpiry', 'CertificateExpiryCritical')
+            }
+            ElseIf ($NotAfter -gt $StartTime -and $NotAfter -lt $WarningThreshold) {
+                $Bag.AddValue('CertificateExpiry', 'CertificateExpiryWarning')
+            }
+            Else {
+                $Bag.AddValue('CertificateExpiry', 'CertificateExpiryOK')
+            }
             <# FOR TESTING
-            $MomApi.Return($Bag)
-            #>
+$MomApi.Return($Bag)
+#>
             # This needs to be in the loop because we're adding multiple property bags that need to be checked.
             $Bag
         }
-        <#
-        Can add functionality here to set warning state but there is no need in this script.
-        #>
-        $Message+="Certificates: $CertCount"
-        $ScriptState="Information"
+        # Can add functionality here to set warning state but there is no need in this script.
+        $ScriptState = "Information"
         Write-Log -ScriptState $ScriptState
     }
     Catch {
-        Set-TerminatingError
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState   
     }
 }
 # Declare all constants used by the script
-$MomApi=New-Object -comObject 'MOM.ScriptAPI'
-$ScriptName="CertificateExpiry.ps1"
-$Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$WorkflowName="Certificates.Monitor.CertificateExpiry"
-$MPName="Certificate.Monitoring"
-$MpVersion="2023.3.22.0"
-[datetime]$StartTime=Get-Date
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "CertificateExpiry.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "Certificate.Monitoring"
+$MpVersion = "2023.3.23.0"
+$MpWorkflow = "Certificates.Monitor.CertificateExpiry"
 Get-CertificateExpiry
 ]]>
 </ScriptBody>
