@@ -1,10 +1,10 @@
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
-      <ID>TestB.Certificate.Views</ID>
+      <ID>Certificate.Views</ID>
       <Version>2024.2.5.0</Version>
     </Identity>
-    <Name>TestB.Certificate.Views</Name>
+    <Name>Certificate.Views</Name>
     <References>
       <Reference Alias="System">
         <ID>System.Library</ID>
@@ -407,8 +407,8 @@
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="false">
       <DisplayStrings>
-        <DisplayString ElementID="TestB.Certificate.Views">
-          <Name>TestB Certificate Views</Name>
+        <DisplayString ElementID="Certificate.Views">
+          <Name>Certificate Views</Name>
           <Description>Console views for certificates.</Description>
         </DisplayString>
         <DisplayString ElementID="Folder_eb557630ee2647b4b49c702c0fb8358f">
