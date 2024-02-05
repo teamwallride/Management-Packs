@@ -2,7 +2,7 @@
   <Manifest>
     <Identity>
       <ID>Certificate.Views</ID>
-      <Version>2024.1.22.0</Version>
+      <Version>2024.2.5.0</Version>
     </Identity>
     <Name>Certificate.Views</Name>
     <References>
@@ -18,7 +18,7 @@
       </Reference>
       <Reference Alias="Monitoring">
         <ID>Certificate.Monitoring</ID>
-        <Version>2023.3.21.1</Version>
+        <Version>2023.3.22.0</Version>
         <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
       </Reference>
     </References>
@@ -434,7 +434,6 @@
         </DisplayString>
         <DisplayString ElementID="View_9b499660bc754c66aa7ded3d732a1391">
           <Name>All Certificates</Name>
-          <Description />
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
