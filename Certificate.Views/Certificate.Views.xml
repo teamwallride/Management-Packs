@@ -1,10 +1,10 @@
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
-      <ID>Certificate.Views</ID>
+      <ID>TestB.Certificate.Views</ID>
       <Version>2024.2.5.0</Version>
     </Identity>
-    <Name>Certificate.Views</Name>
+    <Name>TestB.Certificate.Views</Name>
     <References>
       <Reference Alias="System">
         <ID>System.Library</ID>
@@ -25,174 +25,6 @@
   </Manifest>
   <Presentation>
     <Views>
-      <View ID="View_66e2271ba2c344a49778b1d8ca44ec70" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.AlertViewType" Visible="true">
-        <Category>Operations</Category>
-        <Criteria>
-          <ResolutionState>
-            <StateRange Operator="NotEquals">255</StateRange>
-          </ResolutionState>
-          <CustomField1>Certificate</CustomField1>
-        </Criteria>
-        <Presentation>
-          <ColumnInfo Index="0" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Severity</Name>
-            <Id>Severity</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="1" SortIndex="-1" Width="54" Grouped="false" Sorted="false" IsSortable="false" Visible="true" SortOrder="Ascending">
-            <Name>Icon</Name>
-            <Id>Icon</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Path</Name>
-            <Id>MonitoringObjectPath</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Source</Name>
-            <Id>MonitoringObjectDisplayName</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="3" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Maintenance Mode</Name>
-            <Id>MonitoringObjectInMaintenanceMode</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="6" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Name</Name>
-            <Id>Name</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Resolution State</Name>
-            <Id>ResolutionState</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="8" SortIndex="0" Width="150" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
-            <Name>Created</Name>
-            <Id>TimeRaised</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Age</Name>
-            <Id>Age</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Type</Name>
-            <Id>Category</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Owner</Name>
-            <Id>Owner</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Priority</Name>
-            <Id>Priority</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Latency</Name>
-            <Id>Latency</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Description</Name>
-            <Id>Description</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Connector</Name>
-            <Id>ConnectorId</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Forwarding Status</Name>
-            <Id>ConnectorStatus</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Class</Name>
-            <Id>Class</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="17" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Time in State</Name>
-            <Id>TimeInState</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Custom Field 1</Name>
-            <Id>CustomField1</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Custom Field 2</Name>
-            <Id>CustomField2</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="20" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Custom Field 3</Name>
-            <Id>CustomField3</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Custom Field 4</Name>
-            <Id>CustomField4</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Custom Field 5</Name>
-            <Id>CustomField5</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Custom Field 6</Name>
-            <Id>CustomField6</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="24" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Custom Field 7</Name>
-            <Id>CustomField7</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="25" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Custom Field 8</Name>
-            <Id>CustomField8</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="26" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Custom Field 9</Name>
-            <Id>CustomField9</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="27" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Custom Field 10</Name>
-            <Id>CustomField10</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="28" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Resolved By</Name>
-            <Id>ResolvedBy</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="29" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Time Resolved</Name>
-            <Id>TimeResolved</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="30" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Last State Change</Name>
-            <Id>TimeResolutionStateLastModified</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="31" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Last Modified</Name>
-            <Id>LastModified</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="32" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Last Modified By</Name>
-            <Id>LastModifiedBy</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="33" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Management Group</Name>
-            <Id>ManagementGroup</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="34" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Site</Name>
-            <Id>SiteName</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="35" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Repeat Count</Name>
-            <Id>RepeatCount</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="36" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Ticket ID</Name>
-            <Id>TicketId</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="37" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>TFS Work Item ID</Name>
-            <Id>TfsWorkItemId</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="38" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>TFS Work Item Owner</Name>
-            <Id>TfsWorkItemOwner</Id>
-          </ColumnInfo>
-        </Presentation>
-        <Target />
-      </View>
       <View ID="View_9e1e89c0bb474e709c4799afea921ccb" Accessibility="Public" Enabled="true" Target="Monitoring!Certificate.Class.WindowsCertificate" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
         <Category>Operations</Category>
         <Criteria>
@@ -390,25 +222,193 @@
         </Presentation>
         <Target />
       </View>
+      <View ID="View_6ecad952f48e4d5e90f3f50467b81871" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.AlertViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <ResolutionState>
+            <StateRange Operator="NotEquals">255</StateRange>
+          </ResolutionState>
+          <CustomField1>Certificate</CustomField1>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Severity</Name>
+            <Id>Severity</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="54" Grouped="false" Sorted="false" IsSortable="false" Visible="true" SortOrder="Ascending">
+            <Name>Icon</Name>
+            <Id>Icon</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>MonitoringObjectPath</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Source</Name>
+            <Id>MonitoringObjectDisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>MonitoringObjectInMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="250" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Resolution State</Name>
+            <Id>ResolutionState</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="0" Width="150" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>Created</Name>
+            <Id>TimeRaised</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Age</Name>
+            <Id>Age</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Type</Name>
+            <Id>Category</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="11" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Owner</Name>
+            <Id>Owner</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Priority</Name>
+            <Id>Priority</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="12" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Latency</Name>
+            <Id>Latency</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="13" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Description</Name>
+            <Id>Description</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="14" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Connector</Name>
+            <Id>ConnectorId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="15" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Forwarding Status</Name>
+            <Id>ConnectorStatus</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="16" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Class</Name>
+            <Id>Class</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="17" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Time in State</Name>
+            <Id>TimeInState</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="18" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 1</Name>
+            <Id>CustomField1</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="19" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 2</Name>
+            <Id>CustomField2</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="20" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 3</Name>
+            <Id>CustomField3</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="21" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 4</Name>
+            <Id>CustomField4</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="22" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 5</Name>
+            <Id>CustomField5</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="23" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 6</Name>
+            <Id>CustomField6</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="24" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 7</Name>
+            <Id>CustomField7</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="25" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 8</Name>
+            <Id>CustomField8</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="26" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 9</Name>
+            <Id>CustomField9</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="27" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Custom Field 10</Name>
+            <Id>CustomField10</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="28" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Resolved By</Name>
+            <Id>ResolvedBy</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="29" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Time Resolved</Name>
+            <Id>TimeResolved</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="30" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Last State Change</Name>
+            <Id>TimeResolutionStateLastModified</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="31" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Last Modified</Name>
+            <Id>LastModified</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="32" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Last Modified By</Name>
+            <Id>LastModifiedBy</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="33" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Management Group</Name>
+            <Id>ManagementGroup</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="34" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Site</Name>
+            <Id>SiteName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="35" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Repeat Count</Name>
+            <Id>RepeatCount</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="36" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Ticket ID</Name>
+            <Id>TicketId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="37" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>TFS Work Item ID</Name>
+            <Id>TfsWorkItemId</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="38" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>TFS Work Item Owner</Name>
+            <Id>TfsWorkItemOwner</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
     </Views>
     <Folders>
       <Folder ID="Folder_eb557630ee2647b4b49c702c0fb8358f" Accessibility="Public" ParentFolder="SystemCenter!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
       <Folder ID="Folder_5717a285b53a4b8399fbc2549ce5900a" Accessibility="Public" ParentFolder="Folder_eb557630ee2647b4b49c702c0fb8358f" />
     </Folders>
     <FolderItems>
-      <FolderItem ElementID="View_66e2271ba2c344a49778b1d8ca44ec70" ID="i3515d72a96c34d3fab4e5d0f51fb1ecb" Folder="Folder_eb557630ee2647b4b49c702c0fb8358f" />
       <FolderItem ElementID="View_9e1e89c0bb474e709c4799afea921ccb" ID="i14be1b35ee9d44f5a0d5fce3445bcff0" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
       <FolderItem ElementID="View_2fdaa89b228145d4bac5678466050c7e" ID="i784b7ab14e0d4f92a4f1e0060bdff122" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
       <FolderItem ElementID="View_5fd2a7d4acd84154b7e538d54c612785" ID="i7384d83c64cb4db6b805fb8169c78776" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
       <FolderItem ElementID="View_aa122f5e7f734111b4d30c74ce8d3922" ID="ic83ed46063eb47cfbb0c90ef416522f9" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
       <FolderItem ElementID="View_9b499660bc754c66aa7ded3d732a1391" ID="i3322f05f63a044438c6132bd0fd706d3" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
+      <FolderItem ElementID="View_6ecad952f48e4d5e90f3f50467b81871" ID="i0d4cad144a3c4789a9457a1a1156a512" Folder="Folder_eb557630ee2647b4b49c702c0fb8358f" />
     </FolderItems>
   </Presentation>
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="false">
       <DisplayStrings>
-        <DisplayString ElementID="Certificate.Views">
-          <Name>Certificate Views</Name>
+        <DisplayString ElementID="TestB.Certificate.Views">
+          <Name>TestB Certificate Views</Name>
           <Description>Console views for certificates.</Description>
         </DisplayString>
         <DisplayString ElementID="Folder_eb557630ee2647b4b49c702c0fb8358f">
@@ -416,9 +416,6 @@
         </DisplayString>
         <DisplayString ElementID="Folder_5717a285b53a4b8399fbc2549ce5900a">
           <Name>Windows Server</Name>
-        </DisplayString>
-        <DisplayString ElementID="View_66e2271ba2c344a49778b1d8ca44ec70">
-          <Name>Active Alerts</Name>
         </DisplayString>
         <DisplayString ElementID="View_9e1e89c0bb474e709c4799afea921ccb">
           <Name>Valid</Name>
@@ -434,6 +431,10 @@
         </DisplayString>
         <DisplayString ElementID="View_9b499660bc754c66aa7ded3d732a1391">
           <Name>All Certificates</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_6ecad952f48e4d5e90f3f50467b81871">
+          <Name>Active Alerts</Name>
+          <Description />
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>
