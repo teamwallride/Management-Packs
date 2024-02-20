@@ -2,7 +2,7 @@
   <Manifest>
     <Identity>
       <ID>Certificate.Monitoring</ID>
-      <Version>2023.3.23.0</Version>
+      <Version>2023.3.23.2</Version>
     </Identity>
     <Name>Certificate.Monitoring</Name>
     <References>
@@ -33,6 +33,8 @@
       <ClassTypes>
         <ClassType ID="Certificate.Class.WindowsCertificate" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
           <Property ID="IssuedTo" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="IssuedBy" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
+          <Property ID="StoreName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
           <Property ID="NotBefore" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
           <Property ID="NotAfter" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
           <!-- Thumbprint is the key property because it's unique and we want to return all certs. The IssuedTo property can have duplicates (but different thumbprints) so the discovery will filter them out making it unviable. -->
@@ -97,26 +99,34 @@ $ComputerName='agent.scomtest.local'
     [string]$PSMinor = $PSVersion.Minor
     $PSVersion = $PSMajor + "." + $PSMinor
     $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
-    $CertStore = "Cert:\LocalMachine\My\"
+    $StoreShortName = "LocalMachine\My"
+    $StoreFullname = "Cert:\$StoreShortName\"
     # There can be duplicates certificates (even at thumbprint level) and we only want unique certificates. 
-    $Certificates = Get-ChildItem -Path $CertStore | Sort-Object -Unique
-    $CertCount = $Certificates.Count
+    $Certificates = Get-ChildItem -Path $StoreFullname | Sort-Object -Unique
     foreach ($Certificate in $Certificates) {
       [DateTime]$NotAfter = $Certificate.NotAfter
       [int]$CountCerts = $CountCerts + 1
       $Thumbprint = $Certificate.Thumbprint
       [DateTime]$NotBefore = $Certificate.NotBefore
-      # $True maps to IssuedBy column, $False maps to IssuedTo column in the Certificates mmc console.
+      # This maps to IssuedTo.
       $IssuedTo = $Certificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
+      # This  maps to the IssuedBy.
+      $IssuedBy = $Certificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $true)
       $FormatNotBefore = $NotBefore.ToString("yyyy/MM/dd HH:mm:ss")
       $FormatNotAfter = $NotAfter.ToString("yyyy/MM/dd HH:mm:ss")
-      $Instance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Certificate.Class.WindowsCertificate']$")
-      $Instance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $ComputerName)
-      $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/IssuedTo$", $IssuedTo)
-      $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/NotBefore$", $FormatNotBefore)
-      $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/NotAfter$", $FormatNotAfter)
-      $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/Thumbprint$", $Thumbprint)
-      $DiscoveryData.AddInstance($Instance)
+      $DaysToExpire = (New-TimeSpan -Start $NotBefore -End $NotAfter).Days
+      # Exclude certificates here. For now this is just done by days.
+      If ($DaysToExpire -gt  7) {
+        $Instance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Certificate.Class.WindowsCertificate']$")
+        $Instance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $ComputerName)
+        $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/IssuedTo$", $IssuedTo)
+        $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/IssuedBy$", $IssuedBy)
+        $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/StoreName$", $StoreShortName)
+        $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/NotBefore$", $FormatNotBefore)
+        $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/NotAfter$", $FormatNotAfter)
+        $Instance.AddProperty("$MPElement[Name='Certificate.Class.WindowsCertificate']/Thumbprint$", $Thumbprint)
+        $DiscoveryData.AddInstance($Instance)
+      }
     }
     <# FOR TESTING
 $MomApi.Return($DiscoveryData)
@@ -223,23 +233,26 @@ Function Get-CertificateExpiry {
         [string]$PSMajor = $PSVersion.Major
         [string]$PSMinor = $PSVersion.Minor
         $PSVersion = $PSMajor + "." + $PSMinor
-        $CertStore = "Cert:\LocalMachine\My\"
+        $StoreShortName = "LocalMachine\My"
+        $StoreFullname = "Cert:\$StoreShortName\"
         # There can be duplicates certificates (even at thumbprint level) and we only want unique certificates. 
-        $Certificates = Get-ChildItem -Path $CertStore | Sort-Object -Unique
-        $CertCount = $Certificates.Count
+        $Certificates = Get-ChildItem -Path $StoreFullname | Sort-Object -Unique
         # The certificate threshold to generate a warning alert is deliberatley placed in the script. If this is done as an overridable parameter it will break cookdown.
         $WarningThreshold = $StartTime.AddDays(31)
         foreach ($Certificate in $Certificates) {
             $Bag = $MomApi.CreatePropertyBag()
             $IssuedTo = $Certificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $false)
+            $IssuedBy = $Certificate.GetNameInfo([System.Security.Cryptography.X509Certificates.X509NameType]::SimpleName, $true)
             $Thumbprint = $Certificate.Thumbprint
             [DateTime]$NotBefore = $Certificate.NotBefore
             [DateTime]$NotAfter = $Certificate.NotAfter
             $FormatNotBefore = $NotBefore.ToString("dd/MM/yyyy HH:mm:ss")
             $FormatNotAfter = $NotAfter.ToString("dd/MM/yyyy HH:mm:ss")
             # Add general info to bag
-            $Bag.AddValue('CertStore', $CertStore)
+            $Bag.AddValue('CertStore', $StoreFullname)
             $Bag.AddValue('IssuedTo', $IssuedTo)
+            $Bag.AddValue('IssuedBy', $IssuedBy)
+            $Bag.AddValue('StoreName', $StoreShortName)
             $Bag.AddValue('Thumbprint', $Thumbprint)
             $Bag.AddValue('NotBefore', $FormatNotBefore)
             $Bag.AddValue('NotAfter', $FormatNotAfter)
@@ -274,7 +287,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "CertificateExpiry.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Certificate.Monitoring"
-$MpVersion = "2023.3.23.0"
+$MpVersion = "2023.3.23.2"
 $MpWorkflow = "Certificates.Monitor.CertificateExpiry"
 Get-CertificateExpiry
 ]]>
@@ -405,6 +418,8 @@ Get-CertificateExpiry
         <DiscoveryTypes>
           <DiscoveryClass TypeID="Certificate.Class.WindowsCertificate">
             <Property PropertyID="IssuedTo" />
+            <Property PropertyID="IssuedBy" />
+            <Property PropertyID="StoreName" />
             <Property PropertyID="NotBefore" />
             <Property PropertyID="NotAfter" />
             <Property PropertyID="Thumbprint" />
@@ -430,9 +445,11 @@ Get-CertificateExpiry
             <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
             <AlertParameter2>$Data/Context/Property[@Name='CertStore']$</AlertParameter2>
             <AlertParameter3>$Data/Context/Property[@Name='IssuedTo']$</AlertParameter3>
-            <AlertParameter4>$Data/Context/Property[@Name='NotBefore']$</AlertParameter4>
-            <AlertParameter5>$Data/Context/Property[@Name='NotAfter']$</AlertParameter5>
-            <AlertParameter6>$Data/Context/Property[@Name='Thumbprint']$</AlertParameter6>
+            <AlertParameter4>$Data/Context/Property[@Name='IssuedBy']$</AlertParameter4>
+            <AlertParameter5>$Data/Context/Property[@Name='StoreName']$</AlertParameter5>
+            <AlertParameter6>$Data/Context/Property[@Name='NotBefore']$</AlertParameter6>
+            <AlertParameter7>$Data/Context/Property[@Name='NotAfter']$</AlertParameter7>
+            <AlertParameter8>$Data/Context/Property[@Name='Thumbprint']$</AlertParameter8>
           </AlertParameters>
         </AlertSettings>
         <OperationalStates>
@@ -469,6 +486,12 @@ Get-CertificateExpiry
         <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="IssuedTo">
           <Name>Issued To</Name>
         </DisplayString>
+        <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="IssuedBy">
+          <Name>Issued By</Name>
+        </DisplayString>
+        <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="StoreName">
+          <Name>Store Name</Name>
+        </DisplayString>
         <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="NotBefore">
           <Name>Issued On (YMDT)</Name>
         </DisplayString>
@@ -493,14 +516,16 @@ Get-CertificateExpiry
         </DisplayString>
         <DisplayString ElementID="Certificate.Monitor.CheckExpiry.AlertMessage">
           <Name>Certificate Expiration</Name>
-          <Description>The following certificate will expire soon or has already expired.
+          <Description>The following certificate will expire soon or has already expired:
 
 Computer: {0}
 Certificate Store: {1}
 Issued To: {2}
-Issued On: {3}
-Expires On: {4}
-Thumbprint: {5}
+Issued By: {3}
+Store Name: {4}
+Issued On: {5}
+Expires On: {6}
+Thumbprint: {7}
 </Description>
         </DisplayString>
       </DisplayStrings>
