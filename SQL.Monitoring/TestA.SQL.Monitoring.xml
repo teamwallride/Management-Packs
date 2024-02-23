@@ -1,0 +1,281 @@
+<ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1">
+   <Manifest>
+      <Identity>
+         <ID>TestB.SQL.Monitoring</ID>
+         <Version>2024.2.23.8</Version>
+      </Identity>
+      <Name>TestB.SQL.Monitoring</Name>
+      <References>
+         <Reference Alias="SystemCenter">
+            <ID>Microsoft.SystemCenter.Library</ID>
+            <Version>7.0.8437.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+         <Reference Alias="Windows">
+            <ID>Microsoft.Windows.Library</ID>
+            <Version>7.5.8501.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+         <Reference Alias="System">
+            <ID>System.Library</ID>
+            <Version>7.5.8501.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+         <Reference Alias="Health">
+            <ID>System.Health.Library</ID>
+            <Version>7.0.8437.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+         <Reference Alias="SQLDiscovery">
+            <ID>Microsoft.SQLServer.Windows.Discovery</ID>
+            <Version>7.0.36.0</Version>
+            <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+         </Reference>
+      </References>
+   </Manifest>
+   <TypeDefinitions>
+       <ModuleTypes>
+
+<!--DATA SOURCE MODULE-->
+      <DataSourceModuleType ID="TestB.SQL.Monitoring.Monitor.SQLAccess.DS" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                <Scheduler>
+                  <SimpleReccuringSchedule>
+                    <Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+                    <SyncTime>$Config/SyncTime$</SyncTime>
+                  </SimpleReccuringSchedule>
+                  <ExcludeDates />
+                </Scheduler>
+              </DataSource>
+              <ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>CertificateExpiry.ps1</ScriptName>
+                <ScriptBody>
+<![CDATA[       
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLAccess {
+    $OpsDbServer = "MS1\SCOMINST"
+    $DbQuery = "SELECT COUNT(AgentPendingActionId) as AgentCount from [OperationsManager].[dbo].[AgentPendingAction]"
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        # Set this here so info event is logged if there's no issues.
+        $ScriptState = "Information"
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        $Connection = New-Object System.Data.SQLClient.SQLConnection
+        $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=master;Trusted_Connection=True;"
+        $Connection.Open()
+        $Command = New-Object System.Data.SQLClient.SQLCommand
+        $Command.Connection = $Connection
+        $Command.CommandText = $DbQuery
+        $Reader = $Command.ExecuteReader()
+        $SqlTable = New-Object System.Data.DataTable
+        $SqlTable.Load($Reader)
+        $Connection.Close()
+        $Bag = $MomApi.CreatePropertyBag()
+        $Result = $SqlTable.AgentCount
+        $Message+=$Result
+        #Write-Host -ForegroundColor Yellow $Result
+        If ($Result -gt 0) {
+            $Bag.AddValue('Result', "BAD")
+            $Bag.AddValue('Message', "Account NOT added.")
+        } else {
+            $Bag.AddValue('Result', "GOOD")
+            $Bag.AddValue('Message', "Account IS added.")
+        }
+        <# FOR TESTING
+$MomApi.Return($Bag)
+#>
+        $Bag
+    # Can add functionality here to set warning state but there is no need in this script.
+    $ScriptState = "Information"
+    Write-Log -ScriptState $ScriptState
+}
+Catch {
+    $ScriptState = "Warning"
+    $Message += $_.Exception.Message
+    Write-Log -ScriptState $ScriptState   
+}
+}
+# Declare all constants used by the script
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "SQLAccess.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestB.SQL.Monitoring"
+$MpVersion = "2024.2.23.8"
+$MpWorkflow = "SomeMonitorName"
+Get-SQLAccess
+]]>
+</ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PA">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+    </ModuleTypes>
+<!--MONITOR TYPE-->
+    <MonitorTypes>
+      <UnitMonitorType ID="TestB.MonitorType" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="GOOD" NoDetection="false" />
+          <MonitorTypeState ID="BAD" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="TestB.SQL.Monitoring.Monitor.SQLAccess.DS">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </DataSource>
+            <ConditionDetection ID="HealthyFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">GOOD</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="WarningFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">BAD</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="GOOD">
+              <Node ID="HealthyFilter">
+                  <Node ID="DS" />
+                </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="BAD">
+              <Node ID="WarningFilter">
+                  <Node ID="DS" />
+                </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+  <Monitoring>
+      <Monitors>
+      <UnitMonitor ID="TestB.SQL.Monitoring.Monitor.SQLAccess" Accessibility="Public" Enabled="true" Target="SQLDiscovery!Microsoft.SQLServer.Windows.DBEngine" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="TestB.MonitorType" ConfirmDelivery="true">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="TestB.SQL.Monitoring.Monitor.SQLAccess.AlertMessage">
+          <AlertOnState>Warning</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Property[Type="SQLDiscovery!Microsoft.SQLServer.Windows.DBEngine"]/PrincipalName$</AlertParameter1>
+            <AlertParameter2>$Data/Context/Property[@Name='Result']$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="GOOD" MonitorTypeStateID="GOOD" HealthState="Success" />
+          <OperationalState ID="BAD" MonitorTypeStateID="BAD" HealthState="Warning" />
+        </OperationalStates>
+        <Configuration>
+        <!-- There's no need to run this frequently as it will never change to a healthy state (the certificate will get replaced with a new one) so run once a day. -->
+          <IntervalSeconds>60</IntervalSeconds>
+          <SyncTime />
+          <TimeoutSeconds>120</TimeoutSeconds>
+        </Configuration>
+      </UnitMonitor>
+    </Monitors>
+  </Monitoring>
+
+   <Presentation>
+      <StringResources>
+         <StringResource ID="TestB.SQL.Monitoring.Monitor.SQLAccess.AlertMessage" />
+      </StringResources>
+   </Presentation>
+   <LanguagePacks>
+      <LanguagePack ID="ENU" IsDefault="false">
+         <DisplayStrings>
+            <DisplayString ElementID="TestB.SQL.Monitoring">
+               <Name>TestB.SQL.Monitoring</Name>
+            </DisplayString>
+            <DisplayString ElementID="TestB.SQL.Monitoring.Monitor.SQLAccess">
+               <Name>SQL Access</Name>
+               <Description />
+            </DisplayString>
+            <DisplayString ElementID="TestB.SQL.Monitoring.Monitor.SQLAccess.AlertMessage">
+               <Name>SQL Access</Name>
+               <Description>SQL Access alert: 
+               {0} 
+               {1}</Description>
+            </DisplayString>
+            <DisplayString ElementID="TestB.SQL.Monitoring.Monitor.SQLAccess" SubElementID="GOOD">
+               <Name>SQL Access OK</Name>
+            </DisplayString>
+            <DisplayString ElementID="TestB.SQL.Monitoring.Monitor.SQLAccess" SubElementID="BAD">
+               <Name>No SQL Access</Name>
+            </DisplayString>
+         </DisplayStrings>
+      </LanguagePack>
+   </LanguagePacks>
+</ManagementPack>
