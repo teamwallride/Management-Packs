@@ -2,7 +2,7 @@
   <Manifest>
     <Identity>
       <ID>Certificate.Views</ID>
-      <Version>2024.2.5.0</Version>
+      <Version>2024.2.28.0</Version>
     </Identity>
     <Name>Certificate.Views</Name>
     <References>
@@ -18,211 +18,14 @@
       </Reference>
       <Reference Alias="Monitoring">
         <ID>Certificate.Monitoring</ID>
-        <Version>2023.3.22.0</Version>
+        <Version>2024.2.28.0</Version>
         <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
       </Reference>
     </References>
   </Manifest>
   <Presentation>
     <Views>
-      <View ID="View_9e1e89c0bb474e709c4799afea921ccb" Accessibility="Public" Enabled="true" Target="Monitoring!Certificate.Class.WindowsCertificate" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
-        <Category>Operations</Category>
-        <Criteria>
-          <SeverityList>
-            <Severity>Green</Severity>
-          </SeverityList>
-          <InMaintenanceMode>false</InMaintenanceMode>
-        </Criteria>
-        <Presentation>
-          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
-            <Name>State</Name>
-            <Id>Certificate.Class.WindowsCertificate-*-0e471a91-d46f-3ef6-1575-3025b0439965-*-Health</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Maintenance Mode</Name>
-            <Id>InMaintenanceMode</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Name</Name>
-            <Id>Name</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Path</Name>
-            <Id>Path</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Display Name</Name>
-            <Id>System.Entity/DisplayName</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Issued To</Name>
-            <Id>Certificate.Class.WindowsCertificate/IssuedTo</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Issued On (YMDT)</Name>
-            <Id>Certificate.Class.WindowsCertificate/NotBefore</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Expires On (YMDT)</Name>
-            <Id>Certificate.Class.WindowsCertificate/NotAfter</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Thumbprint</Name>
-            <Id>Certificate.Class.WindowsCertificate/Thumbprint</Id>
-          </ColumnInfo>
-        </Presentation>
-        <Target />
-      </View>
-      <View ID="View_2fdaa89b228145d4bac5678466050c7e" Accessibility="Public" Enabled="true" Target="Monitoring!Certificate.Class.WindowsCertificate" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
-        <Category>Operations</Category>
-        <Criteria>
-          <SeverityList>
-            <Severity>Yellow</Severity>
-          </SeverityList>
-          <InMaintenanceMode>false</InMaintenanceMode>
-        </Criteria>
-        <Presentation>
-          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
-            <Name>State</Name>
-            <Id>Certificate.Class.WindowsCertificate-*-0e471a91-d46f-3ef6-1575-3025b0439965-*-Health</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Maintenance Mode</Name>
-            <Id>InMaintenanceMode</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Name</Name>
-            <Id>Name</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Path</Name>
-            <Id>Path</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Display Name</Name>
-            <Id>System.Entity/DisplayName</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Issued To</Name>
-            <Id>Certificate.Class.WindowsCertificate/IssuedTo</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Issued On (YMDT)</Name>
-            <Id>Certificate.Class.WindowsCertificate/NotBefore</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Expires On (YMDT)</Name>
-            <Id>Certificate.Class.WindowsCertificate/NotAfter</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Thumbprint</Name>
-            <Id>Certificate.Class.WindowsCertificate/Thumbprint</Id>
-          </ColumnInfo>
-        </Presentation>
-        <Target />
-      </View>
-      <View ID="View_5fd2a7d4acd84154b7e538d54c612785" Accessibility="Public" Enabled="true" Target="Monitoring!Certificate.Class.WindowsCertificate" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
-        <Category>Operations</Category>
-        <Criteria>
-          <SeverityList>
-            <Severity>Red</Severity>
-          </SeverityList>
-          <InMaintenanceMode>false</InMaintenanceMode>
-        </Criteria>
-        <Presentation>
-          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
-            <Name>State</Name>
-            <Id>Certificate.Class.WindowsCertificate-*-0e471a91-d46f-3ef6-1575-3025b0439965-*-Health</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Maintenance Mode</Name>
-            <Id>InMaintenanceMode</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Name</Name>
-            <Id>Name</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Path</Name>
-            <Id>Path</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Display Name</Name>
-            <Id>System.Entity/DisplayName</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Issued To</Name>
-            <Id>Certificate.Class.WindowsCertificate/IssuedTo</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Issued On (YMDT)</Name>
-            <Id>Certificate.Class.WindowsCertificate/NotBefore</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Expires On (YMDT)</Name>
-            <Id>Certificate.Class.WindowsCertificate/NotAfter</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Thumbprint</Name>
-            <Id>Certificate.Class.WindowsCertificate/Thumbprint</Id>
-          </ColumnInfo>
-        </Presentation>
-        <Target />
-      </View>
-      <View ID="View_aa122f5e7f734111b4d30c74ce8d3922" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.DashboardViewType" Visible="true">
-        <Category>Operations</Category>
-        <PanelConfiguration Columns="1" Rows="3">
-          <Cell Column="1" Row="1" ViewID="View_9e1e89c0bb474e709c4799afea921ccb" />
-          <Cell Row="2" Column="1" ViewID="View_2fdaa89b228145d4bac5678466050c7e" />
-          <Cell Row="3" Column="1" ViewID="View_5fd2a7d4acd84154b7e538d54c612785" />
-        </PanelConfiguration>
-      </View>
-      <View ID="View_9b499660bc754c66aa7ded3d732a1391" Accessibility="Public" Enabled="true" Target="Monitoring!Certificate.Class.WindowsCertificate" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
-        <Category>Operations</Category>
-        <Criteria>
-          <InMaintenanceMode>false</InMaintenanceMode>
-        </Criteria>
-        <Presentation>
-          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
-            <Name>State</Name>
-            <Id>Certificate.Class.WindowsCertificate-*-0e471a91-d46f-3ef6-1575-3025b0439965-*-Health</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Maintenance Mode</Name>
-            <Id>InMaintenanceMode</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Name</Name>
-            <Id>Name</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Path</Name>
-            <Id>Path</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
-            <Name>Display Name</Name>
-            <Id>System.Entity/DisplayName</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Issued To</Name>
-            <Id>Certificate.Class.WindowsCertificate/IssuedTo</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Issued On (YMDT)</Name>
-            <Id>Certificate.Class.WindowsCertificate/NotBefore</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Expires On (YMDT)</Name>
-            <Id>Certificate.Class.WindowsCertificate/NotAfter</Id>
-          </ColumnInfo>
-          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
-            <Name>Thumbprint</Name>
-            <Id>Certificate.Class.WindowsCertificate/Thumbprint</Id>
-          </ColumnInfo>
-        </Presentation>
-        <Target />
-      </View>
-      <View ID="View_6ecad952f48e4d5e90f3f50467b81871" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.AlertViewType" Visible="true">
+      <View ID="View_2a84b6286a154b759025b66bd1e9e90b" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.AlertViewType" Visible="true">
         <Category>Operations</Category>
         <Criteria>
           <ResolutionState>
@@ -239,15 +42,15 @@
             <Name>Icon</Name>
             <Id>Icon</Id>
           </ColumnInfo>
-          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Path</Name>
             <Id>MonitoringObjectPath</Id>
           </ColumnInfo>
-          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
             <Name>Source</Name>
             <Id>MonitoringObjectDisplayName</Id>
           </ColumnInfo>
-          <ColumnInfo Index="3" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+          <ColumnInfo Index="4" SortIndex="-1" Width="22" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
             <Name>Maintenance Mode</Name>
             <Id>MonitoringObjectInMaintenanceMode</Id>
           </ColumnInfo>
@@ -390,18 +193,248 @@
         </Presentation>
         <Target />
       </View>
+      <View ID="View_f5d286d26bea4c35bb90a4c5330033cc" Accessibility="Public" Enabled="true" Target="Monitoring!Certificate.Class.WindowsCertificate" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Certificate.Class.WindowsCertificate-*-0e471a91-d46f-3ef6-1575-3025b0439965-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued To</Name>
+            <Id>Certificate.Class.WindowsCertificate/IssuedTo</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued By</Name>
+            <Id>Certificate.Class.WindowsCertificate/IssuedBy</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Store Name</Name>
+            <Id>Certificate.Class.WindowsCertificate/StoreName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued On</Name>
+            <Id>Certificate.Class.WindowsCertificate/NotBefore</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Expires On</Name>
+            <Id>Certificate.Class.WindowsCertificate/NotAfter</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Thumbprint</Name>
+            <Id>Certificate.Class.WindowsCertificate/Thumbprint</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_77d6675b0d1840b09e1779d40bf2b7d7" Accessibility="Public" Enabled="true" Target="Monitoring!Certificate.Class.WindowsCertificate" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <SeverityList>
+            <Severity>Red</Severity>
+          </SeverityList>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Certificate.Class.WindowsCertificate-*-0e471a91-d46f-3ef6-1575-3025b0439965-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued To</Name>
+            <Id>Certificate.Class.WindowsCertificate/IssuedTo</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued By</Name>
+            <Id>Certificate.Class.WindowsCertificate/IssuedBy</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Store Name</Name>
+            <Id>Certificate.Class.WindowsCertificate/StoreName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued On</Name>
+            <Id>Certificate.Class.WindowsCertificate/NotBefore</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Expires On</Name>
+            <Id>Certificate.Class.WindowsCertificate/NotAfter</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Thumbprint</Name>
+            <Id>Certificate.Class.WindowsCertificate/Thumbprint</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_bdf94f9f3a584897b3e5ee05877cb1d7" Accessibility="Public" Enabled="true" Target="Monitoring!Certificate.Class.WindowsCertificate" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <SeverityList>
+            <Severity>Yellow</Severity>
+          </SeverityList>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Certificate.Class.WindowsCertificate-*-0e471a91-d46f-3ef6-1575-3025b0439965-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued To</Name>
+            <Id>Certificate.Class.WindowsCertificate/IssuedTo</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued By</Name>
+            <Id>Certificate.Class.WindowsCertificate/IssuedBy</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Store Name</Name>
+            <Id>Certificate.Class.WindowsCertificate/StoreName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued On</Name>
+            <Id>Certificate.Class.WindowsCertificate/NotBefore</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Expires On</Name>
+            <Id>Certificate.Class.WindowsCertificate/NotAfter</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Thumbprint</Name>
+            <Id>Certificate.Class.WindowsCertificate/Thumbprint</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_1d8a0871d9ad4db3a2b5858f0844e7cb" Accessibility="Public" Enabled="true" Target="Monitoring!Certificate.Class.WindowsCertificate" TypeID="SystemCenter!Microsoft.SystemCenter.StateViewType" Visible="true">
+        <Category>Operations</Category>
+        <Criteria>
+          <SeverityList>
+            <Severity>Green</Severity>
+          </SeverityList>
+          <InMaintenanceMode>false</InMaintenanceMode>
+        </Criteria>
+        <Presentation>
+          <ColumnInfo Index="0" SortIndex="0" Width="100" Grouped="false" Sorted="true" IsSortable="true" Visible="true" SortOrder="Descending">
+            <Name>State</Name>
+            <Id>Certificate.Class.WindowsCertificate-*-0e471a91-d46f-3ef6-1575-3025b0439965-*-Health</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="1" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Maintenance Mode</Name>
+            <Id>InMaintenanceMode</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="2" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Name</Name>
+            <Id>Name</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="3" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Path</Name>
+            <Id>Path</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="4" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="false" SortOrder="Ascending">
+            <Name>Display Name</Name>
+            <Id>System.Entity/DisplayName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="6" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued To</Name>
+            <Id>Certificate.Class.WindowsCertificate/IssuedTo</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="5" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued By</Name>
+            <Id>Certificate.Class.WindowsCertificate/IssuedBy</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="9" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Store Name</Name>
+            <Id>Certificate.Class.WindowsCertificate/StoreName</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="7" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Issued On</Name>
+            <Id>Certificate.Class.WindowsCertificate/NotBefore</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="8" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Expires On</Name>
+            <Id>Certificate.Class.WindowsCertificate/NotAfter</Id>
+          </ColumnInfo>
+          <ColumnInfo Index="10" SortIndex="-1" Width="100" Grouped="false" Sorted="false" IsSortable="true" Visible="true" SortOrder="Ascending">
+            <Name>Thumbprint</Name>
+            <Id>Certificate.Class.WindowsCertificate/Thumbprint</Id>
+          </ColumnInfo>
+        </Presentation>
+        <Target />
+      </View>
+      <View ID="View_df6e368f9002428898874cff657e41fc" Accessibility="Public" Enabled="true" Target="System!System.Entity" TypeID="SystemCenter!Microsoft.SystemCenter.DashboardViewType" Visible="true">
+        <Category>Operations</Category>
+        <PanelConfiguration Columns="2" Rows="2">
+          <Cell Column="1" Row="1" ViewID="View_77d6675b0d1840b09e1779d40bf2b7d7" />
+          <Cell Row="1" Column="2" ViewID="View_bdf94f9f3a584897b3e5ee05877cb1d7" />
+          <Cell Row="2" Column="1" ViewID="View_1d8a0871d9ad4db3a2b5858f0844e7cb" />
+          <Cell Row="2" Column="2" ViewID="View_f5d286d26bea4c35bb90a4c5330033cc" />
+        </PanelConfiguration>
+      </View>
     </Views>
     <Folders>
-      <Folder ID="Folder_eb557630ee2647b4b49c702c0fb8358f" Accessibility="Public" ParentFolder="SystemCenter!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
-      <Folder ID="Folder_5717a285b53a4b8399fbc2549ce5900a" Accessibility="Public" ParentFolder="Folder_eb557630ee2647b4b49c702c0fb8358f" />
+      <Folder ID="Folder_6b5f857e85294a11b9c5365662cab511" Accessibility="Public" ParentFolder="SystemCenter!Microsoft.SystemCenter.Monitoring.ViewFolder.Root" />
+      <Folder ID="Folder_b2d797373db34d50ab8033bd26c6c249" Accessibility="Public" ParentFolder="Folder_6b5f857e85294a11b9c5365662cab511" />
     </Folders>
     <FolderItems>
-      <FolderItem ElementID="View_9e1e89c0bb474e709c4799afea921ccb" ID="i14be1b35ee9d44f5a0d5fce3445bcff0" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
-      <FolderItem ElementID="View_2fdaa89b228145d4bac5678466050c7e" ID="i784b7ab14e0d4f92a4f1e0060bdff122" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
-      <FolderItem ElementID="View_5fd2a7d4acd84154b7e538d54c612785" ID="i7384d83c64cb4db6b805fb8169c78776" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
-      <FolderItem ElementID="View_aa122f5e7f734111b4d30c74ce8d3922" ID="ic83ed46063eb47cfbb0c90ef416522f9" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
-      <FolderItem ElementID="View_9b499660bc754c66aa7ded3d732a1391" ID="i3322f05f63a044438c6132bd0fd706d3" Folder="Folder_5717a285b53a4b8399fbc2549ce5900a" />
-      <FolderItem ElementID="View_6ecad952f48e4d5e90f3f50467b81871" ID="i0d4cad144a3c4789a9457a1a1156a512" Folder="Folder_eb557630ee2647b4b49c702c0fb8358f" />
+      <FolderItem ElementID="View_2a84b6286a154b759025b66bd1e9e90b" ID="i22573f9b7b6b450a8ac7bfd357123a87" Folder="Folder_6b5f857e85294a11b9c5365662cab511" />
+      <FolderItem ElementID="View_f5d286d26bea4c35bb90a4c5330033cc" ID="ic91b3f953f07490a99ab555a3102e278" Folder="Folder_b2d797373db34d50ab8033bd26c6c249" />
+      <FolderItem ElementID="View_77d6675b0d1840b09e1779d40bf2b7d7" ID="i49ad73689d6743499557111e4dc1b4c4" Folder="Folder_b2d797373db34d50ab8033bd26c6c249" />
+      <FolderItem ElementID="View_bdf94f9f3a584897b3e5ee05877cb1d7" ID="i64b89353840c42d8acc97ba413ecbaf7" Folder="Folder_b2d797373db34d50ab8033bd26c6c249" />
+      <FolderItem ElementID="View_1d8a0871d9ad4db3a2b5858f0844e7cb" ID="ie452123d11a3410282f790bb470f6eb7" Folder="Folder_b2d797373db34d50ab8033bd26c6c249" />
+      <FolderItem ElementID="View_df6e368f9002428898874cff657e41fc" ID="i0df808ac9bbb42b4986499d3d01ca04e" Folder="Folder_b2d797373db34d50ab8033bd26c6c249" />
     </FolderItems>
   </Presentation>
   <LanguagePacks>
@@ -409,32 +442,31 @@
       <DisplayStrings>
         <DisplayString ElementID="Certificate.Views">
           <Name>Certificate Views</Name>
-          <Description>Console views for certificates.</Description>
+          <Description>Console views for the Certificate.Monitoring management pack.</Description>
         </DisplayString>
-        <DisplayString ElementID="Folder_eb557630ee2647b4b49c702c0fb8358f">
+        <DisplayString ElementID="Folder_6b5f857e85294a11b9c5365662cab511">
           <Name>Certificates</Name>
         </DisplayString>
-        <DisplayString ElementID="Folder_5717a285b53a4b8399fbc2549ce5900a">
+        <DisplayString ElementID="View_2a84b6286a154b759025b66bd1e9e90b">
+          <Name>Active Alerts</Name>
+        </DisplayString>
+        <DisplayString ElementID="Folder_b2d797373db34d50ab8033bd26c6c249">
           <Name>Windows Server</Name>
         </DisplayString>
-        <DisplayString ElementID="View_9e1e89c0bb474e709c4799afea921ccb">
-          <Name>Valid</Name>
-        </DisplayString>
-        <DisplayString ElementID="View_2fdaa89b228145d4bac5678466050c7e">
-          <Name>Expires Soon</Name>
-        </DisplayString>
-        <DisplayString ElementID="View_5fd2a7d4acd84154b7e538d54c612785">
-          <Name>Expired</Name>
-        </DisplayString>
-        <DisplayString ElementID="View_aa122f5e7f734111b4d30c74ce8d3922">
-          <Name>Dashboard</Name>
-        </DisplayString>
-        <DisplayString ElementID="View_9b499660bc754c66aa7ded3d732a1391">
+        <DisplayString ElementID="View_f5d286d26bea4c35bb90a4c5330033cc">
           <Name>All Certificates</Name>
         </DisplayString>
-        <DisplayString ElementID="View_6ecad952f48e4d5e90f3f50467b81871">
-          <Name>Active Alerts</Name>
-          <Description />
+        <DisplayString ElementID="View_77d6675b0d1840b09e1779d40bf2b7d7">
+          <Name>Expired</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_bdf94f9f3a584897b3e5ee05877cb1d7">
+          <Name>Expiring Soon</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_1d8a0871d9ad4db3a2b5858f0844e7cb">
+          <Name>Valid</Name>
+        </DisplayString>
+        <DisplayString ElementID="View_df6e368f9002428898874cff657e41fc">
+          <Name>Dashboard</Name>
         </DisplayString>
       </DisplayStrings>
     </LanguagePack>

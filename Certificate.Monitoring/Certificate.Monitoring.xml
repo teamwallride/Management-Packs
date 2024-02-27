@@ -2,7 +2,7 @@
   <Manifest>
     <Identity>
       <ID>Certificate.Monitoring</ID>
-      <Version>2024.2.27.0</Version>
+      <Version>2024.2.28.0</Version>
     </Identity>
     <Name>Certificate.Monitoring</Name>
     <References>
@@ -156,7 +156,7 @@
   $ScriptName = "CertificateDiscovery.ps1"
   $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
   $Mp = "Certificate.Monitoring"
-  $MpVersion = "2024.2.27.0"
+  $MpVersion = "2024.2.28.0"
   $MpWorkflow = "Certificates.Discovery.WindowsCertificate"
   Get-CertificateDiscovery -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName # Need this to pass params in properly.
       ]]>
@@ -293,7 +293,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "CertificateExpiry.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Certificate.Monitoring"
-$MpVersion = "2024.2.27.0"
+$MpVersion = "2024.2.28.0"
 $MpWorkflow = "Certificates.Monitor.CertificateExpiry"
 Get-CertificateExpiry
 ]]>
@@ -498,10 +498,10 @@ Get-CertificateExpiry
           <Name>Store Name</Name>
         </DisplayString>
         <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="NotBefore">
-          <Name>Issued On (YMDT)</Name>
+          <Name>Issued On</Name>
         </DisplayString>
         <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="NotAfter">
-          <Name>Expires On (YMDT)</Name>
+          <Name>Expires On</Name>
         </DisplayString>
         <DisplayString ElementID="Certificate.Class.WindowsCertificate" SubElementID="Thumbprint">
           <Name>Thumbprint</Name>
