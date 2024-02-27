@@ -2,7 +2,7 @@
    <Manifest>
       <Identity>
          <ID>TestB.SQL.Monitoring</ID>
-         <Version>2024.2.23.8</Version>
+         <Version>2024.2.23.9</Version>
       </Identity>
       <Name>TestB.SQL.Monitoring</Name>
       <References>
@@ -84,7 +84,7 @@ Function Write-Log {
 }
 Function Get-SQLAccess {
     $OpsDbServer = "MS1\SCOMINST"
-    $DbQuery = "SELECT COUNT(AgentPendingActionId) as AgentCount from [OperationsManager].[dbo].[AgentPendingAction]"
+    $DbQuery = "SELECT count(name) as HasAccess FROM [master].[sys].[syslogins] WHERE name = 'LAB\SQL-MonitorTest' AND isntgroup = 1"
     # This logs terminating and non-terminating events.
     $ErrorActionPreference = "Stop"
     Try {
@@ -105,10 +105,10 @@ Function Get-SQLAccess {
         $SqlTable.Load($Reader)
         $Connection.Close()
         $Bag = $MomApi.CreatePropertyBag()
-        $Result = $SqlTable.AgentCount
+        $Result = $SqlTable.HasAccess
         $Message+=$Result
         #Write-Host -ForegroundColor Yellow $Result
-        If ($Result -gt 0) {
+        If ($Result -eq 0) {
             $Bag.AddValue('Result', "BAD")
             $Bag.AddValue('Message', "Account NOT added.")
         } else {
@@ -135,7 +135,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "SQLAccess.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestB.SQL.Monitoring"
-$MpVersion = "2024.2.23.8"
+$MpVersion = "2024.2.23.9"
 $MpWorkflow = "SomeMonitorName"
 Get-SQLAccess
 ]]>
