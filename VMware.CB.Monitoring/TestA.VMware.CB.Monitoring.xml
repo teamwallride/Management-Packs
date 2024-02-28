@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>TestA.VMware.CB.Monitoring</ID>
-            <Version>2024.2.28.0</Version>
+            <Version>2024.2.28.4</Version>
         </Identity>
         <Name>TestA.VMware.CB.Monitoring</Name>
         <References>
@@ -62,6 +62,7 @@
             </ClassTypes>
         </EntityTypes>
         <ModuleTypes>
+        <!--DataSource Modules-->
             <DataSourceModuleType ID="VMware.CB.DataSource.AgentDiscovery" Accessibility="Internal" Batching="false">
                 <Configuration>
                     <xsd:element name="IntervalSeconds" type="xsd:integer"
@@ -83,7 +84,8 @@
                                 <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
                                 <SyncTime>$Config/SyncTime$</SyncTime>
                                 <ScriptName>GetCBAgentInfo.ps1</ScriptName>
-                                <ScriptBody><![CDATA[
+                                <ScriptBody>
+<![CDATA[
 Param ($SourceId, $ManagedEntityId, $ComputerName)
 Function Write-Log {
 	Param($ScriptState)
@@ -122,10 +124,10 @@ $ComputerName = 'agent.scomtest.local'
 		# Get basic info.
 		$ComputerFqdn = ([System.Net.Dns]::GetHostByName(($env:computerName))).Hostname
 		$Agents = Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | where { $_.displayname -like "*Carbon Black*" -or $_.displayname -eq "Cb Protection Agent" } | sort displayname | select -property displayname, displayversion
-		$CarbonBlackSensorVersion = "NotInstalled"
-		$VMwareCarbonBlackEDRSensorVersion = "NotInstalled"
-		$CbProtectionAgentVersion = "NotInstalled"
-		foreach (Agent in Agents) {
+		$CarbonBlackSensorVersion = "Not Installed"
+		$VMwareCarbonBlackEDRSensorVersion = "Not Installed"
+		$CbProtectionAgentVersion = "Not Installed"
+		foreach ($Agent in $Agents) {
 			if ($Agent.displayname -eq "Carbon Black Sensor") {
 				$CarbonBlackSensorVersion = $Agent.displayversion
 			}
@@ -168,7 +170,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "GetCBAgentInfo.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.0"
+$MpVersion = "2024.2.28.4"
 $MpWorkflow = "VMware.CB.Discovery.Agent"
 Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
 ]]>
@@ -280,7 +282,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentInstall.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.0"
+$MpVersion = "2024.2.28.4"
 $MpWorkflow = "VMware.CB.Monitor.AgentInstall"
 Get-AgentInstall
 ]]>
@@ -297,7 +299,112 @@ Get-AgentInstall
         </ModuleImplementation>
         <OutputType>System!System.PropertyBagData</OutputType>
       </DataSourceModuleType>
-            </ModuleTypes>
+      <DataSourceModuleType ID="VMware.CB.DataSource.AgentVersion" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                <Scheduler>
+                  <SimpleReccuringSchedule>
+                    <Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+                    <SyncTime>$Config/SyncTime$</SyncTime>
+                  </SimpleReccuringSchedule>
+                  <ExcludeDates />
+                </Scheduler>
+              </DataSource>
+              <ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>AgentVersion.ps1</ScriptName>
+                <ScriptBody>
+<![CDATA[       
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-AgentVersion {
+# This logs terminating and non-terminating events.
+$ErrorActionPreference="Stop"
+Try {
+    # Set this here so info event is logged if there's no issues.
+    $ScriptState="Information"
+    $PSVersion = $PSVersionTable.PSVersion
+    [string]$PSMajor = $PSVersion.Major
+    [string]$PSMinor = $PSVersion.Minor
+    $PSVersion = $PSMajor + "." + $PSMinor
+    $Bag = $MomApi.CreatePropertyBag()
+	# Update as needed.
+	$LatestVersion="7.4.1.18957"
+	$Agent=Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object {$_.DisplayName -eq "VMWare Carbon Black EDR Sensor"}
+	$AgentVersion=$Agent.DisplayVersion
+	If ($AgentVersion -eq $LatestVersion) {
+		$Bag.AddValue("Result", "GOOD")
+		$Bag.AddValue("Message", "Agent version is current.")
+	} else {
+		$Bag.AddValue("Result", "BAD")
+		$Bag.AddValue("Message", "Agent version is not current. Version is $AgentVersion.")
+	}	
+    $Bag
+<# FOR TESTING
+    $MomApi.Return($Bag)
+    #>
+    # Can add functionality here to set warning state but there is no need in this script.
+    $ScriptState = "Information"
+    Write-Log -ScriptState $ScriptState
+}
+Catch {
+    $ScriptState="Warning"
+    $Message+=$_.Exception.Message
+    Write-Log -ScriptState $ScriptState   
+}
+}
+# Declare all constants used by the script.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "AgentVersion.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestA.VMware.CB.Monitoring"
+$MpVersion = "2024.2.28.4"
+$MpWorkflow = "VMware.CB.Monitor.AgentVersion"
+Get-AgentVersion
+]]>
+</ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PA">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+
+       </ModuleTypes>
 
 <MonitorTypes>
       <UnitMonitorType ID="VMware.CB.MonitorType.AgentInstall" Accessibility="Internal">
@@ -361,8 +468,100 @@ Get-AgentInstall
               </Node>
             </RegularDetection>
           </RegularDetections>
+          <!-- new bit.-->
+          <OnDemandDetections>
+            <OnDemandDetection MonitorTypeStateID="GOOD">
+              <Node ID="GoodFilter">
+                <Node ID="DS" />
+              </Node>
+            </OnDemandDetection>
+            <OnDemandDetection MonitorTypeStateID="BAD">
+              <Node ID="BadFilter">
+                <Node ID="DS" />
+              </Node>
+            </OnDemandDetection>
+          </OnDemandDetections>
         </MonitorImplementation>
       </UnitMonitorType>
+
+      <UnitMonitorType ID="VMware.CB.MonitorType.AgentVersion" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="GOOD" NoDetection="false" />
+          <MonitorTypeState ID="BAD" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="VMware.CB.DataSource.AgentVersion">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </DataSource>
+            <ConditionDetection ID="GoodFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">GOOD</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="BadFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">BAD</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="GOOD">
+              <Node ID="GoodFilter">
+                  <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="BAD">
+              <Node ID="BadFilter">
+                  <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+          <!-- new bit.-->
+          <OnDemandDetections>
+            <OnDemandDetection MonitorTypeStateID="GOOD">
+              <Node ID="GoodFilter">
+                <Node ID="DS" />
+              </Node>
+            </OnDemandDetection>
+            <OnDemandDetection MonitorTypeStateID="BAD">
+              <Node ID="BadFilter">
+                <Node ID="DS" />
+              </Node>
+            </OnDemandDetection>
+          </OnDemandDetections>
+
+        </MonitorImplementation>
+      </UnitMonitorType>
+
 </MonitorTypes>
         </TypeDefinitions>
         <Monitoring>
@@ -582,7 +781,32 @@ Get-AgentInstall
           <OperationalState ID="BAD" MonitorTypeStateID="BAD" HealthState="Error" />
         </OperationalStates>
         <Configuration>
-          <IntervalSeconds>60</IntervalSeconds> <!-- 14280 in prod. -->
+          <IntervalSeconds>86400</IntervalSeconds> <!-- 14280 in prod. -->
+          <SyncTime />
+          <TimeoutSeconds>120</TimeoutSeconds>
+        </Configuration>
+      </UnitMonitor>
+
+      <UnitMonitor ID="VMware.CB.Monitor.AgentVersion" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.Agent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="VMware.CB.MonitorType.AgentVersion" ConfirmDelivery="true">
+        <Category>AvailabilityHealth</Category>
+        <!-- Uncomment to create alert.
+        <AlertSettings AlertMessage="VMware.CB.Monitor.AgentVersion.AlertMessage">
+          <AlertOnState>Warning</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+            <AlertParameter2>$Data/Context/Property[@Name='Message']$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        -->
+        <OperationalStates>
+          <OperationalState ID="GOOD" MonitorTypeStateID="GOOD" HealthState="Success" />
+          <OperationalState ID="BAD" MonitorTypeStateID="BAD" HealthState="Warning" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>86400</IntervalSeconds>
           <SyncTime />
           <TimeoutSeconds>120</TimeoutSeconds>
         </Configuration>
@@ -629,6 +853,7 @@ Get-AgentInstall
                 <StringResource ID="VMware.Monitor.ParityReporterService.AlertMessage"/>
                 <StringResource ID="VMware.Monitor.CarbonBlackService.AlertMessage"/>
 			    <StringResource ID="VMware.CB.Monitor.AgentInstall.AlertMessage"/>
+			    <StringResource ID="VMware.CB.Monitor.AgentVersion.AlertMessage"/>
             </StringResources>
         </Presentation>
         <LanguagePacks>
@@ -654,7 +879,7 @@ Get-AgentInstall
                         <Name>CB Sensor Version</Name>
                     </DisplayString>
                     <DisplayString ElementID="VMware.CB.Class.Agent" SubElementID="VMwareCarbonBlackEDRSensorVersion">
-                        <Name>CB EDR SensorVersion</Name>
+                        <Name>CB EDR Sensor Version</Name>
                     </DisplayString>
                     <DisplayString ElementID="VMware.CB.Class.Agent" SubElementID="CbProtectionAgentVersion">
                         <Name>CB Protection Agent Version</Name>
@@ -710,6 +935,21 @@ Get-AgentInstall
 				</DisplayString>
 				<DisplayString ElementID="VMware.CB.Monitor.AgentInstall.AlertMessage">
 				  <Name>Carbon Black Agent Not Installed</Name>
+				  <Description>The Carbon Black agent is not installed on {0}.</Description>
+				</DisplayString>
+
+                    <DisplayString ElementID="VMware.CB.Monitor.AgentVersion">
+				  <Name>Carbon Black Agent Version</Name>
+				  <Description />
+				</DisplayString>
+				<DisplayString ElementID="VMware.CB.Monitor.AgentVersion" SubElementID="GOOD">
+				  <Name>Agent version OK</Name>
+				</DisplayString>
+				<DisplayString ElementID="VMware.CB.Monitor.AgentVersion" SubElementID="BAD">
+				  <Name>Agent needs update</Name>
+				</DisplayString>
+				<DisplayString ElementID="VMware.CB.Monitor.AgentVersion.AlertMessage">
+				  <Name>Carbon Black Agent Update Required</Name>
 				  <Description>The Carbon Black agent is not installed on {0}.</Description>
 				</DisplayString>
 
