@@ -1,0 +1,273 @@
+<!--
+    29/2/2024.
+    Not a completed mp but this helped me get on-demand working in my Carbon Black mp for the agent version check.
+-->
+
+<UnitMonitor ID="Sample.ServiceStatus.Monitor2" Accessibility="Public" Enabled="true" Target="Sample.ServerRole" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.TimedScript.TwoStateMonitorType" ConfirmDelivery="false">
+        <Category>Custom</Category>
+        <OperationalStates>
+          <OperationalState ID="Error" MonitorTypeStateID="Error" HealthState="Error" />
+          <OperationalState ID="Success" MonitorTypeStateID="Success" HealthState="Success" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>180</IntervalSeconds>
+          <SyncTime />
+          <ScriptName>GetServiceStatus2.vbs</ScriptName>
+          <Arguments>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$ dhcp</Arguments>
+          <ScriptBody>
+            <![CDATA[
+                  call Main()
+                  Sub Main()
+                  Dim oAPI
+                  Dim oBag
+                  Dim serviceName
+                  Dim computerName
+                  Dim statusColl
+                  Dim serviceStatus
+                  computerName = WScript.Arguments(0)
+                  serviceName = WScript.Arguments(1)
+                  Set wmi = GetObject("winmgmts:\\" & computerName & "\root\cimv2")
+                  wql = "SELECT * FROM Win32_Service WHERE Name='" & serviceName & "'"
+                  Set statusColl = wmi.ExecQuery(wql)
+                  If statusColl.Count = 1 Then
+                    Dim service
+                    Set service = statusColl.ItemIndex(0)
+                    serviceStatus = service.State
+                  End If
+                  Set oAPI = CreateObject("MOM.ScriptAPI")
+                  Set oBag = oAPI.CreatePropertyBag()
+                  oBag.AddValue "ServiceStatus", serviceStatus
+                  oAPI.Return(oBag)
+                  End Sub
+                  ]]>
+          </ScriptBody>
+          <TimeoutSeconds>120</TimeoutSeconds>
+          <ErrorExpression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Property[@Name='ServiceStatus']</XPathQuery>
+              </ValueExpression>
+              <Operator>NotEqual</Operator>
+              <ValueExpression>
+                <Value Type="String">Running</Value>
+       </ValueExpression>
+            </SimpleExpression>
+          </ErrorExpression>
+          <SuccessExpression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Property[@Name='ServiceStatus']</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">Running</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </SuccessExpression>
+        </Configuration>
+      </UnitMonitor>
+
+This monitor looks totally fine and will work properly by running the script and interpreting the results of the script every 180 seconds. The problem is that if you try to recalculate the health state of this monitor using health explorer, nothing will happen. This is because the underlying monitor type which in essence acts as the foundation for this monitor does not implement an "On Demand Detection". The "On Demand Detection" section of the monitor type provides additional information to OpsMgr in order to allow it to recalculate the health state at any point in time rather than waiting for the 180 seconds interval. Now lets look at the steps that need to be taken in order to implement a monitor which will react to a request to recalculate its health state:
+
+1 - Implement a probe which is just responsible for retrieving the particular piece of instrumentation
+<ProbeActionModuleType ID="Sample.ServiceStatus.Probe" Accessibility="Public" Batching="false" PassThrough="false">
+        <Configuration>
+          <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer" />
+          <xsd:element minOccurs="1" name="ComputerPrincipalName" type="xsd:string" />
+          <xsd:element minOccurs="1" name="ServiceName" type="xsd:string" />
+        </Configuration>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <ProbeAction ID="PassThrough" TypeID="System!System.PassThroughProbe" />
+              <ProbeAction ID="Script" TypeID="Windows!Microsoft.Windows.ScriptPropertyBagProbe">
+                <ScriptName>GetServiceStatus.vbs</ScriptName>
+                <Arguments>$Config/ComputerPrincipalName$ $Config/ServiceName$</Arguments>
+                <ScriptBody>
+                  <![CDATA[
+                  call Main()
+               Sub Main()
+                  Dim oAPI
+                  Dim oBag
+                  Dim serviceName
+                  Dim computerName
+                  Dim statusColl
+                  Dim serviceStatus
+                  computerName = WScript.Arguments(0)
+                  serviceName = WScript.Arguments(1)
+                  Set wmi = GetObject("winmgmts:\\" & computerName & "\root\cimv2")
+                  wql = "SELECT * FROM Win32_Service WHERE Name='" & serviceName & "'"
+                  Set statusColl = wmi.ExecQuery(wql)
+                  If statusColl.Count = 1 Then
+                    Dim service
+                    Set service = statusColl.ItemIndex(0)
+                    serviceStatus = service.State
+                  End If
+                  Set oAPI = CreateObject("MOM.ScriptAPI")
+                  Set oBag = oAPI.CreatePropertyBag()
+                  oBag.AddValue "ServiceStatus", serviceStatus
+                  oAPI.Return(oBag)
+                  End Sub
+                  ]]>
+                </ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Script">
+                <Node ID="PassThrough" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+        <TriggerOnly>true</TriggerOnly>
+      </ProbeActionModuleType>
+
+2 - Implement a composite data source module which would combine the probe with a scheduler. Its not a must, but I would recommend you do this to simplify the implementation of the monitor type in step 3:
+<DataSourceModuleType ID="Sample.ServiceStatus.DataSource" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" name="IntervalSeconds" type="xsd:integer" />
+          <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer" />
+          <xsd:element minOccurs="1" name="ComputerPrincipalName" type="xsd:string" />
+          <xsd:element minOccurs="1" name="ServiceName" type="xsd:string" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.Discovery.Scheduler">
+                <Scheduler>
+                  <SimpleReccuringSchedule>
+                    <Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+                  </SimpleReccuringSchedule>
+   <ExcludeDates />
+                </Scheduler>
+              </DataSource>
+              <ProbeAction ID="Probe" TypeID="Sample.ServiceStatus.Probe">
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+                <ComputerPrincipalName>$Config/ComputerPrincipalName$</ComputerPrincipalName>
+                <ServiceName>$Config/ServiceName$</ServiceName>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="Probe">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+
+
+3 - Monitor type which contains a section called "OnDemandDetection". The section is highlighted below:
+<UnitMonitorType ID="Sample.ServiceStatusMonitorType" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="Running" NoDetection="false" />
+          <MonitorTypeState ID="NotRunning" NoDetection="false" />
+        </MonitorTypeStates>
+       <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer" />
+          <xsd:element name="TimeoutSeconds" type="xsd:int" />
+          <xsd:element name="ComputerPrincipalName" type="xsd:string" />
+          <xsd:element name="ServiceName" type="xsd:string" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="Sample.ServiceStatus.DataSource">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              <ComputerPrincipalName>$Config/ComputerPrincipalName$</ComputerPrincipalName>
+              <ServiceName>$Config/ServiceName$</ServiceName>
+            </DataSource>
+            <ProbeAction ID="Probe" TypeID="Sample.ServiceStatus.Probe">
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              <ComputerPrincipalName>$Config/ComputerPrincipalName$</ComputerPrincipalName>
+              <ServiceName>$Config/ServiceName$</ServiceName>
+            </ProbeAction>
+            <ConditionDetection ID="NotRunningCondition" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='ServiceStatus']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>NotEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Running</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="RunningCondition" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='ServiceStatus']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Running</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="Running">
+              <Node ID="RunningCondition">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="NotRunning">
+              <Node ID="NotRunningCondition">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+          <OnDemandDetections>
+            <OnDemandDetection MonitorTypeStateID = "Running">
+              <Node ID = "RunningCondition">
+                <Node ID = "Probe" />
+              </Node>
+            </OnDemandDetection >
+            <OnDemandDetection MonitorTypeStateID = "NotRunning">
+              <Node ID = "NotRunningCondition">
+                <Node ID = "Probe" />
+              </Node>
+            </OnDemandDetection >
+          </OnDemandDetections>
+        </MonitorImplementation>
+   </UnitMonitorType>
+
+4 - Monitor which uses the monitor type created in step 3.
+<UnitMonitor ID="Sample.ServiceStatus.Monitor" Accessibility="Internal" Enabled="true" Target="Sample.ServerRole" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Sample.ServiceStatusMonitorType" ConfirmDelivery="false">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="Sample.ServiceStatus.Monitor.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>Dhcp</AlertParameter1>
+            <AlertParameter2>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Running" MonitorTypeStateID="Running" HealthState="Success" />
+          <OperationalState ID="NotRunning" MonitorTypeStateID="NotRunning" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>360</IntervalSeconds>
+          <TimeoutSeconds>300</TimeoutSeconds>
+        <ComputerPrincipalName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerPrincipalName>
+          <ServiceName>Dhcp</ServiceName>
+        </Configuration>
+      </UnitMonitor>

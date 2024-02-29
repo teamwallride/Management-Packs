@@ -1047,12 +1047,12 @@ Get-AgentVersion
 				  <Description>The Carbon Black agent is not installed on {0}.</Description>
 				</DisplayString>
 
-                    <DisplayString ElementID="VMware.CB.Monitor.AgentVersion">
+        <DisplayString ElementID="VMware.CB.Monitor.AgentVersion">
 				  <Name>Carbon Black Agent Version</Name>
 				  <Description />
 				</DisplayString>
 				<DisplayString ElementID="VMware.CB.Monitor.AgentVersion" SubElementID="GOOD">
-				  <Name>Agent version OK</Name>
+				  <Name>Agent is current</Name>
 				</DisplayString>
 				<DisplayString ElementID="VMware.CB.Monitor.AgentVersion" SubElementID="BAD">
 				  <Name>Agent needs update</Name>
@@ -1062,20 +1062,20 @@ Get-AgentVersion
 				  <Description>The Carbon Black agent is not installed on {0}.</Description>
 				</DisplayString>
 
-                    <DisplayString ElementID="VMware.CB.Group.CBWebConsole">
-                        <Name>VMware Carbon Black Web Console</Name>
-                    </DisplayString>
-                    <DisplayString ElementID="VMware.CB.Discovery.CBWebConsole">
-                        <Name>Populate VMware.CB.Group.CBWebConsole</Name>
-                        <Description>This discovery rule populates the group VMware.CB.Group.CBWebConsole.</Description>
-                    </DisplayString>
-                    <DisplayString ElementID="VMware.CB.Group.CBLinuxProcess">
-                        <Name>VMware Carbon Black Linux Process</Name>
-                    </DisplayString>
-                    <DisplayString ElementID="VMware.CB.Discovery.CBLinuxProcess">
-                        <Name>Populate VMware.CB.Group.CBLinuxProcess</Name>
-                        <Description>This discovery rule populates the group VMware.CB.Group.CBLinuxProcess.</Description>
-                    </DisplayString>
+        <DisplayString ElementID="VMware.CB.Group.CBWebConsole">
+            <Name>VMware Carbon Black Web Console</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Discovery.CBWebConsole">
+            <Name>Populate VMware.CB.Group.CBWebConsole</Name>
+            <Description>This discovery rule populates the group VMware.CB.Group.CBWebConsole.</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Group.CBLinuxProcess">
+            <Name>VMware Carbon Black Linux Process</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Discovery.CBLinuxProcess">
+            <Name>Populate VMware.CB.Group.CBLinuxProcess</Name>
+            <Description>This discovery rule populates the group VMware.CB.Group.CBLinuxProcess.</Description>
+        </DisplayString>
                 </DisplayStrings>
             </LanguagePack>
         </LanguagePacks>
