@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>TestA.VMware.CB.Monitoring</ID>
-            <Version>2024.2.28.8</Version>
+            <Version>2024.2.28.9</Version>
         </Identity>
         <Name>TestA.VMware.CB.Monitoring</Name>
         <References>
@@ -170,7 +170,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "GetCBAgentInfo.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.8"
+$MpVersion = "2024.2.28.9"
 $MpWorkflow = "VMware.CB.Discovery.Agent"
 Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
 ]]>
@@ -283,7 +283,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentInstall.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.8"
+$MpVersion = "2024.2.28.9"
 $MpWorkflow = "VMware.CB.Monitor.AgentInstall"
 Get-AgentInstall
 ]]>
@@ -388,7 +388,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentVersion.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.8"
+$MpVersion = "2024.2.28.9"
 $MpWorkflow = "VMware.CB.Monitor.AgentVersion"
 Get-AgentVersion
 ]]>
@@ -487,7 +487,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentVersion.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.8"
+$MpVersion = "2024.2.28.9"
 $MpWorkflow = "VMware.CB.Monitor.AgentVersion"
 Get-AgentVersion
 ]]>
@@ -898,7 +898,7 @@ Get-AgentVersion
 
       <UnitMonitor ID="VMware.CB.Monitor.AgentVersion" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.Agent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="VMware.CB.MonitorType.AgentVersion" ConfirmDelivery="true">
         <Category>AvailabilityHealth</Category>
-        <!-- Uncomment to create alert.
+        <!-- Uncomment to create alert.-->
         <AlertSettings AlertMessage="VMware.CB.Monitor.AgentVersion.AlertMessage">
           <AlertOnState>Warning</AlertOnState>
           <AutoResolve>true</AutoResolve>
@@ -909,7 +909,7 @@ Get-AgentVersion
             <AlertParameter2>$Data/Context/Property[@Name='Message']$</AlertParameter2>
           </AlertParameters>
         </AlertSettings>
-        -->
+        <!---->
         <OperationalStates>
           <OperationalState ID="GOOD" MonitorTypeStateID="GOOD" HealthState="Success" />
           <OperationalState ID="BAD" MonitorTypeStateID="BAD" HealthState="Warning" />
@@ -1059,7 +1059,7 @@ Get-AgentVersion
 				</DisplayString>
 				<DisplayString ElementID="VMware.CB.Monitor.AgentVersion.AlertMessage">
 				  <Name>Carbon Black Agent Update Required</Name>
-				  <Description>The Carbon Black agent is not installed on {0}.</Description>
+				  <Description>The Carbon Black agent on {0} needs to be upgraded to version {1}. The installed version is {2}.</Description>
 				</DisplayString>
 
         <DisplayString ElementID="VMware.CB.Group.CBWebConsole">
