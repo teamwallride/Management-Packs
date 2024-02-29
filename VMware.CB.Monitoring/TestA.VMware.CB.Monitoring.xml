@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>TestA.VMware.CB.Monitoring</ID>
-            <Version>2024.2.28.4</Version>
+            <Version>2024.2.28.8</Version>
         </Identity>
         <Name>TestA.VMware.CB.Monitoring</Name>
         <References>
@@ -170,7 +170,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "GetCBAgentInfo.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.4"
+$MpVersion = "2024.2.28.8"
 $MpWorkflow = "VMware.CB.Discovery.Agent"
 Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
 ]]>
@@ -199,6 +199,7 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
                 </ModuleImplementation>
                 <OutputType>System!System.Discovery.Data</OutputType>
             </DataSourceModuleType>
+            <!-- Agent install. -->
       <DataSourceModuleType ID="VMware.CB.DataSource.AgentInstall" Accessibility="Internal" Batching="false">
         <Configuration>
           <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -282,7 +283,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentInstall.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.4"
+$MpVersion = "2024.2.28.8"
 $MpWorkflow = "VMware.CB.Monitor.AgentInstall"
 Get-AgentInstall
 ]]>
@@ -299,6 +300,7 @@ Get-AgentInstall
         </ModuleImplementation>
         <OutputType>System!System.PropertyBagData</OutputType>
       </DataSourceModuleType>
+      <!-- Agent version. -->
       <DataSourceModuleType ID="VMware.CB.DataSource.AgentVersion" Accessibility="Internal" Batching="false">
         <Configuration>
           <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -386,7 +388,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentVersion.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.4"
+$MpVersion = "2024.2.28.8"
 $MpWorkflow = "VMware.CB.Monitor.AgentVersion"
 Get-AgentVersion
 ]]>
@@ -404,6 +406,108 @@ Get-AgentVersion
         <OutputType>System!System.PropertyBagData</OutputType>
       </DataSourceModuleType>
 
+
+<!-- PROBE ACTION MODULE-->
+      <ProbeActionModuleType ID="VMware.CB.ProbeAction.AgentVersion" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <ProbeAction ID="PassThrough" TypeID="System!System.PassThroughProbe" />
+              <ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>AgentVersion.ps1</ScriptName>
+                <ScriptBody>
+<![CDATA[       
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-AgentVersion {
+# This logs terminating and non-terminating events.
+$ErrorActionPreference="Stop"
+Try {
+    # Set this here so info event is logged if there's no issues.
+    $ScriptState="Information"
+    $PSVersion = $PSVersionTable.PSVersion
+    [string]$PSMajor = $PSVersion.Major
+    [string]$PSMinor = $PSVersion.Minor
+    $PSVersion = $PSMajor + "." + $PSMinor
+    $Bag = $MomApi.CreatePropertyBag()
+	# Update as needed.
+	$LatestVersion="7.4.1.18957"
+	$Agent=Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object {$_.DisplayName -eq "VMWare Carbon Black EDR Sensor"}
+	$AgentVersion=$Agent.DisplayVersion
+	If ($AgentVersion -eq $LatestVersion) {
+    $Message+="GOOD" # testing, remove.
+		$Bag.AddValue("Result", "GOOD")
+		$Bag.AddValue("Message", "Agent version is current.")
+	} else {
+    $Message+="BAD" # testing, remove.
+		$Bag.AddValue("Result", "BAD")
+		$Bag.AddValue("Message", "Agent version is not current. Version is $AgentVersion.")
+	}	
+    $Bag
+<# FOR TESTING
+    $MomApi.Return($Bag)
+    #>
+    # Can add functionality here to set warning state but there is no need in this script.
+    $ScriptState = "Information"
+    Write-Log -ScriptState $ScriptState
+}
+Catch {
+    $ScriptState="Warning"
+    $Message+=$_.Exception.Message
+    Write-Log -ScriptState $ScriptState   
+}
+}
+# Declare all constants used by the script.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "AgentVersion.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestA.VMware.CB.Monitoring"
+$MpVersion = "2024.2.28.8"
+$MpWorkflow = "VMware.CB.Monitor.AgentVersion"
+Get-AgentVersion
+]]>
+</ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PA">
+                <Node ID="PassThrough" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+        <TriggerOnly>true</TriggerOnly>
+      </ProbeActionModuleType>
+
+
+      <!-- END PROBE ACTION. -->
        </ModuleTypes>
 
 <MonitorTypes>
@@ -506,6 +610,11 @@ Get-AgentVersion
               <SyncTime>$Config/SyncTime$</SyncTime>
               <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
             </DataSource>
+<!-- new bit. -->
+            <ProbeAction ID="Probe" TypeID="VMware.CB.ProbeAction.AgentVersion">
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </ProbeAction>
+
             <ConditionDetection ID="GoodFilter" TypeID="System!System.ExpressionFilter">
               <Expression>
                 <SimpleExpression>
@@ -549,12 +658,12 @@ Get-AgentVersion
           <OnDemandDetections>
             <OnDemandDetection MonitorTypeStateID="GOOD">
               <Node ID="GoodFilter">
-                <Node ID="DS" />
+                <Node ID="Probe" />
               </Node>
             </OnDemandDetection>
             <OnDemandDetection MonitorTypeStateID="BAD">
               <Node ID="BadFilter">
-                <Node ID="DS" />
+                <Node ID="Probe" />
               </Node>
             </OnDemandDetection>
           </OnDemandDetections>
@@ -640,7 +749,7 @@ Get-AgentVersion
                         </DiscoveryClass>
                     </DiscoveryTypes>
                     <DataSource ID="DS" TypeID="VMware.CB.DataSource.AgentDiscovery">
-                        <IntervalSeconds>60</IntervalSeconds> <!-- 86400 in prod. -->
+                        <IntervalSeconds>86400</IntervalSeconds> <!-- 86400 in prod. -->
                         <SyncTime></SyncTime>
                         <TimeoutSeconds>120</TimeoutSeconds>
                     </DataSource>
