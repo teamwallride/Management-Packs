@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>TestA.VMware.CB.Monitoring</ID>
-            <Version>2024.2.28.9</Version>
+            <Version>2024.3.1.2</Version>
         </Identity>
         <Name>TestA.VMware.CB.Monitoring</Name>
         <References>
@@ -170,7 +170,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "GetCBAgentInfo.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.9"
+$MpVersion = "2024.3.1.2"
 $MpWorkflow = "VMware.CB.Discovery.Agent"
 Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
 ]]>
@@ -255,13 +255,14 @@ Try {
     [string]$PSMajor = $PSVersion.Major
     [string]$PSMinor = $PSVersion.Minor
     $PSVersion = $PSMajor + "." + $PSMinor
+    $ComputerFqdn = ([System.Net.Dns]::GetHostByName(($env:computerName))).Hostname
     $Bag = $MomApi.CreatePropertyBag()
-    If (Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object {$_.displayname -like "*Carbon Black*"}) {
+    If (Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object {$_.DisplayName -eq "VMWare Carbon Black EDR Sensor"}) {
         $Bag.AddValue("Result", "GOOD")
         $Bag.AddValue("Message", "The Carbon Black agent is installed.")
     } else {
         $Bag.AddValue("Result", "BAD")
-        $Bag.AddValue("Message", "The Carbon Black agent is not installed.")
+            $Bag.AddValue("Message", "The Carbon Black agent is not installed on $ComputerFqdn.")
     }
     $Bag
     <# FOR TESTING
@@ -283,7 +284,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentInstall.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.9"
+$MpVersion = "2024.3.1.2"
 $MpWorkflow = "VMware.CB.Monitor.AgentInstall"
 Get-AgentInstall
 ]]>
@@ -347,40 +348,42 @@ Function Write-Log {
     Break
 }
 Function Get-AgentVersion {
-# This logs terminating and non-terminating events.
-$ErrorActionPreference="Stop"
-Try {
-    # Set this here so info event is logged if there's no issues.
-    $ScriptState="Information"
-    $PSVersion = $PSVersionTable.PSVersion
-    [string]$PSMajor = $PSVersion.Major
-    [string]$PSMinor = $PSVersion.Minor
-    $PSVersion = $PSMajor + "." + $PSMinor
-    $Bag = $MomApi.CreatePropertyBag()
-	# Update as needed.
-	$LatestVersion="7.4.1.18957"
-	$Agent=Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object {$_.DisplayName -eq "VMWare Carbon Black EDR Sensor"}
-	$AgentVersion=$Agent.DisplayVersion
-	If ($AgentVersion -eq $LatestVersion) {
-		$Bag.AddValue("Result", "GOOD")
-		$Bag.AddValue("Message", "Agent version is current.")
-	} else {
-		$Bag.AddValue("Result", "BAD")
-		$Bag.AddValue("Message", "Agent version is not current. Version is $AgentVersion.")
-	}	
-    $Bag
-<# FOR TESTING
-    $MomApi.Return($Bag)
-    #>
-    # Can add functionality here to set warning state but there is no need in this script.
-    $ScriptState = "Information"
-    Write-Log -ScriptState $ScriptState
-}
-Catch {
-    $ScriptState="Warning"
-    $Message+=$_.Exception.Message
-    Write-Log -ScriptState $ScriptState   
-}
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        # Set this here so info event is logged if there's no issues.
+        $ScriptState = "Information"
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        $ComputerFqdn = ([System.Net.Dns]::GetHostByName(($env:computerName))).Hostname
+        $Bag = $MomApi.CreatePropertyBag()
+        # Update as needed.
+        $LatestVersion = "7.4.1.18957"
+        $Agent = Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object { $_.DisplayName -eq "VMWare Carbon Black EDR Sensor"}
+        $AgentVersion = $Agent.DisplayVersion
+        If ($AgentVersion -eq $LatestVersion) {
+            $Bag.AddValue("Result", "GOOD")
+            $Bag.AddValue("Message", "The Carbon Black agent version is current ($LatestVersion).")
+        }
+        else {
+            $Bag.AddValue("Result", "BAD")
+            $Bag.AddValue("Message", "The Carbon Black agent version on $ComputerFqdn is $AgentVersion. The latest version is $LatestVersion.")
+        }	
+        $Bag
+        <# FOR TESTING
+        $MomApi.Return($Bag)
+        #>
+        # Can add functionality here to set warning state but there is no need in this script.
+        $ScriptState = "Information"
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState   
+    }
 }
 # Declare all constants used by the script.
 [datetime]$StartTime = Get-Date
@@ -388,7 +391,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentVersion.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.9"
+$MpVersion = "2024.3.1.2"
 $MpWorkflow = "VMware.CB.Monitor.AgentVersion"
 Get-AgentVersion
 ]]>
@@ -444,42 +447,42 @@ Function Write-Log {
     Break
 }
 Function Get-AgentVersion {
-# This logs terminating and non-terminating events.
-$ErrorActionPreference="Stop"
-Try {
-    # Set this here so info event is logged if there's no issues.
-    $ScriptState="Information"
-    $PSVersion = $PSVersionTable.PSVersion
-    [string]$PSMajor = $PSVersion.Major
-    [string]$PSMinor = $PSVersion.Minor
-    $PSVersion = $PSMajor + "." + $PSMinor
-    $Bag = $MomApi.CreatePropertyBag()
-	# Update as needed.
-	$LatestVersion="7.4.1.18957"
-	$Agent=Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object {$_.DisplayName -eq "VMWare Carbon Black EDR Sensor"}
-	$AgentVersion=$Agent.DisplayVersion
-	If ($AgentVersion -eq $LatestVersion) {
-    $Message+="GOOD" # testing, remove.
-		$Bag.AddValue("Result", "GOOD")
-		$Bag.AddValue("Message", "Agent version is current.")
-	} else {
-    $Message+="BAD" # testing, remove.
-		$Bag.AddValue("Result", "BAD")
-		$Bag.AddValue("Message", "Agent version is not current. Version is $AgentVersion.")
-	}	
-    $Bag
-<# FOR TESTING
-    $MomApi.Return($Bag)
-    #>
-    # Can add functionality here to set warning state but there is no need in this script.
-    $ScriptState = "Information"
-    Write-Log -ScriptState $ScriptState
-}
-Catch {
-    $ScriptState="Warning"
-    $Message+=$_.Exception.Message
-    Write-Log -ScriptState $ScriptState   
-}
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        # Set this here so info event is logged if there's no issues.
+        $ScriptState = "Information"
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        $ComputerFqdn = ([System.Net.Dns]::GetHostByName(($env:computerName))).Hostname
+        $Bag = $MomApi.CreatePropertyBag()
+        # Update as needed.
+        $LatestVersion = "7.4.1.18957"
+        $Agent = Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object { $_.DisplayName -eq "VMWare Carbon Black EDR Sensor"}
+        $AgentVersion = $Agent.DisplayVersion
+        If ($AgentVersion -eq $LatestVersion) {
+            $Bag.AddValue("Result", "GOOD")
+            $Bag.AddValue("Message", "The Carbon Black agent version is current ($LatestVersion).")
+        }
+        else {
+            $Bag.AddValue("Result", "BAD")
+            $Bag.AddValue("Message", "The Carbon Black agent version on $ComputerFqdn is $AgentVersion. The latest version is $LatestVersion.")
+        }	
+        $Bag
+        <# FOR TESTING
+        $MomApi.Return($Bag)
+        #>
+        # Can add functionality here to set warning state but there is no need in this script.
+        $ScriptState = "Information"
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState   
+    }
 }
 # Declare all constants used by the script.
 [datetime]$StartTime = Get-Date
@@ -487,7 +490,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentVersion.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.2.28.9"
+$MpVersion = "2024.3.1.2"
 $MpWorkflow = "VMware.CB.Monitor.AgentVersion"
 Get-AgentVersion
 ]]>
@@ -882,7 +885,7 @@ Get-AgentVersion
           <AlertPriority>Normal</AlertPriority>
           <AlertSeverity>MatchMonitorHealth</AlertSeverity>
           <AlertParameters>
-            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+            <AlertParameter1>$Data/Context/Property[@Name='Message']$</AlertParameter1>
           </AlertParameters>
         </AlertSettings>
         <OperationalStates>
@@ -905,8 +908,7 @@ Get-AgentVersion
           <AlertPriority>Normal</AlertPriority>
           <AlertSeverity>MatchMonitorHealth</AlertSeverity>
           <AlertParameters>
-            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
-            <AlertParameter2>$Data/Context/Property[@Name='Message']$</AlertParameter2>
+            <AlertParameter1>$Data/Context/Property[@Name='Message']$</AlertParameter1>
           </AlertParameters>
         </AlertSettings>
         <!---->
@@ -1044,7 +1046,7 @@ Get-AgentVersion
 				</DisplayString>
 				<DisplayString ElementID="VMware.CB.Monitor.AgentInstall.AlertMessage">
 				  <Name>Carbon Black Agent Not Installed</Name>
-				  <Description>The Carbon Black agent is not installed on {0}.</Description>
+				  <Description>{0}</Description>
 				</DisplayString>
 
         <DisplayString ElementID="VMware.CB.Monitor.AgentVersion">
@@ -1059,7 +1061,7 @@ Get-AgentVersion
 				</DisplayString>
 				<DisplayString ElementID="VMware.CB.Monitor.AgentVersion.AlertMessage">
 				  <Name>Carbon Black Agent Update Required</Name>
-				  <Description>The Carbon Black agent on {0} needs to be upgraded to version {1}. The installed version is {2}.</Description>
+				  <Description>{0}</Description>
 				</DisplayString>
 
         <DisplayString ElementID="VMware.CB.Group.CBWebConsole">
