@@ -1,15 +1,10 @@
-<!--
-  To do before sealing:
-  Comment out AlertSettings on VMware.CB.Monitor.AgentVersion, we don't want it to alert.
--->
-
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
       <ID>TestA.VMware.CB.Monitoring</ID>
-      <Version>2024.3.4.3</Version>
+      <Version>2024.3.4.4</Version>
     </Identity>
     <Name>TestA.VMware.CB.Monitoring</Name>
     <References>
@@ -67,7 +62,7 @@
       </ClassTypes>
     </EntityTypes>
     <ModuleTypes>
-      <!--Agent Discovery-->
+      <!-- Agent Discovery. -->
       <DataSourceModuleType ID="VMware.CB.DataSource.AgentDiscovery" Accessibility="Internal" Batching="false">
         <Configuration>
           <xsd:element name="IntervalSeconds" type="xsd:integer"
@@ -176,7 +171,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentDiscovery.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.3.4.3"
+$MpVersion = "2024.3.4.4"
 $MpWorkflow = "VMware.CB.Discovery.Agent"
 Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
 ]]>
@@ -303,7 +298,7 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
                   $ScriptName = "AgentStatus.ps1"
                   $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
                   $Mp = "TestA.VMware.CB.Monitoring"
-                  $MpVersion = "2024.3.4.3"
+                  $MpVersion = "2024.3.4.4"
                   $MpWorkflow = "VMware.CB.Monitor.AgentStatus"
                   Get-AgentStatus
 ]]>
@@ -320,8 +315,6 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
         </ModuleImplementation>
         <OutputType>System!System.PropertyBagData</OutputType>
       </DataSourceModuleType>
-
-<!-- PROBE ACTION MODULE-->
       <ProbeActionModuleType ID="VMware.CB.ProbeAction.AgentStatus" Accessibility="Internal" Batching="false">
         <Configuration>
           <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -406,7 +399,7 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
                   $ScriptName = "AgentStatus.ps1"
                   $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
                   $Mp = "TestA.VMware.CB.Monitoring"
-                  $MpVersion = "2024.3.4.3"
+                  $MpVersion = "2024.3.4.4"
                   $MpWorkflow = "VMware.CB.Monitor.AgentStatus"
                   Get-AgentStatus
 ]]>
@@ -424,14 +417,9 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
         <OutputType>System!System.PropertyBagData</OutputType>
         <TriggerOnly>true</TriggerOnly>
       </ProbeActionModuleType>
-
-
-      <!-- END PROBE ACTION. -->
-
-
     </ModuleTypes>
     <MonitorTypes>
-      <!-- Agent install -->
+      <!-- Agent Status -->
       <UnitMonitorType ID="VMware.CB.MonitorType.AgentStatus" Accessibility="Internal">
         <MonitorTypeStates>
           <MonitorTypeState ID="Healthy" NoDetection="false" />
@@ -537,12 +525,11 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
           </OnDemandDetections>
         </MonitorImplementation>
       </UnitMonitorType>
-
     </MonitorTypes>
   </TypeDefinitions>
   <Monitoring>
     <Discoveries>
-      <Discovery ID="VMware.CB.Discovery.CBACServer" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="VMware.CB.Discovery.CBACServer" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
           <DiscoveryClass TypeID="VMware.CB.Class.CBACServer"/>
@@ -673,7 +660,7 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
       </Discovery>
     </Discoveries>
     <Monitors>
-      <!-- Carbon Black App Control Server (ParityServer) -->
+      <!-- ParityServer service -->
       <UnitMonitor ID="VMware.Monitor.ParityServerService" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.CBACServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
         <AlertSettings AlertMessage="VMware.Monitor.ParityServerService.AlertMessage">
@@ -696,7 +683,7 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
-      <!-- Carbon Black App Control Reporter (ParityReporter) -->
+      <!-- ParityReporter service -->
       <UnitMonitor ID="VMware.Monitor.ParityReporterService" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.CBACServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
         <AlertSettings AlertMessage="VMware.Monitor.ParityReporterService.AlertMessage">
@@ -719,7 +706,7 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
-      <!-- Carbon Black Sensor OR VMware Carbon Black EDR Sensor (CarbonBlack) -->
+      <!-- CarbonBlack service -->
       <UnitMonitor ID="VMware.Monitor.CarbonBlackService" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.Agent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
         <Category>Alert</Category>
         <AlertSettings AlertMessage="VMware.Monitor.CarbonBlackService.AlertMessage">
@@ -742,6 +729,7 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
           <CheckStartupType>true</CheckStartupType>
         </Configuration>
       </UnitMonitor>
+      <!-- Agent Status -->
       <UnitMonitor ID="VMware.CB.Monitor.AgentStatus" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.Agent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="VMware.CB.MonitorType.AgentStatus" ConfirmDelivery="true">
         <Category>AvailabilityHealth</Category>
         <AlertSettings AlertMessage="VMware.CB.Monitor.AgentStatus.AlertMessage">
