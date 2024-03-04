@@ -9,7 +9,7 @@
   <Manifest>
     <Identity>
       <ID>TestA.VMware.CB.Monitoring</ID>
-      <Version>2024.3.4.1</Version>
+      <Version>2024.3.4.3</Version>
     </Identity>
     <Name>TestA.VMware.CB.Monitoring</Name>
     <References>
@@ -176,7 +176,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "AgentDiscovery.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "TestA.VMware.CB.Monitoring"
-$MpVersion = "2024.3.4.1"
+$MpVersion = "2024.3.4.3"
 $MpWorkflow = "VMware.CB.Discovery.Agent"
 Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
 ]]>
@@ -303,7 +303,7 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
                   $ScriptName = "AgentStatus.ps1"
                   $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
                   $Mp = "TestA.VMware.CB.Monitoring"
-                  $MpVersion = "2024.3.4.1"
+                  $MpVersion = "2024.3.4.3"
                   $MpWorkflow = "VMware.CB.Monitor.AgentStatus"
                   Get-AgentStatus
 ]]>
@@ -320,6 +320,114 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
         </ModuleImplementation>
         <OutputType>System!System.PropertyBagData</OutputType>
       </DataSourceModuleType>
+
+<!-- PROBE ACTION MODULE-->
+      <ProbeActionModuleType ID="VMware.CB.ProbeAction.AgentStatus" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <ProbeAction ID="PassThrough" TypeID="System!System.PassThroughProbe" />
+              <ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>AgentStatus.ps1</ScriptName>
+                <ScriptBody>
+<![CDATA[       
+                    Function Write-Log {
+                      Param($ScriptState)
+                      if ($ScriptState -eq "Information") {
+                          $EventId = 17609
+                          $EventLevel = 0 # 0=Info
+                      }
+                      else {
+                          $EventId = 17610
+                          $EventLevel = 2 # 2=Warning
+                      }
+                      $End = Get-Date
+                      $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+                      $Minutes = $TimeCount.Minutes
+                      $Seconds = $TimeCount.Seconds
+                      $Milliseconds = $TimeCount.Milliseconds
+                      $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+                      Break
+                  }
+                  Function Get-AgentStatus {
+                      # This logs terminating and non-terminating events.
+                      $ErrorActionPreference = "Stop"
+                      Try {
+                          # Set this here so info event is logged if there's no issues.
+                          $ScriptState = "Information"
+                          $PSVersion = $PSVersionTable.PSVersion
+                          [string]$PSMajor = $PSVersion.Major
+                          [string]$PSMinor = $PSVersion.Minor
+                          $PSVersion = $PSMajor + "." + $PSMinor
+                          $ComputerFqdn = ([System.Net.Dns]::GetHostByName(($env:computerName))).Hostname
+                          $Bag = $MomApi.CreatePropertyBag()
+                          $LatestVersion = "7.4.1.18957"
+                          $Agent = Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object { $_.DisplayName -eq "VMWare Carbon Black EDR Sensor" }
+                          $AgentVersion = $Agent.DisplayVersion
+                          # Agent is installed and current.
+                          If ($AgentVersion -eq $LatestVersion) {
+                              $Bag.AddValue("Result", "Healthy")
+                              $Bag.AddValue("Message", "The Carbon Black agent version is current ($LatestVersion).")
+                          }
+                          # Agent is installed but not current.
+                          elseif ($AgentVersion -ne $null) {
+                              $Bag.AddValue("Result", "Warning")
+                              $Bag.AddValue("Message", "The Carbon Black agent on $ComputerFqdn is not $LatestVersion. The installed version is $AgentVersion.")
+                          }
+                          else {
+                              $Bag.AddValue("Result", "Critical")
+                              $Bag.AddValue("Message", "The Carbon Black agent is not installed on $ComputerFqdn.")
+                          }
+                          $Bag
+                          <# FOR TESTING
+                  $MomApi.Return($Bag)
+                  #>
+                          # Can add functionality here to set warning state but there is no need in this script.
+                          $ScriptState = "Information"
+                          Write-Log -ScriptState $ScriptState
+                      }
+                      Catch {
+                          $ScriptState = "Warning"
+                          $Message += $_.Exception.Message
+                          Write-Log -ScriptState $ScriptState   
+                      }
+                  }
+                  # Declare all constants used by the script.
+                  [datetime]$StartTime = Get-Date
+                  $MomApi = New-Object -comObject 'MOM.ScriptAPI'
+                  $ScriptName = "AgentStatus.ps1"
+                  $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+                  $Mp = "TestA.VMware.CB.Monitoring"
+                  $MpVersion = "2024.3.4.3"
+                  $MpWorkflow = "VMware.CB.Monitor.AgentStatus"
+                  Get-AgentStatus
+]]>
+</ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PA">
+                <Node ID="PassThrough" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+        <TriggerOnly>true</TriggerOnly>
+      </ProbeActionModuleType>
+
+
+      <!-- END PROBE ACTION. -->
+
 
     </ModuleTypes>
     <MonitorTypes>
@@ -350,6 +458,9 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
               <SyncTime>$Config/SyncTime$</SyncTime>
               <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
             </DataSource>
+            <ProbeAction ID="Probe" TypeID="VMware.CB.ProbeAction.AgentStatus">
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </ProbeAction>
             <ConditionDetection ID="HealthyFilter" TypeID="System!System.ExpressionFilter">
               <Expression>
                 <SimpleExpression>
@@ -410,17 +521,17 @@ Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName 
           <OnDemandDetections>
             <OnDemandDetection MonitorTypeStateID="Healthy">
               <Node ID="HealthyFilter">
-                <Node ID="DS" />
+                <Node ID="Probe" />
               </Node>
             </OnDemandDetection>
             <OnDemandDetection MonitorTypeStateID="Warning">
               <Node ID="WarningFilter">
-                <Node ID="DS" />
+                <Node ID="Probe" />
               </Node>
             </OnDemandDetection>
             <OnDemandDetection MonitorTypeStateID="Critical">
               <Node ID="CriticalFilter">
-                <Node ID="DS" />
+                <Node ID="Probe" />
               </Node>
             </OnDemandDetection>
           </OnDemandDetections>
