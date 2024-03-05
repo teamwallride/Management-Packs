@@ -1,747 +1,898 @@
-<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
-	<Manifest>
-		<Identity>
-			<ID>VMware.CB.Monitoring</ID>
-			<Version>2023.12.8.0</Version>
-		</Identity>
-		<Name>VMware.CB.Monitoring</Name>
-		<References>
-			<Reference Alias="Windows">
-				<ID>Microsoft.Windows.Library</ID>
-				<Version>7.5.8501.0</Version>
-				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-			</Reference>
-			<Reference Alias="System">
-				<ID>System.Library</ID>
-				<Version>7.5.8501.0</Version>
-				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-			</Reference>
-			<Reference Alias="SystemCenter">
-				<ID>Microsoft.SystemCenter.Library</ID>
-				<Version>7.0.8437.0</Version>
-				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-			</Reference>
-			<Reference Alias="Health">
-				<ID>System.Health.Library</ID>
-				<Version>7.0.8437.0</Version>
-				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-			</Reference>
-			<Reference Alias="MSIGL">
-				<ID>Microsoft.SystemCenter.InstanceGroup.Library</ID>
-				<Version>7.5.8501.0</Version>
-				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-			</Reference>
-			<Reference Alias="WebApplicationTest">
-			<ID>Microsoft.SystemCenter.WebApplicationTest.Library</ID>
-			<Version>7.2.11719.0</Version>
-			<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-			</Reference>
-			<Reference Alias="UnixProcLib">
-			<ID>Microsoft.Unix.Process.Library</ID>
-			<Version>7.6.1064.0</Version>
-			<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
-			</Reference>
-		</References>
-	</Manifest>
-	<TypeDefinitions>
-		<EntityTypes>
-			<ClassTypes>
-				<ClassType ID="VMware.Class.CBACServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
-					<Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-					<Property ID="InstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-				</ClassType>
-				<ClassType ID="VMware.Class.CBAgent" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
-					<Property ID="EDRVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-					<Property ID="EDRInstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-					<Property ID="ACVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-					<Property ID="ACInstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
-				</ClassType>
-				<ClassType ID="VMware.Group.CBWebConsole" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-				<ClassType ID="VMware.Group.CBLinuxProcess" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
-			</ClassTypes>
-		</EntityTypes>
-		<MonitorTypes>
-			<!-- VMware.MonitorType.EDRAgentInstall -->
-			<UnitMonitorType ID="VMware.MonitorType.EDRAgentInstall" Accessibility="Public">
-				<MonitorTypeStates>
-					<MonitorTypeState ID="RegKeyExists" NoDetection="false"/>
-					<MonitorTypeState ID="RegKeyMissing" NoDetection="false"/>
-				</MonitorTypeStates>
-				<Configuration/>
-				<MonitorImplementation>
-					<MemberModules>
-						<DataSource ID="RegDS" TypeID="Windows!Microsoft.Windows.RegistryProvider">
-							<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-							<RegistryAttributeDefinitions>
-								<RegistryAttributeDefinition>
-									<AttributeName>EDRAgentInstalled</AttributeName>
-									<Path>SOFTWARE\CarbonBlack\config</Path>
-									<!-- For testing.
-									<Path>SOFTWARE\CarbonBlack\config</Path>
-									-->
-									<PathType>0</PathType>
-									<!-- 0=regKey 1=regValue -->
-									<AttributeType>0</AttributeType>
-									<!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
-								</RegistryAttributeDefinition>
-							</RegistryAttributeDefinitions>
-							<Frequency>21600</Frequency>
-							<!-- change in prod -->
-						</DataSource>
-						<ConditionDetection ID="CDExists" TypeID="System!System.ExpressionFilter">
-							<Expression>
-								<SimpleExpression>
-									<ValueExpression>
-										<XPathQuery Type="Boolean">Values/EDRAgentInstalled</XPathQuery>
-									</ValueExpression>
-									<Operator>Equal</Operator>
-									<ValueExpression>
-										<Value Type="Boolean">true</Value>
-									</ValueExpression>
-								</SimpleExpression>
-							</Expression>
-						</ConditionDetection>
-						<ConditionDetection ID="CDMissing" TypeID="System!System.ExpressionFilter">
-							<Expression>
-								<SimpleExpression>
-									<ValueExpression>
-										<XPathQuery Type="Boolean">Values/EDRAgentInstalled</XPathQuery>
-									</ValueExpression>
-									<Operator>Equal</Operator>
-									<ValueExpression>
-										<Value Type="Boolean">false</Value>
-									</ValueExpression>
-								</SimpleExpression>
-							</Expression>
-						</ConditionDetection>
-					</MemberModules>
-					<RegularDetections>
-						<RegularDetection MonitorTypeStateID="RegKeyExists">
-							<Node ID="CDExists">
-								<Node ID="RegDS"/>
-							</Node>
-						</RegularDetection>
-						<RegularDetection MonitorTypeStateID="RegKeyMissing">
-							<Node ID="CDMissing">
-								<Node ID="RegDS"/>
-							</Node>
-						</RegularDetection>
-					</RegularDetections>
-				</MonitorImplementation>
-			</UnitMonitorType>
-			<!-- VMware.MonitorType.EDRAgentVersion -->
-			<UnitMonitorType ID="VMware.MonitorType.EDRAgentVersion" Accessibility="Internal">
-				<MonitorTypeStates>
-					<MonitorTypeState ID="RegValueMatch" NoDetection="false"/>
-					<MonitorTypeState ID="RegValueDoesNotMatch" NoDetection="false"/>
-				</MonitorTypeStates>
-				<Configuration/>
-				<MonitorImplementation>
-					<MemberModules>
-						<DataSource ID="RegDS" TypeID="Windows!Microsoft.Windows.RegistryProvider">
-							<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-							<RegistryAttributeDefinitions>
-								<RegistryAttributeDefinition>
-									<AttributeName>EDRAgentVersionExist</AttributeName>
-									<Path>SOFTWARE\CarbonBlack\config</Path>
-									<!-- For testing.
-									<Path>SOFTWARE\CarbonBlack\config</Path>
-									-->
-									<PathType>0</PathType>	<!-- 0=regKey 1=regValue -->
-									<AttributeType>0</AttributeType>	<!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
-								</RegistryAttributeDefinition>
-								<RegistryAttributeDefinition>
-									<AttributeName>EDRAgentVersion</AttributeName>
-									<Path>SOFTWARE\CarbonBlack\config\SensorVersion</Path>
-									<!-- For testing.
-									<Path>SOFTWARE\CarbonBlack\config\SensorVersion</Path>
-									-->
-									<PathType>1</PathType>
-									<AttributeType>1</AttributeType>
-								</RegistryAttributeDefinition>
-							</RegistryAttributeDefinitions>
-							<Frequency>21900</Frequency>
-							<!-- change in prod -->
-						</DataSource>
-						<ConditionDetection ID="CDGood" TypeID="System!System.ExpressionFilter">
-							<Expression>
-								<SimpleExpression>
-									<ValueExpression>
-										<XPathQuery Type="String">Values/EDRAgentVersion</XPathQuery>
-									</ValueExpression>
-									<Operator>Equal</Operator>
-									<ValueExpression>
-										<Value Type="String">0007.0003.0002.18738</Value>
-									</ValueExpression>
-								</SimpleExpression>
-							</Expression>
-						</ConditionDetection>
-						<ConditionDetection ID="CDBad" TypeID="System!System.ExpressionFilter">
-							<Expression>
-								<!-- Need 'And' expression here otherwise it considers it unhealthy if the key isn't there and will alert. It will also alert if the value exists but the value data is blank. -->
-								<And>
-									<Expression>
-										<SimpleExpression>
-											<ValueExpression>
-												<XPathQuery Type="String">Values/EDRAgentVersion</XPathQuery>
-											</ValueExpression>
-											<Operator>NotEqual</Operator>
-											<ValueExpression>
-												<Value Type="String">0007.0003.0002.18738</Value>
-											</ValueExpression>
-										</SimpleExpression>
-									</Expression>
-									<Expression>
-										<SimpleExpression>
-											<ValueExpression>
-												<XPathQuery Type="String">Values/EDRAgentVersionExist</XPathQuery>
-											</ValueExpression>
-											<Operator>Equal</Operator>
-											<ValueExpression>
-												<Value Type="String">true</Value>
-											</ValueExpression>
-										</SimpleExpression>
-									</Expression>
-								</And>
-							</Expression>
-						</ConditionDetection>
-					</MemberModules>
-					<RegularDetections>
-						<RegularDetection MonitorTypeStateID="RegValueMatch">
-							<Node ID="CDGood">
-								<Node ID="RegDS"/>
-							</Node>
-						</RegularDetection>
-						<RegularDetection MonitorTypeStateID="RegValueDoesNotMatch">
-							<Node ID="CDBad">
-								<Node ID="RegDS"/>
-							</Node>
-						</RegularDetection>
-					</RegularDetections>
-				</MonitorImplementation>
-			</UnitMonitorType>
-		</MonitorTypes>
-	</TypeDefinitions>
-	<Monitoring>
-		<Discoveries>
-			<Discovery ID="VMware.Discovery.CBACServer" Enabled="false" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
-				<Category>Discovery</Category>
-				<DiscoveryTypes>
-					<DiscoveryClass TypeID="VMware.Class.CBACServer"/>
-				</DiscoveryTypes>
-				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
-					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-					<RegistryAttributeDefinitions>
-						<RegistryAttributeDefinition>
-							<AttributeName>AppControlInstalled</AttributeName>
-							<Path>SOFTWARE\Bit9\Parity Server</Path>
-							<PathType>0</PathType>
-							<!-- 0=regKey 1=regValue -->
-							<AttributeType>0</AttributeType>
-							<!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
-						</RegistryAttributeDefinition>
-						<RegistryAttributeDefinition>
-							<AttributeName>Version</AttributeName>
-							<Path>SOFTWARE\Bit9\Parity Server\ProductVersion</Path>
-							<PathType>1</PathType>
-							<AttributeType>1</AttributeType>
-						</RegistryAttributeDefinition>
-						<RegistryAttributeDefinition>
-							<AttributeName>InstalledPath</AttributeName>
-							<Path>SOFTWARE\Bit9\Parity Server\InstallPath</Path>
-							<PathType>1</PathType>
-							<AttributeType>1</AttributeType>
-						</RegistryAttributeDefinition>
-					</RegistryAttributeDefinitions>
-					<Frequency>82800</Frequency>
-					<ClassId>$MPElement[Name="VMware.Class.CBACServer"]$</ClassId>
-					<InstanceSettings>
-						<Settings>
-							<Setting>
-								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
-								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
-							</Setting>
-							<Setting>
-								<Name>$MPElement[Name="VMware.Class.CBACServer"]/Version$</Name>
-								<Value>$Data/Values/Version$</Value>
-							</Setting>
-							<Setting>
-								<Name>$MPElement[Name="VMware.Class.CBACServer"]/InstallFolder$</Name>
-								<Value>$Data/Values/InstalledPath$</Value>
-							</Setting>
-							<Setting>
-								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
-								<Value>$Target/Host/Property[Type="System!System.Entity"]/DisplayName$</Value>
-							</Setting>
-						</Settings>
-					</InstanceSettings>
-					<Expression>
-						<SimpleExpression>
-							<ValueExpression>
-								<XPathQuery Type="String">Values/AppControlInstalled</XPathQuery>
-							</ValueExpression>
-							<Operator>Equal</Operator>
-							<ValueExpression>
-								<Value Type="String">True</Value>
-							</ValueExpression>
-						</SimpleExpression>
-					</Expression>
-				</DataSource>
-			</Discovery>
-			<Discovery ID="VMware.Discovery.CBAgent" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
-				<Category>Discovery</Category>
-				<DiscoveryTypes>
-					<DiscoveryClass TypeID="VMware.Class.CBAgent"/>
-				</DiscoveryTypes>
-				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
-					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-					<RegistryAttributeDefinitions>
-						<RegistryAttributeDefinition>
-							<AttributeName>AgentInstalled</AttributeName>
-							<Path>SOFTWARE\CarbonBlack\config</Path>
-							<PathType>0</PathType>
-							<!-- 0=regKey 1=regValue -->
-							<AttributeType>0</AttributeType>
-							<!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
-						</RegistryAttributeDefinition>
-						<RegistryAttributeDefinition>
-							<AttributeName>EDRVersion</AttributeName>
-							<Path>SOFTWARE\CarbonBlack\config\SensorVersion</Path>
-							<PathType>1</PathType>
-							<AttributeType>1</AttributeType>
-						</RegistryAttributeDefinition>
-						<RegistryAttributeDefinition>
-							<AttributeName>EDRInstallFolder</AttributeName>
-							<Path>SOFTWARE\CarbonBlack\config\ProgramFilesCarbonBlack</Path>
-							<PathType>1</PathType>
-							<AttributeType>1</AttributeType>
-						</RegistryAttributeDefinition>
-						<RegistryAttributeDefinition>
-							<AttributeName>ACVersion</AttributeName>
-							<Path>SOFTWARE\WOW6432Node\Bit9\Parity Agent\ParityAgentVersion</Path>
-							<PathType>1</PathType>
-							<AttributeType>1</AttributeType>
-						</RegistryAttributeDefinition>
-						<RegistryAttributeDefinition>
-							<AttributeName>ACInstallFolder</AttributeName>
-							<Path>SOFTWARE\WOW6432Node\Bit9\Parity Agent\ParityAgentInstallPath</Path>
-							<PathType>1</PathType>
-							<AttributeType>1</AttributeType>
-						</RegistryAttributeDefinition>
-					</RegistryAttributeDefinitions>
-					<Frequency>83100</Frequency>
-					<ClassId>$MPElement[Name="VMware.Class.CBAgent"]$</ClassId>
-					<InstanceSettings>
-						<Settings>
-							<Setting>
-								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
-								<Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
-							</Setting>
-							<Setting>
-								<Name>$MPElement[Name="VMware.Class.CBAgent"]/EDRVersion$</Name>
-								<Value>$Data/Values/EDRVersion$</Value>
-							</Setting>
-							<Setting>
-								<Name>$MPElement[Name="VMware.Class.CBAgent"]/EDRInstallFolder$</Name>
-								<Value>$Data/Values/EDRInstallFolder$</Value>
-							</Setting>
-							<Setting>
-								<Name>$MPElement[Name="VMware.Class.CBAgent"]/ACVersion$</Name>
-								<Value>$Data/Values/ACVersion$</Value>
-							</Setting>
-							<Setting>
-								<Name>$MPElement[Name="VMware.Class.CBAgent"]/ACInstallFolder$</Name>
-								<Value>$Data/Values/ACInstallFolder$</Value>
-							</Setting>
-							<Setting>
-								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
-								<Value>$Target/Host/Property[Type="System!System.Entity"]/DisplayName$</Value>
-							</Setting>
-						</Settings>
-					</InstanceSettings>
-					<Expression>
-						<Or>
-							<Expression>
-								<SimpleExpression>
-									<ValueExpression>
-										<XPathQuery Type="String">Values/AgentInstalled</XPathQuery>
-									</ValueExpression>
-									<Operator>Equal</Operator>
-									<ValueExpression>
-										<Value Type="String">True</Value>
-									</ValueExpression>
-								</SimpleExpression>
-							</Expression>
-							<Expression>
-								<SimpleExpression>
-									<ValueExpression>
-										<XPathQuery Type="String">Values/AgentInstalled</XPathQuery>
-									</ValueExpression>
-									<Operator>Equal</Operator>
-									<ValueExpression>
-										<Value Type="String">False</Value>
-									</ValueExpression>
-								</SimpleExpression>
-							</Expression>
-						</Or>
-					</Expression>
-				</DataSource>
-			</Discovery>
-			<Discovery ID="VMware.Discovery.CBWebConsole" Enabled="true" Target="VMware.Group.CBWebConsole" ConfirmDelivery="false" Remotable="true" Priority="Normal">
-			<Category>Discovery</Category>
-			<DiscoveryTypes>
-			  <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
-			</DiscoveryTypes>
-			<DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
-			  <RuleId>$MPElement$</RuleId>
-			  <GroupInstanceId>$MPElement[Name="VMware.Group.CBWebConsole"]$</GroupInstanceId>
-			  <MembershipRules>
-				<MembershipRule>
-				  <MonitoringClass>$MPElement[Name="WebApplicationTest!Microsoft.SystemCenter.WebApplicationTest.WebTest"]$</MonitoringClass>
-				  <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
-				  <Expression>
-					<RegExExpression>
-					  <ValueExpression>
-						<Property>$MPElement[Name="System!System.Entity"]/DisplayName$</Property>
-					  </ValueExpression>
-					  <Operator>MatchesRegularExpression</Operator>
-					  <Pattern>(?i:^Carbon Black)</Pattern>
-					</RegExExpression>
-				  </Expression>
-				</MembershipRule>
-			  </MembershipRules>
-			</DataSource>
-			</Discovery>			
-			<Discovery ID="VMware.Discovery.CBLinuxProcess" Enabled="true" Target="VMware.Group.CBLinuxProcess" ConfirmDelivery="false" Remotable="true" Priority="Normal">
-			<Category>Discovery</Category>
-			<DiscoveryTypes>
-			  <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
-			</DiscoveryTypes>
-			<DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
-			  <RuleId>$MPElement$</RuleId>
-			  <GroupInstanceId>$MPElement[Name="VMware.Group.CBLinuxProcess"]$</GroupInstanceId>
-			  <MembershipRules>
-				<MembershipRule>
-				  <MonitoringClass>$MPElement[Name="UnixProcLib!Microsoft.SystemCenter.MonitoredUnixProcess"]$</MonitoringClass>
-				  <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
-				  <Expression>
-					<RegExExpression>
-					  <ValueExpression>
-						<Property>$MPElement[Name="System!System.Entity"]/DisplayName$</Property>
-					  </ValueExpression>
-					  <Operator>MatchesRegularExpression</Operator>
-					  <Pattern>(?i:^Carbon Black)</Pattern>
-					</RegExExpression>
-				  </Expression>
-				</MembershipRule>
-			  </MembershipRules>
-			</DataSource>
-			</Discovery>			
-		</Discoveries>
-		<Monitors>
-			<!-- Carbon Black App Control Server (ParityServer) -->
-			<UnitMonitor ID="VMware.Monitor.ParityServerService" Accessibility="Public" Enabled="true" Target="VMware.Class.CBACServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
-				<Category>Alert</Category>
-				<AlertSettings AlertMessage="VMware.Monitor.ParityServerService.AlertMessage">
-					<AlertOnState>Error</AlertOnState>
-					<AutoResolve>true</AutoResolve>
-					<AlertPriority>Normal</AlertPriority>
-					<AlertSeverity>Error</AlertSeverity>
-					<AlertParameters>
-						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
-					</AlertParameters>
-				</AlertSettings>
-				<OperationalStates>
-					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
-					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
-				</OperationalStates>
-				<Configuration>
-					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-					<ServiceName>ParityServer</ServiceName>
-					<CheckStartupType>true</CheckStartupType>
-				</Configuration>
-			</UnitMonitor>
-			<!-- Carbon Black App Control Reporter (ParityReporter) -->
-			<UnitMonitor ID="VMware.Monitor.ParityReporterService" Accessibility="Public" Enabled="true" Target="VMware.Class.CBACServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
-				<Category>Alert</Category>
-				<AlertSettings AlertMessage="VMware.Monitor.ParityReporterService.AlertMessage">
-					<AlertOnState>Error</AlertOnState>
-					<AutoResolve>true</AutoResolve>
-					<AlertPriority>Normal</AlertPriority>
-					<AlertSeverity>Error</AlertSeverity>
-					<AlertParameters>
-						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
-					</AlertParameters>
-				</AlertSettings>
-				<OperationalStates>
-					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
-					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
-				</OperationalStates>
-				<Configuration>
-					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-					<ServiceName>ParityReporter</ServiceName>
-					<CheckStartupType>true</CheckStartupType>
-				</Configuration>
-			</UnitMonitor>
-			<!-- Carbon Black Sensor OR VMware Carbon Black EDR Sensor (CarbonBlack) -->
-			<UnitMonitor ID="VMware.Monitor.CarbonBlackService" Accessibility="Public" Enabled="true" Target="VMware.Class.CBAgent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
-				<Category>Alert</Category>
-				<AlertSettings AlertMessage="VMware.Monitor.CarbonBlackService.AlertMessage">
-					<AlertOnState>Error</AlertOnState>
-					<AutoResolve>true</AutoResolve>
-					<AlertPriority>Normal</AlertPriority>
-					<AlertSeverity>Error</AlertSeverity>
-					<AlertParameters>
-						<AlertParameter1>$Data/Context/Property[@Name='DisplayName']$</AlertParameter1>
-						<AlertParameter2>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter2>
-					</AlertParameters>
-				</AlertSettings>
-				<OperationalStates>
-					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
-					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
-				</OperationalStates>
-				<Configuration>
-					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-					<ServiceName>CarbonBlack</ServiceName>
-					<CheckStartupType>true</CheckStartupType>
-				</Configuration>
-			</UnitMonitor>
-			<!-- VMware.Monitor.EDRAgentInstall -->
-			<UnitMonitor ID="VMware.Monitor.EDRAgentInstall" Accessibility="Public" Enabled="true" Target="VMware.Class.CBAgent" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="VMware.MonitorType.EDRAgentInstall" ConfirmDelivery="true">
-				<Category>Alert</Category>
-				<AlertSettings AlertMessage="VMware.Monitor.EDRAgentInstall.AlertMessage">
-					<AlertOnState>Error</AlertOnState>
-					<AutoResolve>true</AutoResolve>
-					<AlertPriority>Normal</AlertPriority>
-					<AlertSeverity>MatchMonitorHealth</AlertSeverity>
-					<AlertParameters>
-						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
-					</AlertParameters>
-				</AlertSettings>
-				<OperationalStates>
-					<OperationalState ID="Success" MonitorTypeStateID="RegKeyExists" HealthState="Success"/>
-					<OperationalState ID="Error" MonitorTypeStateID="RegKeyMissing" HealthState="Error"/>
-				</OperationalStates>
-				<Configuration/>
-			</UnitMonitor>
-			<!-- VMware.Monitor.EDRAgentVersion -->
-			<UnitMonitor ID="VMware.Monitor.EDRAgentVersion" Accessibility="Public" Enabled="true" Target="VMware.Class.CBAgent" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="VMware.MonitorType.EDRAgentVersion" ConfirmDelivery="true">
-				<Category>Alert</Category>
-				<AlertSettings AlertMessage="VMware.Monitor.EDRAgentVersion.AlertMessage">
-					<AlertOnState>Warning</AlertOnState>
-					<AutoResolve>true</AutoResolve>
-					<AlertPriority>Normal</AlertPriority>
-					<AlertSeverity>MatchMonitorHealth</AlertSeverity>
-					<AlertParameters>
-						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
-						<!-- This is a cheat to show the agent version in the alert. I can't find a better way to do it. -->
-						<AlertParameter2>$Target/Property[Type="VMware.Class.CBAgent"]/EDRVersion$</AlertParameter2>
-					</AlertParameters>
-				</AlertSettings>
-				<OperationalStates>
-					<OperationalState ID="Success" MonitorTypeStateID="RegValueMatch" HealthState="Success"/>
-					<OperationalState ID="Warning" MonitorTypeStateID="RegValueDoesNotMatch" HealthState="Warning"/>
-				</OperationalStates>
-				<Configuration/>
-			</UnitMonitor>
-		</Monitors>
-		<Recoveries>
-			<Recovery ID="VMware.Recovery.ParityServerService" Accessibility="Public" Enabled="true" Target="VMware.Class.CBACServer" Monitor="VMware.Monitor.ParityServerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
-				<Category>Maintenance</Category>
-				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
-					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
-					<WorkingDirectory/>
-					<CommandLine>start "ParityServer"</CommandLine>
-					<TimeoutSeconds>60</TimeoutSeconds>
-					<RequireOutput>true</RequireOutput>
-				</WriteAction>
-			</Recovery>
-			<Recovery ID="VMware.Recovery.ParityReporterService" Accessibility="Public" Enabled="true" Target="VMware.Class.CBACServer" Monitor="VMware.Monitor.ParityReporterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
-				<Category>Maintenance</Category>
-				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
-					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
-					<WorkingDirectory/>
-					<CommandLine>start "ParityReporter"</CommandLine>
-					<TimeoutSeconds>60</TimeoutSeconds>
-					<RequireOutput>true</RequireOutput>
-				</WriteAction>
-			</Recovery>
-			<Recovery ID="VMware.Recovery.CarbonBlackService" Accessibility="Public" Enabled="true" Target="VMware.Class.CBAgent" Monitor="VMware.Monitor.CarbonBlackService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
-				<Category>Maintenance</Category>
-				<WriteAction ID="WA" TypeID="System!System.CommandExecuter">
-					<ApplicationName>%windir%\System32\net.exe</ApplicationName>
-					<WorkingDirectory/>
-					<CommandLine>start "CarbonBlack"</CommandLine>
-					<TimeoutSeconds>60</TimeoutSeconds>
-					<RequireOutput>true</RequireOutput>
-				</WriteAction>
-			</Recovery>
-		</Recoveries>
-	</Monitoring>
-	<Presentation>
-		<StringResources>
-			<StringResource ID="VMware.Monitor.ParityServerService.AlertMessage"/>
-			<StringResource ID="VMware.Monitor.ParityReporterService.AlertMessage"/>
-			<StringResource ID="VMware.Monitor.CarbonBlackService.AlertMessage"/>
-			<StringResource ID="VMware.Monitor.EDRAgentInstall.AlertMessage"/>
-			<StringResource ID="VMware.Monitor.EDRAgentVersion.AlertMessage"/>
-		</StringResources>
-	</Presentation>
-	<LanguagePacks>
-		<LanguagePack ID="ENU" IsDefault="false">
-			<DisplayStrings>
-				<DisplayString ElementID="VMware.CB.Monitoring">
-					<Name>VMware Carbon Black Monitoring</Name>
-					<Description>Custom monitoring for Carbon Black.</Description>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Class.CBACServer">
-					<Name>VMware Carbon Black App Control Server</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Class.CBACServer" SubElementID="Version">
-					<Name>Version</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Class.CBACServer" SubElementID="InstallFolder">
-					<Name>Install Folder</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Class.CBAgent">
-					<Name>VMware Carbon Black Agent</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Class.CBAgent" SubElementID="EDRVersion">
-					<Name>EDR Version</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Class.CBAgent" SubElementID="EDRInstallFolder">
-					<Name>EDR Install Folder</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Class.CBAgent" SubElementID="ACVersion">
-					<Name>AC Version</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Class.CBAgent" SubElementID="ACInstallFolder">
-					<Name>AC Install Folder</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.ParityServerService">
-					<Name>Carbon Black App Control Server</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.ParityServerService.AlertMessage">
-					<Name>Carbon Black App Control Server Service Not Running</Name>
-					<Description>The 'Carbon Black App Control Server' service on {0} is not running.</Description>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.ParityServerService" SubElementID="Healthy">
-					<Name>Running</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.ParityServerService" SubElementID="Unhealthy">
-					<Name>Not running</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.ParityReporterService">
-					<Name>Carbon Black App Control Reporter</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.ParityReporterService.AlertMessage">
-					<Name>Carbon Black App Control Reporter Service Not Running</Name>
-					<Description>The 'Carbon Black App Control Reporter' service on {0} is not running.</Description>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.ParityReporterService" SubElementID="Healthy">
-					<Name>Running</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.ParityReporterService" SubElementID="Unhealthy">
-					<Name>Not running</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.CarbonBlackService">
-					<Name>Carbon Black EDR Sensor</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.CarbonBlackService.AlertMessage">
-					<Name>Carbon Black EDR Sensor Service Not Running</Name>
-					<Description>The '{0}' service on {1} is not running.</Description>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.CarbonBlackService" SubElementID="Healthy">
-					<Name>Running</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.CarbonBlackService" SubElementID="Unhealthy">
-					<Name>Not running</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.EDRAgentInstall">
-					<Name>Carbon Black EDR Agent Install</Name>
-					<Description/>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.EDRAgentInstall" SubElementID="Success">
-					<Name>RegKeyExists</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.EDRAgentInstall" SubElementID="Error">
-					<Name>RegKeyMissing</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.EDRAgentInstall.AlertMessage">
-					<Name>Carbon Black EDR Agent Not Installed</Name>
-					<Description>The Carbon Black EDR agent is not installed on {0}.
-						See the knowledge section below for more information.</Description>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.EDRAgentVersion">
-					<Name>Carbon Black EDR Agent Version</Name>
-					<Description/>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.EDRAgentVersion" SubElementID="Success">
-					<Name>RegValueMatch</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.EDRAgentVersion" SubElementID="Warning">
-					<Name>RegValueDoesNotMatch</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Monitor.EDRAgentVersion.AlertMessage">
-					<Name>Carbon Black EDR Agent Update Required</Name>
-					<Description>The Carbon Black EDR agent on {0} needs to be upgraded to version 0007.0003.0002.18738. The installed version is {1}.
-						See the knowledge section below for more information.</Description>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Group.CBWebConsole">
-				  <Name>VMware Carbon Black Web Console</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Discovery.CBWebConsole">
-					<Name>Populate VMware.Group.CBWebConsole</Name>
-					<Description>This discovery rule populates the group VMware.Group.CBWebConsole.</Description>
-				</DisplayString>
-				
-				<DisplayString ElementID="VMware.Group.CBLinuxProcess">
-				  <Name>VMware Carbon Black Linux Process</Name>
-				</DisplayString>
-				<DisplayString ElementID="VMware.Discovery.CBLinuxProcess">
-					<Name>Populate VMware.Group.CBLinuxProcess</Name>
-					<Description>This discovery rule populates the group VMware.Group.CBLinuxProcess.</Description>
-				</DisplayString>
-			</DisplayStrings>
-			<KnowledgeArticles>
-				<KnowledgeArticle ElementID="VMware.Monitor.EDRAgentInstall" Visible="true">
-					<MamlContent>
-						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-							<maml:title>Summary</maml:title>
-							<maml:para>This monitor checks if the Carbon Black EDR agent is installed.</maml:para>
-						</maml:section>
-						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-							<maml:title>Causes</maml:title>
-							<maml:para>If the below registry value is not found, it's assumed the agent is not installed and an alert is generated.</maml:para>
-							<maml:list>
-								<maml:listItem>
-									<maml:para>HKLM\SYSTEM\CurrentControlSet\Services\CarbonBlack</maml:para>
-								</maml:listItem>
-							</maml:list>
-						</maml:section>
-						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-							<maml:title>Resolutions</maml:title>
-							<maml:para>Install the agent and the alert will automatically close.</maml:para>
-						</maml:section>
-					</MamlContent>
-				</KnowledgeArticle>
-				<KnowledgeArticle ElementID="VMware.Monitor.EDRAgentVersion" Visible="true">
-					<MamlContent>
-						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-							<maml:title>Summary</maml:title>
-							<maml:para>This monitor checks the version of the Carbon Black EDR agent.</maml:para>
-						</maml:section>
-						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-							<maml:title>Causes</maml:title>
-							<maml:para>If the agent is not version 0007.0003.0002.18738 an alert is generated.</maml:para>
-						</maml:section>
-						<maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
-							<maml:title>Resolutions</maml:title>
-							<maml:para>Upgrade the agent and the alert will automatically close.</maml:para>
-						</maml:section>
-					</MamlContent>
-				</KnowledgeArticle>
-			</KnowledgeArticles>
-		</LanguagePack>
-	</LanguagePacks>
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>VMware.CB.Monitoring</ID>
+      <Version>2024.3.5.0</Version>
+    </Identity>
+    <Name>VMware.CB.Monitoring</Name>
+    <References>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8437.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8437.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="MSIGL">
+        <ID>Microsoft.SystemCenter.InstanceGroup.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="WebApplicationTest">
+        <ID>Microsoft.SystemCenter.WebApplicationTest.Library</ID>
+        <Version>7.2.11719.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="UnixProcLib">
+        <ID>Microsoft.Unix.Process.Library</ID>
+        <Version>7.6.1064.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="VMware.CB.Class.CBACServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="InstallFolder" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+        </ClassType>
+        <ClassType ID="VMware.CB.Class.Agent" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+          <Property ID="CarbonBlackSensorVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="VMwareCarbonBlackEDRSensorVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+          <Property ID="CbProtectionAgentVersion" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+        </ClassType>
+        <ClassType ID="VMware.CB.Group.CBWebConsole" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+        <ClassType ID="VMware.CB.Group.CBLinuxProcess" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false" />
+      </ClassTypes>
+    </EntityTypes>
+    <ModuleTypes>
+      <!-- Agent Discovery. -->
+      <DataSourceModuleType ID="VMware.CB.DataSource.AgentDiscovery" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element name="IntervalSeconds" type="xsd:integer"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="SyncTime" type="xsd:string"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="TimeoutSeconds" type="xsd:integer"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                <SyncTime>$Config/SyncTime$</SyncTime>
+                <ScriptName>AgentDiscovery.ps1</ScriptName>
+                <ScriptBody>
+                  <![CDATA[
+Param ($SourceId, $ManagedEntityId, $ComputerName)
+Function Write-Log {
+	Param($ScriptState)
+	if ($ScriptState -eq "Information") {
+		$EventId = 17609
+		$EventLevel = 0 # 0=Info
+	}
+	else {
+		$EventId = 17610
+		$EventLevel = 2 # 2=Warning
+	}
+	$End = Get-Date
+	$TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+	$Minutes = $TimeCount.Minutes
+	$Seconds = $TimeCount.Seconds
+	$Milliseconds = $TimeCount.Milliseconds
+	$MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+	Break
+}
+Function Get-CBAgent {
+	# This logs terminating and non-terminating events.
+	$ErrorActionPreference = "Stop"
+	Try {
+		$ScriptState = "Information"
+		<# FOR TESTING
+$SourceId = '{00000000-0000-0000-0000-000000000000}'
+$ManagedEntityId = '{00000000-0000-0000-0000-000000000000}'
+$ComputerName = 'agent.scomtest.local'
+#>
+		$DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+		# Get PowerShell version.
+		$PSVersion = $PSVersionTable.PSVersion
+		[string]$PSMajor = $PSVersion.Major
+		[string]$PSMinor = $PSVersion.Minor
+		$PSVersion = $PSMajor + "." + $PSMinor
+		# Get basic info.
+		$ComputerFqdn = ([System.Net.Dns]::GetHostByName(($env:computerName))).Hostname
+    # This returns Carbon Black related agents.
+		$Agents = Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | where {$_.DisplayName -like "*Carbon Black*" -or $_.DisplayName -eq "Cb Protection Agent"} | sort DisplayName | select -property DisplayName, DisplayVersion
+		$CarbonBlackSensorVersion = "Not Installed"
+		$VMwareCarbonBlackEDRSensorVersion = "Not Installed"
+		$CbProtectionAgentVersion = "Not Installed"
+		foreach ($Agent in $Agents) {
+			if ($Agent.DisplayName -eq "Carbon Black Sensor") {
+				$CarbonBlackSensorVersion = $Agent.DisplayVersion
+			}
+			elseif ($Agent.DisplayName -eq "VMware Carbon Black EDR Sensor") {
+				$VMwareCarbonBlackEDRSensorVersion = $Agent.DisplayVersion
+			}
+			elseif ($Agent.DisplayName -eq "Cb Protection Agent") {
+				$CbProtectionAgentVersion = $Agent.DisplayVersion
+			}
+		}
+		<# FOR TESTING
+write-host "CarbonBlackSensorVersion: $CarbonBlackSensorVersion"
+write-host "VMwareCarbonBlackEDRSensorVersion: $VMwareCarbonBlackEDRSensorVersion"
+write-host "CbProtectionAgentVersion: $CbProtectionAgentVersion"
+#>
+		# Return discovery data.
+		$Instance = $DiscoveryData.CreateClassInstance("$MPElement[Name='VMware.CB.Class.Agent']$")
+		$Instance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $ComputerName)
+		$Instance.AddProperty("$MPElement[Name='VMware.CB.Class.Agent']/CarbonBlackSensorVersion$", $CarbonBlackSensorVersion)
+		$Instance.AddProperty("$MPElement[Name='VMware.CB.Class.Agent']/VMwareCarbonBlackEDRSensorVersion$", $VMwareCarbonBlackEDRSensorVersion)
+		$Instance.AddProperty("$MPElement[Name='VMware.CB.Class.Agent']/CbProtectionAgentVersion$", $CbProtectionAgentVersion)
+		$Instance.AddProperty("$MPElement[Name='System!System.Entity']/DisplayName$", $ComputerName)
+		$DiscoveryData.AddInstance($Instance)
+		# Submit discovery data back to Operations Manager and complete the script.
+		$DiscoveryData
+		<# FOR TESTING
+$MomApi.Return($DiscoveryData)
+#>
+		Write-Log -ScriptState $ScriptState
+	}
+	Catch {
+		$ScriptState = "Warning"
+		$Message += $_.Exception.Message
+		Write-Log -ScriptState $ScriptState 
+	}
+}
+# Declare all constants used by the script.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "AgentDiscovery.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "VMware.CB.Monitoring"
+$MpVersion = "2024.3.5.0"
+$MpWorkflow = "VMware.CB.Discovery.Agent"
+Get-CBAgent -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
+]]>
+                </ScriptBody>
+                <Parameters>
+                  <Parameter>
+                    <Name>SourceId</Name>
+                    <Value>$MPElement$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ManagedEntityId</Name>
+                    <Value>$Target/Id$</Value>
+                  </Parameter>
+                  <Parameter>
+                    <Name>ComputerName</Name>
+                    <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+                  </Parameter>
+                </Parameters>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </DataSource>
+            </MemberModules>
+            <Composition>
+              <Node ID="DS" />
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.Discovery.Data</OutputType>
+      </DataSourceModuleType>
+      <!-- Agent Status. -->
+      <DataSourceModuleType ID="VMware.CB.DataSource.AgentStatus" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                <Scheduler>
+                  <SimpleReccuringSchedule>
+                    <Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+                    <SyncTime>$Config/SyncTime$</SyncTime>
+                  </SimpleReccuringSchedule>
+                  <ExcludeDates />
+                </Scheduler>
+              </DataSource>
+              <ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>AgentStatus.ps1</ScriptName>
+                <ScriptBody>
+                  <![CDATA[       
+                    Function Write-Log {
+                      Param($ScriptState)
+                      if ($ScriptState -eq "Information") {
+                          $EventId = 17609
+                          $EventLevel = 0 # 0=Info
+                      }
+                      else {
+                          $EventId = 17610
+                          $EventLevel = 2 # 2=Warning
+                      }
+                      $End = Get-Date
+                      $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+                      $Minutes = $TimeCount.Minutes
+                      $Seconds = $TimeCount.Seconds
+                      $Milliseconds = $TimeCount.Milliseconds
+                      $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+                      Break
+                  }
+                  Function Get-AgentStatus {
+                      # This logs terminating and non-terminating events.
+                      $ErrorActionPreference = "Stop"
+                      Try {
+                          # Set this here so info event is logged if there's no issues.
+                          $ScriptState = "Information"
+                          $PSVersion = $PSVersionTable.PSVersion
+                          [string]$PSMajor = $PSVersion.Major
+                          [string]$PSMinor = $PSVersion.Minor
+                          $PSVersion = $PSMajor + "." + $PSMinor
+                          $ComputerFqdn = ([System.Net.Dns]::GetHostByName(($env:computerName))).Hostname
+                          $Bag = $MomApi.CreatePropertyBag()
+                          $LatestVersion = "7.4.1.18957"
+                          $Agent = Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object { $_.DisplayName -eq "VMWare Carbon Black EDR Sensor" }
+                          $AgentVersion = $Agent.DisplayVersion
+                          # Agent is installed and current.
+                          If ($AgentVersion -eq $LatestVersion) {
+                              $Bag.AddValue("Result", "Healthy")
+                              $Bag.AddValue("Message", "The Carbon Black agent version is current ($LatestVersion).")
+                          }
+                          # Agent is installed but not current.
+                          elseif ($AgentVersion -ne $null) {
+                              $Bag.AddValue("Result", "Warning")
+                              $Bag.AddValue("Message", "The Carbon Black agent on $ComputerFqdn is not $LatestVersion. The installed version is $AgentVersion.")
+                          }
+                          else {
+                              $Bag.AddValue("Result", "Critical")
+                              $Bag.AddValue("Message", "The Carbon Black agent is not installed on $ComputerFqdn.")
+                          }
+                          $Bag
+                          <# FOR TESTING
+                  $MomApi.Return($Bag)
+                  #>
+                          # Can add functionality here to set warning state but there is no need in this script.
+                          $ScriptState = "Information"
+                          Write-Log -ScriptState $ScriptState
+                      }
+                      Catch {
+                          $ScriptState = "Warning"
+                          $Message += $_.Exception.Message
+                          Write-Log -ScriptState $ScriptState   
+                      }
+                  }
+                  # Declare all constants used by the script.
+                  [datetime]$StartTime = Get-Date
+                  $MomApi = New-Object -comObject 'MOM.ScriptAPI'
+                  $ScriptName = "AgentStatus.ps1"
+                  $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+                  $Mp = "VMware.CB.Monitoring"
+                  $MpVersion = "2024.3.5.0"
+                  $MpWorkflow = "VMware.CB.Monitor.AgentStatus"
+                  Get-AgentStatus
+]]>
+                </ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PA">
+                <Node ID="Scheduler" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+      </DataSourceModuleType>
+      <ProbeActionModuleType ID="VMware.CB.ProbeAction.AgentStatus" Accessibility="Internal" Batching="false">
+        <Configuration>
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <ModuleImplementation Isolation="Any">
+          <Composite>
+            <MemberModules>
+              <ProbeAction ID="PassThrough" TypeID="System!System.PassThroughProbe" />
+              <ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.PowerShellPropertyBagTriggerOnlyProbe">
+                <ScriptName>AgentStatus.ps1</ScriptName>
+                <ScriptBody>
+<![CDATA[       
+                    Function Write-Log {
+                      Param($ScriptState)
+                      if ($ScriptState -eq "Information") {
+                          $EventId = 17609
+                          $EventLevel = 0 # 0=Info
+                      }
+                      else {
+                          $EventId = 17610
+                          $EventLevel = 2 # 2=Warning
+                      }
+                      $End = Get-Date
+                      $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+                      $Minutes = $TimeCount.Minutes
+                      $Seconds = $TimeCount.Seconds
+                      $Milliseconds = $TimeCount.Milliseconds
+                      $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+                      Break
+                  }
+                  Function Get-AgentStatus {
+                      # This logs terminating and non-terminating events.
+                      $ErrorActionPreference = "Stop"
+                      Try {
+                          # Set this here so info event is logged if there's no issues.
+                          $ScriptState = "Information"
+                          $PSVersion = $PSVersionTable.PSVersion
+                          [string]$PSMajor = $PSVersion.Major
+                          [string]$PSMinor = $PSVersion.Minor
+                          $PSVersion = $PSMajor + "." + $PSMinor
+                          $ComputerFqdn = ([System.Net.Dns]::GetHostByName(($env:computerName))).Hostname
+                          $Bag = $MomApi.CreatePropertyBag()
+                          $LatestVersion = "7.4.1.18957"
+                          $Agent = Get-ChildItem -Path "HKLM:\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall" | Get-ItemProperty | Where-Object { $_.DisplayName -eq "VMWare Carbon Black EDR Sensor" }
+                          $AgentVersion = $Agent.DisplayVersion
+                          # Agent is installed and current.
+                          If ($AgentVersion -eq $LatestVersion) {
+                              $Bag.AddValue("Result", "Healthy")
+                              $Bag.AddValue("Message", "The Carbon Black agent version is current ($LatestVersion).")
+                          }
+                          # Agent is installed but not current.
+                          elseif ($AgentVersion -ne $null) {
+                              $Bag.AddValue("Result", "Warning")
+                              $Bag.AddValue("Message", "The Carbon Black agent on $ComputerFqdn is not $LatestVersion. The installed version is $AgentVersion.")
+                          }
+                          else {
+                              $Bag.AddValue("Result", "Critical")
+                              $Bag.AddValue("Message", "The Carbon Black agent is not installed on $ComputerFqdn.")
+                          }
+                          $Bag
+                          <# FOR TESTING
+                  $MomApi.Return($Bag)
+                  #>
+                          # Can add functionality here to set warning state but there is no need in this script.
+                          $ScriptState = "Information"
+                          Write-Log -ScriptState $ScriptState
+                      }
+                      Catch {
+                          $ScriptState = "Warning"
+                          $Message += $_.Exception.Message
+                          Write-Log -ScriptState $ScriptState   
+                      }
+                  }
+                  # Declare all constants used by the script.
+                  [datetime]$StartTime = Get-Date
+                  $MomApi = New-Object -comObject 'MOM.ScriptAPI'
+                  $ScriptName = "AgentStatus.ps1"
+                  $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+                  $Mp = "VMware.CB.Monitoring"
+                  $MpVersion = "2024.3.5.0"
+                  $MpWorkflow = "VMware.CB.Monitor.AgentStatus"
+                  Get-AgentStatus
+]]>
+</ScriptBody>
+                <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+              </ProbeAction>
+            </MemberModules>
+            <Composition>
+              <Node ID="PA">
+                <Node ID="PassThrough" />
+              </Node>
+            </Composition>
+          </Composite>
+        </ModuleImplementation>
+        <OutputType>System!System.PropertyBagData</OutputType>
+        <TriggerOnly>true</TriggerOnly>
+      </ProbeActionModuleType>
+    </ModuleTypes>
+    <MonitorTypes>
+      <!-- Agent Status -->
+      <UnitMonitorType ID="VMware.CB.MonitorType.AgentStatus" Accessibility="Internal">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="Healthy" NoDetection="false" />
+          <MonitorTypeState ID="Warning" NoDetection="false" />
+          <MonitorTypeState ID="Critical" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element minOccurs="1" type="xsd:integer" name="IntervalSeconds"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="0" type="xsd:string" name="SyncTime"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element minOccurs="1" type="xsd:integer" name="TimeoutSeconds"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+          <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+          <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="VMware.CB.DataSource.AgentStatus">
+              <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+              <SyncTime>$Config/SyncTime$</SyncTime>
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </DataSource>
+            <ProbeAction ID="Probe" TypeID="VMware.CB.ProbeAction.AgentStatus">
+              <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
+            </ProbeAction>
+            <ConditionDetection ID="HealthyFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Healthy</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="WarningFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Warning</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+            <ConditionDetection ID="CriticalFilter" TypeID="System!System.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="String">Property[@Name='Result']</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Equal</Operator>
+                  <ValueExpression>
+                    <Value Type="String">Critical</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="Healthy">
+              <Node ID="HealthyFilter">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="Warning">
+              <Node ID="WarningFilter">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="Critical">
+              <Node ID="CriticalFilter">
+                <Node ID="DS" />
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+          <OnDemandDetections>
+            <OnDemandDetection MonitorTypeStateID="Healthy">
+              <Node ID="HealthyFilter">
+                <Node ID="Probe" />
+              </Node>
+            </OnDemandDetection>
+            <OnDemandDetection MonitorTypeStateID="Warning">
+              <Node ID="WarningFilter">
+                <Node ID="Probe" />
+              </Node>
+            </OnDemandDetection>
+            <OnDemandDetection MonitorTypeStateID="Critical">
+              <Node ID="CriticalFilter">
+                <Node ID="Probe" />
+              </Node>
+            </OnDemandDetection>
+          </OnDemandDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Discoveries>
+      <Discovery ID="VMware.CB.Discovery.CBACServer" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="VMware.CB.Class.CBACServer"/>
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>AppControlInstalled</AttributeName>
+              <Path>SOFTWARE\Bit9\Parity Server</Path>
+              <PathType>0</PathType>
+              <!-- 0=regKey 1=regValue -->
+              <AttributeType>0</AttributeType>
+              <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>Version</AttributeName>
+              <Path>SOFTWARE\Bit9\Parity Server\ProductVersion</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+            <RegistryAttributeDefinition>
+              <AttributeName>InstalledPath</AttributeName>
+              <Path>SOFTWARE\Bit9\Parity Server\InstallPath</Path>
+              <PathType>1</PathType>
+              <AttributeType>1</AttributeType>
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <Frequency>86400</Frequency>
+          <ClassId>$MPElement[Name="VMware.CB.Class.CBACServer"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="VMware.CB.Class.CBACServer"]/Version$</Name>
+                <Value>$Data/Values/Version$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="VMware.CB.Class.CBACServer"]/InstallFolder$</Name>
+                <Value>$Data/Values/InstalledPath$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="System!System.Entity"]/DisplayName$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Values/AppControlInstalled</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">True</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+      <Discovery ID="VMware.CB.Discovery.CBAgent" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="VMware.CB.Class.Agent">
+            <Property PropertyID="CarbonBlackSensorVersion"/>
+            <Property PropertyID="VMwareCarbonBlackEDRSensorVersion"/>
+            <Property PropertyID="CbProtectionAgentVersion"/>
+          </DiscoveryClass>
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="VMware.CB.DataSource.AgentDiscovery">
+          <IntervalSeconds>86400</IntervalSeconds>
+          <SyncTime></SyncTime>
+          <TimeoutSeconds>120</TimeoutSeconds>
+        </DataSource>
+      </Discovery>
+      <Discovery ID="VMware.CB.Discovery.CBWebConsole" Enabled="true" Target="VMware.CB.Group.CBWebConsole" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="VMware.CB.Group.CBWebConsole"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="WebApplicationTest!Microsoft.SystemCenter.WebApplicationTest.WebTest"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+              <Expression>
+                <RegExExpression>
+                  <ValueExpression>
+                    <Property>$MPElement[Name="System!System.Entity"]/DisplayName$</Property>
+                  </ValueExpression>
+                  <Operator>MatchesRegularExpression</Operator>
+                  <Pattern>(?i:^Carbon Black)</Pattern>
+                </RegExExpression>
+              </Expression>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+      <Discovery ID="VMware.CB.Discovery.CBLinuxProcess" Enabled="true" Target="VMware.CB.Group.CBLinuxProcess" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities" />
+        </DiscoveryTypes>
+        <DataSource ID="GroupPopulationDataSource" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+          <RuleId>$MPElement$</RuleId>
+          <GroupInstanceId>$MPElement[Name="VMware.CB.Group.CBLinuxProcess"]$</GroupInstanceId>
+          <MembershipRules>
+            <MembershipRule>
+              <MonitoringClass>$MPElement[Name="UnixProcLib!Microsoft.SystemCenter.MonitoredUnixProcess"]$</MonitoringClass>
+              <RelationshipClass>$MPElement[Name="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"]$</RelationshipClass>
+              <Expression>
+                <RegExExpression>
+                  <ValueExpression>
+                    <Property>$MPElement[Name="System!System.Entity"]/DisplayName$</Property>
+                  </ValueExpression>
+                  <Operator>MatchesRegularExpression</Operator>
+                  <Pattern>(?i:^Carbon Black)</Pattern>
+                </RegExExpression>
+              </Expression>
+            </MembershipRule>
+          </MembershipRules>
+        </DataSource>
+      </Discovery>
+    </Discoveries>
+    <Monitors>
+      <!-- ParityServer service -->
+      <UnitMonitor ID="VMware.Monitor.ParityServerService" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.CBACServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="VMware.Monitor.ParityServerService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Data/Context/Property[@Name='DisplayName']$</AlertParameter1>
+            <AlertParameter2>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>ParityServer</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+      <!-- ParityReporter service -->
+      <UnitMonitor ID="VMware.Monitor.ParityReporterService" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.CBACServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="VMware.Monitor.ParityReporterService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Data/Context/Property[@Name='DisplayName']$</AlertParameter1>
+            <AlertParameter2>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>ParityReporter</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+      <!-- CarbonBlack service -->
+      <UnitMonitor ID="VMware.Monitor.CarbonBlackService" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.Agent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="VMware.Monitor.CarbonBlackService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Data/Context/Property[@Name='DisplayName']$</AlertParameter1>
+            <AlertParameter2>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter2>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>CarbonBlack</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+      <!-- Agent Status -->
+      <UnitMonitor ID="VMware.CB.Monitor.AgentStatus" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.Agent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="VMware.CB.MonitorType.AgentStatus" ConfirmDelivery="true">
+        <Category>AvailabilityHealth</Category>
+        <AlertSettings AlertMessage="VMware.CB.Monitor.AgentStatus.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Data/Context/Property[@Name='Message']$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Healthy" HealthState="Success" />
+          <OperationalState ID="Warning" MonitorTypeStateID="Warning" HealthState="Warning" />
+          <OperationalState ID="Critical" MonitorTypeStateID="Critical" HealthState="Error" />
+        </OperationalStates>
+        <Configuration>
+          <IntervalSeconds>86400</IntervalSeconds>
+          <SyncTime />
+          <TimeoutSeconds>120</TimeoutSeconds>
+        </Configuration>
+      </UnitMonitor>
+    </Monitors>
+    <Recoveries>
+      <Recovery ID="VMware.Recovery.ParityServerService" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.CBACServer" Monitor="VMware.Monitor.ParityServerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "ParityServer"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <Recovery ID="VMware.Recovery.ParityReporterService" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.CBACServer" Monitor="VMware.Monitor.ParityReporterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "ParityReporter"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+      <Recovery ID="VMware.Recovery.CarbonBlackService" Accessibility="Public" Enabled="true" Target="VMware.CB.Class.Agent" Monitor="VMware.Monitor.CarbonBlackService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "CarbonBlack"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+    </Recoveries>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="VMware.Monitor.ParityServerService.AlertMessage"/>
+      <StringResource ID="VMware.Monitor.ParityReporterService.AlertMessage"/>
+      <StringResource ID="VMware.Monitor.CarbonBlackService.AlertMessage"/>
+      <StringResource ID="VMware.CB.Monitor.AgentStatus.AlertMessage"/>
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="VMware.CB.Monitoring">
+          <Name>VMware Carbon Black Monitoring</Name>
+          <Description>Custom monitoring for Carbon Black.</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Class.CBACServer">
+          <Name>VMware Carbon Black App Control Server</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Class.CBACServer" SubElementID="Version">
+          <Name>Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Class.CBACServer" SubElementID="InstallFolder">
+          <Name>Install Folder</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Class.Agent">
+          <Name>VMware Carbon Black Agent</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Class.Agent" SubElementID="CarbonBlackSensorVersion">
+          <Name>CB Sensor Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Class.Agent" SubElementID="VMwareCarbonBlackEDRSensorVersion">
+          <Name>CB EDR Sensor Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Class.Agent" SubElementID="CbProtectionAgentVersion">
+          <Name>CB Protection Agent Version</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.ParityServerService">
+          <Name>Carbon Black App Control Server</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.ParityServerService.AlertMessage">
+          <Name>Carbon Black App Control Server Service Not Running</Name>
+          <Description>The '{0}' service on {1} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.ParityServerService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.ParityServerService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.ParityReporterService">
+          <Name>Carbon Black App Control Reporter</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.ParityReporterService.AlertMessage">
+          <Name>Carbon Black App Control Reporter Service Not Running</Name>
+          <Description>The '{0}' service on {1} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.ParityReporterService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.ParityReporterService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.CarbonBlackService">
+          <Name>Carbon Black EDR Sensor</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.CarbonBlackService.AlertMessage">
+          <Name>Carbon Black EDR Sensor Service Not Running</Name>
+          <Description>The '{0}' service on {1} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.CarbonBlackService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.Monitor.CarbonBlackService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Monitor.AgentStatus">
+          <Name>Carbon Black Agent Status</Name>
+          <Description />
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Monitor.AgentStatus" SubElementID="Healthy">
+          <Name>Agent installed</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Monitor.AgentStatus" SubElementID="Warning">
+          <Name>Incorrect agent version</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Monitor.AgentStatus" SubElementID="Critical">
+          <Name>Agent not installed</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Monitor.AgentStatus.AlertMessage">
+          <Name>Carbon Black Agent</Name>
+          <Description>{0}</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Group.CBWebConsole">
+          <Name>VMware Carbon Black Web Console</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Discovery.CBWebConsole">
+          <Name>Populate VMware.CB.Group.CBWebConsole</Name>
+          <Description>This discovery rule populates the group VMware.CB.Group.CBWebConsole.</Description>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Group.CBLinuxProcess">
+          <Name>VMware Carbon Black Linux Process</Name>
+        </DisplayString>
+        <DisplayString ElementID="VMware.CB.Discovery.CBLinuxProcess">
+          <Name>Populate VMware.CB.Group.CBLinuxProcess</Name>
+          <Description>This discovery rule populates the group VMware.CB.Group.CBLinuxProcess.</Description>
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
 </ManagementPack>
