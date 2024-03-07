@@ -8,7 +8,7 @@
    <Manifest>
       <Identity>
          <ID>Sample.OleDb</ID>
-         <Version>2024.3.1.1</Version>
+         <Version>2024.3.7.0</Version>
       </Identity>
       <Name>Sample.OleDb</Name>
       <References>
@@ -68,7 +68,7 @@
    Using Microsoft.SQLServer.Core.DBEngine class because it has the ConnectionString property.
 -->
                         <ConnectionString>Provider=SQLOLEDB;Server=$Target/Property[Type="SQLCore!Microsoft.SQLServer.Core.DBEngine"]/ConnectionString$;Database=master;Integrated Security=SSPI</ConnectionString>
-                        <Query>SELECT count(name) as HasAccess FROM [master].[sys].[syslogins] WHERE name = 'LAB\SQL-MonitorTest' AND isntgroup = 1</Query>
+                        <Query>select count([name]) as HasAccess FROM master.sys.server_principals WHERE [name] LIKE 'LAB%\ADMIN_VULNSCN_DB_RO_GG' OR [name] = 'svr_role_db_scanning'</Query>
                         <GetValue>true</GetValue>
                         <QueryTimeout>60</QueryTimeout>
                         <GetFetchTime>true</GetFetchTime>
@@ -101,9 +101,9 @@
                            <ValueExpression>
                               <XPathQuery Type="Integer">Columns[1]/Column[1]</XPathQuery>
                            </ValueExpression>
-                           <Operator>Equal</Operator>
+                           <Operator>Less</Operator>
                            <ValueExpression>
-                              <Value Type="Integer">0</Value>
+                              <Value Type="Integer">2</Value>
                            </ValueExpression>
                         </SimpleExpression>
                      </Expression>
@@ -116,7 +116,7 @@
                            </ValueExpression>
                            <Operator>Equal</Operator>
                            <ValueExpression>
-                              <Value Type="Integer">1</Value>
+                              <Value Type="Integer">2</Value>
                            </ValueExpression>
                         </SimpleExpression>
                      </Expression>
