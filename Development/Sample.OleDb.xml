@@ -1,14 +1,13 @@
 <!--
-   This seems to work without the DatabaseNameRegLocation and DatabaseServerNameRegLocation bits.
-   I think the alert description (AlertParameters) is good too.
-   Needs more testing.
+   Add probe action module, 'recalculate health' button works.
+   Added 'Columns[1]/Column[1]' to condition detection to get better info. It's used in alert description too.
 -->
 <ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema"
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1">
    <Manifest>
       <Identity>
          <ID>Sample.OleDb</ID>
-         <Version>2024.3.7.0</Version>
+         <Version>2024.3.8.4</Version>
       </Identity>
       <Name>Sample.OleDb</Name>
       <References>
@@ -68,7 +67,15 @@
    Using Microsoft.SQLServer.Core.DBEngine class because it has the ConnectionString property.
 -->
                         <ConnectionString>Provider=SQLOLEDB;Server=$Target/Property[Type="SQLCore!Microsoft.SQLServer.Core.DBEngine"]/ConnectionString$;Database=master;Integrated Security=SSPI</ConnectionString>
-                        <Query>select count([name]) as HasAccess FROM master.sys.server_principals WHERE [name] LIKE 'LAB%\ADMIN_VULNSCN_DB_RO_GG' OR [name] = 'svr_role_db_scanning'</Query>
+                        <Query>
+                        select
+                        case
+                        when count([name]) = 2 then 'Instance configured'
+                        else 'Instance not configured'
+                        end as HasAccess
+                        FROM master.sys.server_principals 
+                        WHERE [name] LIKE 'LAB%\ADMIN_VULNSCN_DB_RO_GG' OR [name] = 'svr_role_db_scanning'
+                        </Query>
                         <GetValue>true</GetValue>
                         <QueryTimeout>60</QueryTimeout>
                         <GetFetchTime>true</GetFetchTime>
@@ -83,6 +90,56 @@
             </ModuleImplementation>
             <OutputType>System!System.OleDbData</OutputType>
          </DataSourceModuleType>
+
+<!-- new bit -->         
+         <ProbeActionModuleType ID="ProbeActionModule" Accessibility="Public" RunAs="Sample.SQL.Probe.RunAsProfile" Batching="false">
+            <Configuration />
+            <ModuleImplementation Isolation="Any">
+               <Composite>
+                  <MemberModules>
+
+                  <!--
+                     <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                        <Scheduler>
+                           <SimpleReccuringSchedule>
+                              <Interval Unit="Seconds">60</Interval>
+                           </SimpleReccuringSchedule>
+                           <ExcludeDates />
+                        </Scheduler>
+                     </DataSource>
+                     -->
+                                   <ProbeAction ID="PassThrough" TypeID="System!System.PassThroughProbe" />
+
+                     <ProbeAction ID="Probe" TypeID="System!System.OleDbProbe">
+                        <!--
+   Using Microsoft.SQLServer.Core.DBEngine class because it has the ConnectionString property.
+-->
+                        <ConnectionString>Provider=SQLOLEDB;Server=$Target/Property[Type="SQLCore!Microsoft.SQLServer.Core.DBEngine"]/ConnectionString$;Database=master;Integrated Security=SSPI</ConnectionString>
+                        <Query>
+                        select
+                        case
+                        when count([name]) = 2 then 'Instance configured'
+                        else 'Instance not configured'
+                        end as HasAccess
+                        FROM master.sys.server_principals 
+                        WHERE [name] LIKE 'LAB%\ADMIN_VULNSCN_DB_RO_GG' OR [name] = 'svr_role_db_scanning'
+                        </Query>
+                        <GetValue>true</GetValue>
+                        <QueryTimeout>3600</QueryTimeout>
+                        <GetFetchTime>true</GetFetchTime>
+                     </ProbeAction>
+                  </MemberModules>
+                  <Composition>
+                    <Node ID="Probe">
+                        <Node ID="PassThrough" />
+                     </Node>
+                  </Composition>
+               </Composite>
+            </ModuleImplementation>
+            <OutputType>System!System.OleDbData</OutputType>
+        <TriggerOnly>true</TriggerOnly>
+         </ProbeActionModuleType>
+
       </ModuleTypes>
       <!--MONITOR TYPE-->
       <MonitorTypes>
@@ -95,15 +152,18 @@
             <MonitorImplementation>
                <MemberModules>
                   <DataSource ID="DS" TypeID="DataSourceModule" />
+                  <!-- new bit -->
+            <ProbeAction ID="Probe" TypeID="ProbeActionModule" />
+
                   <ConditionDetection ID="CDNoAccess" TypeID="System!System.ExpressionFilter">
                      <Expression>
                         <SimpleExpression>
                            <ValueExpression>
-                              <XPathQuery Type="Integer">Columns[1]/Column[1]</XPathQuery>
+                              <XPathQuery Type="String">Columns[1]/Column[1]</XPathQuery>
                            </ValueExpression>
-                           <Operator>Less</Operator>
+                           <Operator>Equal</Operator>
                            <ValueExpression>
-                              <Value Type="Integer">2</Value>
+                              <Value Type="String">Instance not configured</Value>
                            </ValueExpression>
                         </SimpleExpression>
                      </Expression>
@@ -112,11 +172,11 @@
                      <Expression>
                         <SimpleExpression>
                            <ValueExpression>
-                              <XPathQuery Type="Integer">Columns[1]/Column[1]</XPathQuery>
+                              <XPathQuery Type="String">Columns[1]/Column[1]</XPathQuery>
                            </ValueExpression>
                            <Operator>Equal</Operator>
                            <ValueExpression>
-                              <Value Type="Integer">2</Value>
+                              <Value Type="String">Instance configured</Value>
                            </ValueExpression>
                         </SimpleExpression>
                      </Expression>
@@ -134,6 +194,20 @@
                      </Node>
                   </RegularDetection>
                </RegularDetections>
+<!-- new bit -->
+          <OnDemandDetections>
+            <OnDemandDetection MonitorTypeStateID="HasAccess">
+              <Node ID="CDHasAccess"> <!-- needs to match condition detection id -->
+                <Node ID="Probe" />
+              </Node>
+            </OnDemandDetection>
+            <OnDemandDetection MonitorTypeStateID="NoAccess">
+              <Node ID="CDNoAccess"> <!-- needs to match condition detection id -->
+                <Node ID="Probe" />
+              </Node>
+            </OnDemandDetection>
+          </OnDemandDetections>
+
             </MonitorImplementation>
          </UnitMonitorType>
       </MonitorTypes>
@@ -151,6 +225,7 @@
                <AlertParameters>
                   <AlertParameter1>$Target/Property[Type="SQLDiscovery!Microsoft.SQLServer.Windows.DBEngine"]/PrincipalName$</AlertParameter1>
                   <AlertParameter2>$Target/Property[Type="System!System.Entity"]/DisplayName$</AlertParameter2>
+                  <AlertParameter3>$Data/Context/Columns[1]/Column[1]$</AlertParameter3>
                </AlertParameters>
             </AlertSettings>
             <OperationalStates>
@@ -178,7 +253,7 @@
             </DisplayString>
             <DisplayString ElementID="Sample.OleDb.Monitor.SQLAccess.AlertMessage">
                <Name>OLEDB SQL Access</Name>
-               <Description>Blah LAB\SQL-MonitorTest {0} {1}.</Description>
+               <Description>Blah LAB\SQL-MonitorTest {0} {1}. Result code: {2}</Description>
             </DisplayString>
             <DisplayString ElementID="Sample.OleDb.Monitor.SQLAccess" SubElementID="OK">
                <Name>Has access</Name>
