@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
-            <Version>2024.2.19.0</Version>
+            <Version>2024.3.12.0</Version>
         </Identity>
         <Name>Microsoft.SCOM.UpdateRollup.Monitoring</Name>
         <References>
@@ -759,7 +759,7 @@
                                     $ScriptName = "GetWindowsURInfo.ps1"
                                     $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
                                     $Mp = "Microsoft.SCOM.UpdateRollup.Monitoring"
-                                    $MpVersion = "2024.2.19.0"
+                                    $MpVersion = "2024.3.12.0"
                                     $MpWorkflow = "Microsoft.SCOM.UpdateRollup.Discovery.WindowsComputer"
                                     Get-URInfo -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
                                 ]]>
@@ -1080,7 +1080,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.2.19.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.3.12.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError {
@@ -1459,90 +1459,63 @@ DailyReport -EmailFromAddress $EmailFromAddress -EmailToAddress $EmailToAddress 
                                 <ScriptName>SCOM.MpBackup.ps1</ScriptName>
                                 <ScriptBody><![CDATA[
 Param ($MpBackupFolder)
-<#**************************************** FUNCTION: LogAndQuit ****************************************#>
-Function LogAndQuit {
-    If ($Script:CountError -gt 0) {
-        $EventId = 17613
-        $EventLevel = 2
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
     }
-    Else {
-        $Script:CountError = 0 # If no errors set this value so it appears in the event.
-        $EventId = 17612
-        $EventLevel = 0
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
     }
-    # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MpBackup.ps1", $EventId, $EventLevel, "Management pack backup script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MpBackup`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.2.19.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
 }
-<#**************************************** FUNCTION: CheckNull ****************************************#>
-Function CheckNull ($PassedInParam) {
-    If ([string]::IsNullOrEmpty($PassedInParam)) {
-        $Script:IsItNull = $True # Update this so we can make decisions.
-        $Script:CountError += 1
-        $Script:Message += "[CODE_SECTION_$CodeSection] $ValueToCheck is empty. Error output: ($Error).`n"
-    }
-    Else {
-        $Script:IsItNull = $False # Update this so we can make decisions.
-    }
-}
-<#**************************************** FUNCTION: TerminatingError ****************************************#>
-Function TerminatingError {
-    $script:CountError += 1
-    $script:Message += "[CODE_SECTION_$CodeSection] A terminating error occurred. Error output: (" + $_.Exception.Message + ").`n"
-    LogAndQuit
-}
-<#**************************************** FUNCTION: MpBackup ****************************************#>
-Function MpBackup {
+Function Get-ManagementPacks {
+    # This logs terminating and non-terminating events.
     $ErrorActionPreference = "Stop"
     Try {
-        <# FOR TESTING
-$MpBackupFolder="C:\temp\mpbackups"
-#>
-        <# CODE_SECTION_1
-Load required objects.
-#>
-        $CodeSection = "1" $ObjMomApi = New-Object -comObject 'MOM.ScriptAPI' # MOMScriptAPI object.
-        <# CODE_SECTION_2.
-Get powershell version.
-This is shown in events to assist troubleshooting if powershell doesn't play nice.
-#>
-        $CodeSection = "2" $PSVersion = $PSVersionTable.PSVersion
+        # Set this here so info event is logged if there's no issues.
+        $ScriptState = "Information"
+        $PSVersion = $PSVersionTable.PSVersion
         [string]$PSMajor = $PSVersion.Major
         [string]$PSMinor = $PSVersion.Minor
         $PSVersion = $PSMajor + "." + $PSMinor
-        <# CODE_SECTION_3
-Set common variables.
-#>
-        $CodeSection = "3" $ComputerFqdn = ([System.Net.Dns]::GetHostByName(($env:computerName))).Hostname
-        $ValueToCheck = "ComputerFqdn"; CheckNull $ComputerFqdn # Expect value.
-        <# CODE_SECTION_4
-Check output folder and load SCOM module.
-#>
-        $CodeSection = "4"
-        If (-Not(Test-Path -Path $MpBackupFolder)) {
-            $Script:CountError += 1
-            $Script:Message += "[CODE_SECTION_$CodeSection] The mp backup folder $MpBackupFolder does not exist.`n"
+        <# FOR TESTING
+        $MpBackupFolder = "C:\temp\mpbackups"
+        #>
+        $PowerShellInstallDirectory = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\Powershell\V2").InstallDirectory
+        Import-module $PowerShellInstallDirectory`OperationsManager
+        New-DefaultManagementGroupConnection
+        Remove-Item -Path "$MpBackupFolder\*.*"
+        $ManagementPacks = Get-SCOMManagementPack | Where-Object { $_.Sealed -eq $False }
+        $ManagementPacks | ForEach-Object {
+            Export-SCOMManagementPack -ManagementPack:$_ -Path:$MpBackupFolder
         }
-        Else {
-            $PowerShellInstallDirectory = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\Powershell\V2").InstallDirectory
-            $ValueToCheck = "PowerShellInstallDirectory"; CheckNull $PowerShellInstallDirectory # Expect value.
-            If ($Script:IsItNull -ne $True) {
-                # 
-                Import-module $PowerShellInstallDirectory`OperationsManager
-                New-DefaultManagementGroupConnection
-                $Script:SCOMMGName = (Get-SCOMManagementGroup).Name
-                $MPs = Get-SCOMManagementPack | Where-Object { $_.Sealed -eq $False }
-                $MPs | ForEach-Object {
-                    Export-SCOMManagementPack -ManagementPack:$_ -Path:$MpBackupFolder
-                }
-            }
-        }
-        LogAndQuit
+        $ScriptState = "Information"
+        Write-Log -ScriptState $ScriptState
     }
     Catch {
-        TerminatingError
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState   
     }
 }
-MpBackup -MpBackupFolder $MpBackupFolder # Need this to pass params in properly.
+# Declare all constants used by the script
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "MpBackup.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "Microsoft.SCOM.UpdateRollup.Monitoring"
+$MpVersion = "2024.3.12.0"
+$MpWorkflow = "Microsoft.SCOM.UpdateRollup.Rule.MpBackup"
+Get-ManagementPacks -MpBackupFolder $MpBackupFolder # Need this to pass params in properly.
 ]]>
                                 </ScriptBody>
                                 <Parameters>
@@ -1602,7 +1575,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.2.19.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.3.12.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -2344,7 +2317,7 @@ try {
     $EventId = 17616
     $EventLevel = 0 # 0=Information, 1=Error, 2=Warning
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.2.19.0)")
+    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.3.12.0)")
     Write-Host Information event ID 17616 successfully written to the Operations Manager log.
     Write-Host
 }
