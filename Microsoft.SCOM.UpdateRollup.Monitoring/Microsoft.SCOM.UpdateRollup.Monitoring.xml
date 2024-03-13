@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
-            <Version>2024.3.13.0</Version>
+            <Version>2024.3.14.0</Version>
         </Identity>
         <Name>Microsoft.SCOM.UpdateRollup.Monitoring</Name>
         <References>
@@ -759,7 +759,7 @@
                                     $ScriptName = "GetWindowsURInfo.ps1"
                                     $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
                                     $Mp = "Microsoft.SCOM.UpdateRollup.Monitoring"
-                                    $MpVersion = "2024.3.13.0"
+                                    $MpVersion = "2024.3.14.0"
                                     $MpWorkflow = "Microsoft.SCOM.UpdateRollup.Discovery.WindowsComputer"
                                     Get-URInfo -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
                                 ]]>
@@ -788,7 +788,7 @@
                 </ModuleImplementation>
                 <OutputType>System!System.Discovery.Data</OutputType>
             </DataSourceModuleType>
-            <DataSourceModuleType ID="Microsoft.SCOM.UpdateRollup.DataSource.ManagementPackBackup" Accessibility="Public" Batching="false">
+            <DataSourceModuleType ID="Microsoft.SCOM.UpdateRollup.DataSource.ManagementGroupReport" Accessibility="Public" Batching="false">
                 <Configuration>
                     <IncludeSchemaTypes>
                         <SchemaType>System!System.ExpressionEvaluatorSchema</SchemaType>
@@ -822,7 +822,7 @@
                 </ModuleImplementation>
                 <OutputType>System!System.TriggerData</OutputType>
             </DataSourceModuleType>
-            <DataSourceModuleType ID="Microsoft.SCOM.UpdateRollup.DataSource.ManagementGroupReport" Accessibility="Public" Batching="false">
+            <DataSourceModuleType ID="Microsoft.SCOM.UpdateRollup.DataSource.ManagementPackBackup" Accessibility="Public" Batching="false">
                 <Configuration>
                     <IncludeSchemaTypes>
                         <SchemaType>System!System.ExpressionEvaluatorSchema</SchemaType>
@@ -1080,7 +1080,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.3.13.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.3.14.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError {
@@ -1439,26 +1439,24 @@ DailyReport -EmailFromAddress $EmailFromAddress -EmailToAddress $EmailToAddress 
                 <OutputType>System!System.BaseData</OutputType>
                 <InputType>System!System.BaseData</InputType>
             </WriteActionModuleType>
-            <WriteActionModuleType ID="Microsoft.SCOM.UpdateRollup.WriteAction.ManagementPackBackup" Accessibility="Internal" Batching="false">
+            <WriteActionModuleType ID="Microsoft.SCOM.UpdateRollup.WriteAction.UnsealedMpBackup" Accessibility="Internal" Batching="false">
                 <Configuration>
-                    <xsd:element minOccurs="1" name="ComputerName" type="xsd:string"
-                        xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
-                    <xsd:element minOccurs="1" name="MpBackupFolder" type="xsd:string"
+                    <xsd:element minOccurs="1" name="BackupFolder" type="xsd:string"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
                     <xsd:element minOccurs="1" name="TimeoutSeconds" type="xsd:integer"
                         xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
                 </Configuration>
                 <OverrideableParameters>
-                    <OverrideableParameter ID="MpBackupFolder" Selector="$Config/MpBackupFolder$" ParameterType="string" />
+                    <OverrideableParameter ID="BackupFolder" Selector="$Config/BackupFolder$" ParameterType="string" />
                     <OverrideableParameter ID="TimeoutSeconds" Selector="$Config/TimeoutSeconds$" ParameterType="int" />
                 </OverrideableParameters>
                 <ModuleImplementation Isolation="Any">
                     <Composite>
                         <MemberModules>
                             <WriteAction ID="WA" TypeID="Windows!Microsoft.Windows.PowerShellWriteAction">
-                                <ScriptName>SCOM.MpBackup.ps1</ScriptName>
+                                <ScriptName>UnsealedMpBackup.ps1</ScriptName>
                                 <ScriptBody><![CDATA[
-Param ($MpBackupFolder)
+Param ($BackupFolder)
 Function Write-Log {
     Param($ScriptState)
     if ($ScriptState -eq "Information") {
@@ -1488,15 +1486,15 @@ Function Get-ManagementPacks {
         [string]$PSMinor = $PSVersion.Minor
         $PSVersion = $PSMajor + "." + $PSMinor
         <# FOR TESTING
-        $MpBackupFolder = "C:\temp\mpbackups"
+        $BackupFolder = "C:\temp\UnsealedMpBackups"
         #>
         $PowerShellInstallDirectory = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\Powershell\V2").InstallDirectory
         Import-module $PowerShellInstallDirectory`OperationsManager
         New-DefaultManagementGroupConnection
-        Remove-Item -Path $MpBackupFolder\* -Recurse
+        Remove-Item -Path $BackupFolder\* -Recurse
         $ManagementPacks = Get-SCOMManagementPack | Where-Object { $_.Sealed -eq $False }
         $ManagementPacks | ForEach-Object {
-            Export-SCOMManagementPack -ManagementPack:$_ -Path:$MpBackupFolder
+            Export-SCOMManagementPack -ManagementPack:$_ -Path:$BackupFolder
         }
         $ScriptState = "Information"
         Write-Log -ScriptState $ScriptState
@@ -1510,22 +1508,18 @@ Function Get-ManagementPacks {
 # Declare all constants used by the script
 [datetime]$StartTime = Get-Date
 $MomApi = New-Object -comObject 'MOM.ScriptAPI'
-$ScriptName = "MpBackup.ps1"
+$ScriptName = "UnsealedMpBackup.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.UpdateRollup.Monitoring"
-$MpVersion = "2024.3.13.0"
-$MpWorkflow = "Microsoft.SCOM.UpdateRollup.Rule.MpBackup"
-Get-ManagementPacks -MpBackupFolder $MpBackupFolder # Need this to pass params in properly.
+$MpVersion = "2024.3.14.0"
+$MpWorkflow = "Microsoft.SCOM.UpdateRollup.Rule.UnsealedMpBackup"
+Get-ManagementPacks -BackupFolder $BackupFolder # Need this to pass params in properly.
 ]]>
                                 </ScriptBody>
                                 <Parameters>
                                     <Parameter>
-                                        <Name>ComputerName</Name>
-                                        <Value>$Config/ComputerName$</Value>
-                                    </Parameter>
-                                    <Parameter>
-                                        <Name>MpBackupFolder</Name>
-                                        <Value>$Config/MpBackupFolder$</Value>
+                                        <Name>BackupFolder</Name>
+                                        <Value>$Config/BackupFolder$</Value>
                                     </Parameter>
                                 </Parameters>
                                 <TimeoutSeconds>$Config/TimeoutSeconds$</TimeoutSeconds>
@@ -1575,7 +1569,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.3.13.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.3.14.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -2317,7 +2311,7 @@ try {
     $EventId = 17616
     $EventLevel = 0 # 0=Information, 1=Error, 2=Warning
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.3.13.0)")
+    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2024.3.14.0)")
     Write-Host Information event ID 17616 successfully written to the Operations Manager log.
     Write-Host
 }
@@ -2431,18 +2425,22 @@ catch {
                     </WriteAction>
                 </WriteActions>
             </Rule>
-            <Rule ID="Microsoft.SCOM.UpdateRollup.Rule.MpBackup" Enabled="false" Target="Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
+            <Rule ID="Microsoft.SCOM.UpdateRollup.Rule.UnsealedMpBackup" Enabled="false" Target="Microsoft.SCOM.UpdateRollup.Class.WindowsComputer" ConfirmDelivery="true" Remotable="true" Priority="Normal" DiscardLevel="100">
                 <Category>Maintenance</Category>
                 <DataSources>
-                    <DataSource ID="Scheduler" TypeID="Microsoft.SCOM.UpdateRollup.DataSource.ManagementPackBackup">
-                        <IntervalSeconds>86400</IntervalSeconds>
-                        <SyncTime></SyncTime>
+                    <DataSource ID="DS" TypeID="System!System.Scheduler">
+                        <Scheduler>
+                            <SimpleReccuringSchedule>
+                                <Interval Unit="Seconds">86400</Interval>
+                                <SyncTime>05:00</SyncTime> <!-- E.g. AM 08:00, PM 20:00. -->
+                            </SimpleReccuringSchedule>
+                            <ExcludeDates />
+                        </Scheduler>
                     </DataSource>
                 </DataSources>
                 <WriteActions>
-                    <WriteAction ID="WA" TypeID="Microsoft.SCOM.UpdateRollup.WriteAction.ManagementPackBackup">
-                        <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
-                        <MpBackupFolder></MpBackupFolder>
+                    <WriteAction ID="WA" TypeID="Microsoft.SCOM.UpdateRollup.WriteAction.UnsealedMpBackup">
+                        <BackupFolder>Add folder</BackupFolder>
                         <TimeoutSeconds>120</TimeoutSeconds>
                     </WriteAction>
                 </WriteActions>
@@ -2816,7 +2814,7 @@ catch {
                     <Name>Daily Report</Name>
                     <Description>This rule runs a PowerShell script at 8am everyday that emails a summary of active alerts to selected recipients. For this rule to work 1) Add Resolution state Name=Assigned, ID=1. 2) Configure overrides EmailFromAddress, EmailToAddress, EmailServer, EmailPort, Identifier</Description>
                 </DisplayString>
-                <DisplayString ElementID="Microsoft.SCOM.UpdateRollup.Rule.MpBackup">
+                <DisplayString ElementID="Microsoft.SCOM.UpdateRollup.Rule.UnsealedMpBackup">
                     <Name>Management Pack Backup</Name>
                     <Description />
                 </DisplayString>
