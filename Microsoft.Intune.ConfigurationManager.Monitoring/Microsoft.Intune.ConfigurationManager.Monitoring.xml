@@ -4,7 +4,7 @@
   <Manifest>
     <Identity>
       <ID>Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.3.14.5</Version>
+      <Version>2024.3.15.0</Version>
     </Identity>
     <Name>Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
@@ -209,9 +209,6 @@
                   <AttributeName>ConfigurationManagerClientInstalled</AttributeName>
                   <!-- HKLM\SYSTEM\CurrentControlSet\Services\CcmExec doesn't work so using this key. -->
                   <Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
-                  <!-- For testing.
-									<Path>SOFTWARE\Microsoft\SMS\Mobile Client</Path>
-									-->
                   <PathType>0</PathType>
                   <!-- 0=regKey 1=regValue -->
                   <AttributeType>0</AttributeType>
@@ -843,7 +840,7 @@
             </Settings>
           </InstanceSettings>
           <Expression>
-            <!-- OR expression allows us to alert with other monitoring if the client isn't installed. This is used by Microsoft.Intune.ConfigurationManager.Monitor.ClientInstall. -->
+            <!-- Return instances even if the agent is installed or not so we can generate alert if not installed. -->
             <Or>
               <Expression>
                 <SimpleExpression>
@@ -1208,9 +1205,9 @@
         </Configuration>
       </UnitMonitor>
       <!-- 
-        SMS Agent Host service. Runs on all Windows Computers. Enabled default.
-        This service has automatic delayed start and restarts a lot (apparantly normal) so we need a custom MT
-        to alert after a certain count and duration.
+        SMS Agent Host service. Runs on all Windows Computers. Enabled by default.
+        This service has automatic delayed start and restarts a lot. Not sure if that's
+        normal so for now we need a custom MT to alert after a certain count and duration.
       -->
       <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.Client" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Microsoft.Intune.ConfigurationManager.MonitorType.ServiceWithInterval" ConfirmDelivery="false">
         <Category>AvailabilityHealth</Category>
@@ -1310,9 +1307,7 @@
           <RequireOutput>true</RequireOutput>
         </WriteAction>
       </Recovery>
-      <!-- SQL Server VSS Writer. Only runs on site servers. 
-      to test alert: set to disabled
-      -->
+      <!-- SQL Server VSS Writer. Only runs on site servers. To test alert set to disabled. -->
       <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SqlServerVssWriterService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
@@ -1356,7 +1351,7 @@
           <RequireOutput>true</RequireOutput>
         </WriteAction>
       </Recovery>
-      <!-- SMS Agent Host service. Runs on all Windows Computers. Enabled default. -->
+      <!-- SMS Agent Host service. Runs on all Windows Computers. -->
       <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.CcmExecService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.Client" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
