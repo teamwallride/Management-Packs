@@ -4,7 +4,7 @@
   <Manifest>
     <Identity>
       <ID>Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.3.14.4</Version>
+      <Version>2024.3.14.5</Version>
     </Identity>
     <Name>Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
@@ -219,7 +219,6 @@
                 </RegistryAttributeDefinition>
               </RegistryAttributeDefinitions>
               <Frequency>86400</Frequency>
-              <!-- change in prod -->
             </DataSource>
             <ConditionDetection ID="CDExists" TypeID="System!System.ExpressionFilter">
               <Expression>
@@ -1210,7 +1209,7 @@
       </UnitMonitor>
       <!-- 
         SMS Agent Host service. Runs on all Windows Computers. Enabled default.
-        This service restarts a lot (apparantly normal) so we need a custom MT
+        This service has automatic delayed start and restarts a lot (apparantly normal) so we need a custom MT
         to alert after a certain count and duration.
       -->
       <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.Client" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Microsoft.Intune.ConfigurationManager.MonitorType.ServiceWithInterval" ConfirmDelivery="false">
@@ -1257,7 +1256,7 @@
     <Recoveries>
       <!-- All recoveries are enabled by default. -->
       <!-- SMS_SITE_SQL_BACKUP service. Only runs on site servers. -->
-      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1268,7 +1267,7 @@
         </WriteAction>
       </Recovery>
       <!-- SMS_SITE_COMPONENT_MANAGER service. Only runs on site servers. -->
-      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteComponentManagerService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteComponentManagerService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteComponentManagerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1279,7 +1278,7 @@
         </WriteAction>
       </Recovery>
       <!-- SMS_SITE_VSS_WRITER service. Only runs on site servers. -->
-      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteVssWriterService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteVssWriterService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1290,7 +1289,7 @@
         </WriteAction>
       </Recovery>
       <!-- CONFIGURATION_MANAGER_UPDATE service. Only runs on site servers. -->
-      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.ConfigurationManagerUpdateService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.ConfigurationManagerUpdateService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.ConfigurationManagerUpdateService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1301,7 +1300,7 @@
         </WriteAction>
       </Recovery>
       <!-- WSUS Service. Only runs on site servers. -->
-      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.WsusService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.WsusService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.WsusService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.WsusService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1314,7 +1313,7 @@
       <!-- SQL Server VSS Writer. Only runs on site servers. 
       to test alert: set to disabled
       -->
-      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SqlServerVssWriterService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SqlServerVssWriterService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SqlServerVssWriterService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1325,7 +1324,7 @@
         </WriteAction>
       </Recovery>
       <!-- AI_UPDATE_SERVICE_POINT service. Only runs on selected site servers. -->
-      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.AiUpdateServicePointService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.AiUpdateServicePointService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.AiUpdateServicePointService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1336,7 +1335,7 @@
         </WriteAction>
       </Recovery>
       <!-- SMS_EXECUTIVE service. Only runs on selected seed servers. -->
-      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsExecutiveService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsExecutiveService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsExecutiveService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1347,7 +1346,7 @@
         </WriteAction>
       </Recovery>
       <!-- Windows Deployment Services Server service. Only runs on selected seed servers but no site servers. -->
-      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.WdsServerService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.WdsServerService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.ServerSeed" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.WdsServerService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
@@ -1358,7 +1357,7 @@
         </WriteAction>
       </Recovery>
       <!-- SMS Agent Host service. Runs on all Windows Computers. Enabled default. -->
-      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.CcmExecService" Accessibility="Public" Enabled="false" Target="Microsoft.Intune.ConfigurationManager.Class.Client" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.CcmExecService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.Client" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.CcmExecService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
         <Category>Maintenance</Category>
         <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
           <ApplicationName>%windir%\System32\net.exe</ApplicationName>
