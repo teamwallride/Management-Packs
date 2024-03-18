@@ -2,7 +2,7 @@
   <Manifest>
     <Identity>
       <ID>Microsoft.Intune.ConfigurationManager.Monitoring.Overrides</ID>
-      <Version>2024.2.1.0</Version>
+      <Version>2024.3.15.0</Version>
     </Identity>
     <Name>Microsoft.Intune.ConfigurationManager.Monitoring.Overrides</Name>
     <References>

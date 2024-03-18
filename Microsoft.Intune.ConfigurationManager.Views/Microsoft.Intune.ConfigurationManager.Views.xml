@@ -2,13 +2,13 @@
   <Manifest>
     <Identity>
       <ID>Microsoft.Intune.ConfigurationManager.Views</ID>
-      <Version>2024.2.1.0</Version>
+      <Version>2024.3.15.0</Version>
     </Identity>
     <Name>Microsoft.Intune.ConfigurationManager.Views</Name>
     <References>
       <Reference Alias="Intune">
         <ID>Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-        <Version>2024.1.31.1</Version>
+        <Version>2024.3.15.0</Version>
         <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
       </Reference>
       <Reference Alias="System">
