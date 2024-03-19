@@ -4,7 +4,7 @@
   <Manifest>
     <Identity>
       <ID>Microsoft.Intune.ConfigurationManager.Monitoring</ID>
-      <Version>2024.3.15.0</Version>
+      <Version>2024.3.19.0</Version>
     </Identity>
     <Name>Microsoft.Intune.ConfigurationManager.Monitoring</Name>
     <References>
@@ -668,7 +668,7 @@
           <RegistryAttributeDefinitions>
             <RegistryAttributeDefinition>
               <AttributeName>IsConfigurationManagerSoftwareUpdatePoint</AttributeName>
-              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\Software Update Point</Path>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Software Update Point</Path>
               <!-- 0=regKey 1=regValue -->
               <PathType>0</PathType>
               <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
@@ -676,13 +676,13 @@
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
               <AttributeName>SiteCode</AttributeName>
-              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\Software Update Point\Site Code</Path>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Software Update Point\Site Code</Path>
               <PathType>1</PathType>
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
             <RegistryAttributeDefinition>
               <AttributeName>Version</AttributeName>
-              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\Software Update Point\Version</Path>
+              <Path>SOFTWARE\Microsoft\SMS\Operations Management\SMS Server Role\SMS Software Update Point\Version</Path>
               <PathType>1</PathType>
               <AttributeType>1</AttributeType>
             </RegistryAttributeDefinition>
