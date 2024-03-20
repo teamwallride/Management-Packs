@@ -1,13 +1,14 @@
 <!--
    Add probe action module, 'recalculate health' button works.
    Added 'Columns[1]/Column[1]' to condition detection to get better info. It's used in alert description too.
+   Alerts so go to server team.
 -->
 <ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema"
    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1">
    <Manifest>
       <Identity>
          <ID>Sample.OleDb</ID>
-         <Version>2024.3.8.4</Version>
+         <Version>2024.3.20.0</Version>
       </Identity>
       <Name>Sample.OleDb</Name>
       <References>
@@ -252,8 +253,8 @@
                <Description />
             </DisplayString>
             <DisplayString ElementID="Sample.OleDb.Monitor.SQLAccess.AlertMessage">
-               <Name>OLEDB SQL Access</Name>
-               <Description>Blah LAB\SQL-MonitorTest {0} {1}. Result code: {2}</Description>
+               <Name>Tenable SQL Access Not Configured</Name>
+               <Description>The SQL instance {1} has not been configured for Tenable access.</Description>
             </DisplayString>
             <DisplayString ElementID="Sample.OleDb.Monitor.SQLAccess" SubElementID="OK">
                <Name>Has access</Name>
