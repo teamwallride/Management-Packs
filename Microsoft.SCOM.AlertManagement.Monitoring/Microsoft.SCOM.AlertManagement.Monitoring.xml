@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.AlertManagement.Monitoring</ID>
-            <Version>2024.1.29.0</Version>
+            <Version>2024.3.27.0</Version>
         </Identity>
         <Name>Microsoft.SCOM.AlertManagement.Monitoring</Name>
         <References>
@@ -189,6 +189,8 @@ Function Set-AlertManagement {
                     # UNIX / Linux
                     "Microsoft.Linux.*" { $Category="Linux Server"; $Owner=$ServerTeam; BREAK }
                     "Microsoft.Unix.*" { $Category="UNIX Server"; $Owner=$ServerTeam; BREAK }
+                    # Tenable Nessus
+                    "Tenable.Nessus.Monitoring" { $Category="Tenable Nessus"; $Owner=$ServerTeam; BREAK }
                     # VMware Carbon Black
                     "VMware.C*.Monitoring" { $Category="Carbon Black"; $Owner=$ServerTeam; BREAK }
                     # VMware Workspace One
@@ -242,7 +244,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="Microsoft.SCOM.AlertManagement.Monitoring"
-$MpVersion="2024.1.29.0"
+$MpVersion="2024.3.27.0"
 $MpWorkflow="Microsoft.SCOM.AlertManagement.Rule.AlertManagement"
 Set-AlertManagement
 ]]>

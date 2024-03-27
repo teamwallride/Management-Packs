@@ -1,0 +1,624 @@
+<!--
+    Change LAB% to correct domain name.
+    Alerts go to server team.
+    Update alert.management mp.
+-->
+<ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1">
+    <Manifest>
+        <Identity>
+            <ID>Tenable.Nessus.Monitoring</ID>
+            <Version>2024.3.27.2</Version>
+        </Identity>
+        <Name>Tenable.Nessus.Monitoring</Name>
+        <References>
+            <Reference Alias="SystemCenter">
+                <ID>Microsoft.SystemCenter.Library</ID>
+                <Version>7.0.8437.0</Version>
+                <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+            </Reference>
+            <Reference Alias="Windows">
+                <ID>Microsoft.Windows.Library</ID>
+                <Version>7.5.8501.0</Version>
+                <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+            </Reference>
+            <Reference Alias="System">
+                <ID>System.Library</ID>
+                <Version>7.5.8501.0</Version>
+                <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+            </Reference>
+            <Reference Alias="Health">
+                <ID>System.Health.Library</ID>
+                <Version>7.0.8437.0</Version>
+                <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+            </Reference>
+            <Reference Alias="SQLDiscovery">
+                <ID>Microsoft.SQLServer.Windows.Discovery</ID>
+                <Version>7.0.36.0</Version>
+                <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+            </Reference>
+            <Reference Alias="SQLCore">
+                <ID>Microsoft.SQLServer.Core.Library</ID>
+                <Version>7.0.36.0</Version>
+                <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+            </Reference>
+        </References>
+    </Manifest>
+    <TypeDefinitions>
+        <EntityTypes>
+            <ClassTypes>
+                <ClassType ID="Tenable.Nessus.Class.Agent" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false">
+                    <Property ID="Version" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0"/>
+                </ClassType>
+            </ClassTypes>
+        </EntityTypes>
+        <SecureReferences>
+            <SecureReference ID="Tenable.Nessus.RunAsProfile.SQLAccess" Accessibility="Public" Context="System!System.Entity" />
+        </SecureReferences>
+        <ModuleTypes>
+            <DataSourceModuleType ID="Tenable.Nessus.DataSource.SQLAccess" Accessibility="Public" RunAs="Tenable.Nessus.RunAsProfile.SQLAccess" Batching="false">
+                <Configuration />
+                <ModuleImplementation Isolation="Any">
+                    <Composite>
+                        <MemberModules>
+                            <DataSource ID="Scheduler" TypeID="System!System.Scheduler">
+                                <Scheduler>
+                                    <SimpleReccuringSchedule>
+                                        <Interval Unit="Seconds">86400</Interval>
+                                    </SimpleReccuringSchedule>
+                                    <ExcludeDates />
+                                </Scheduler>
+                            </DataSource>
+                            <ProbeAction ID="Probe" TypeID="System!System.OleDbProbe">
+                                <ConnectionString>Provider=SQLOLEDB;Server=$Target/Property[Type="SQLCore!Microsoft.SQLServer.Core.DBEngine"]/ConnectionString$;Database=master;Integrated Security=SSPI</ConnectionString>
+                                <Query>
+                        select
+                        case
+                        when count([name]) = 2 then 'Instance configured'
+                        else 'Instance not configured'
+                        end as HasAccess
+                        FROM master.sys.server_principals 
+                        WHERE [name] LIKE 'LAB%\ADMIN_VULNSCN_DB_RO_GG' OR [name] = 'svr_role_db_scanning'
+                                </Query>
+                                <GetValue>true</GetValue>
+                                <QueryTimeout>60</QueryTimeout>
+                                <GetFetchTime>true</GetFetchTime>
+                            </ProbeAction>
+                        </MemberModules>
+                        <Composition>
+                            <Node ID="Probe">
+                                <Node ID="Scheduler" />
+                            </Node>
+                        </Composition>
+                    </Composite>
+                </ModuleImplementation>
+                <OutputType>System!System.OleDbData</OutputType>
+            </DataSourceModuleType>
+            <DataSourceModuleType ID="Tenable.Nessus.DataSource.BaseData" Accessibility="Public" Batching="false">
+                <Configuration>
+                    <xsd:element minOccurs="1" name="IntervalSeconds" type="xsd:unsignedInt"
+                        xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+                    <xsd:element minOccurs="1" name="ComputerPrincipalName" type="xsd:string"
+                        xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+                </Configuration>
+                <OverrideableParameters>
+                    <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+                </OverrideableParameters>
+                <ModuleImplementation Isolation="Any">
+                    <Composite>
+                        <MemberModules>
+                            <DataSource ID="Scheduler" TypeID="System!System.Discovery.Scheduler">
+                                <Scheduler>
+                                    <SimpleReccuringSchedule>
+                                        <Interval Unit="Seconds">$Config/IntervalSeconds$</Interval>
+                                    </SimpleReccuringSchedule>
+                                    <ExcludeDates />
+                                </Scheduler>
+                            </DataSource>
+                            <ProbeAction ID="Probe" TypeID="Windows!Microsoft.Windows.RegistryProbe">
+                                <ComputerName>$Config/ComputerPrincipalName$</ComputerName>
+                                <RegistryAttributeDefinitions>
+                                    <RegistryAttributeDefinition>
+                                        <AttributeName>IsTenableNessusAgent</AttributeName>
+                                        <!-- 0=regKey 1=regValue -->
+                                        <Path>SOFTWARE\Tenable\Nessus Agent</Path>
+                                        <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+                                        <PathType>0</PathType>
+                                        <AttributeType>0</AttributeType>
+                                    </RegistryAttributeDefinition>
+                                    <RegistryAttributeDefinition>
+                                        <AttributeName>Version</AttributeName>
+                                        <Path>SOFTWARE\Tenable\Nessus Agent\Version</Path>
+                                        <PathType>1</PathType>
+                                        <AttributeType>1</AttributeType>
+                                    </RegistryAttributeDefinition>
+                                </RegistryAttributeDefinitions>
+                            </ProbeAction>
+                            <ConditionDetection ID="Filter" TypeID="System!System.ExpressionFilter">
+                                <Expression>
+                                    <!-- Return instances even if the agent is installed or not so we can generate alert if not installed. -->
+                                    <Or>
+                                        <Expression>
+                                            <SimpleExpression>
+                                                <ValueExpression>
+                                                    <XPathQuery Type="String">Values/IsTenableNessusAgent</XPathQuery>
+                                                </ValueExpression>
+                                                <Operator>Equal</Operator>
+                                                <ValueExpression>
+                                                    <Value Type="String">True</Value>
+                                                </ValueExpression>
+                                            </SimpleExpression>
+                                        </Expression>
+                                        <Expression>
+                                            <SimpleExpression>
+                                                <ValueExpression>
+                                                    <XPathQuery Type="String">Values/IsTenableNessusAgent</XPathQuery>
+                                                </ValueExpression>
+                                                <Operator>Equal</Operator>
+                                                <ValueExpression>
+                                                    <Value Type="String">False</Value>
+                                                </ValueExpression>
+                                            </SimpleExpression>
+                                        </Expression>
+                                    </Or>
+                                </Expression>
+                            </ConditionDetection>
+                        </MemberModules>
+                        <Composition>
+                            <Node ID="Filter">
+                                <Node ID="Probe">
+                                    <Node ID="Scheduler" />
+                                </Node>
+                            </Node>
+                        </Composition>
+                    </Composite>
+                </ModuleImplementation>
+                <OutputType>System!System.BaseData</OutputType>
+            </DataSourceModuleType>
+            <DataSourceModuleType ID="Tenable.Nessus.DataSource.DiscoveryData" Accessibility="Public" Batching="false">
+                <Configuration>
+                    <xsd:element minOccurs="1" name="IntervalSeconds" type="xsd:unsignedInt"
+                        xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+                    <xsd:element minOccurs="1" name="ComputerPrincipalName" type="xsd:string"
+                        xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+                </Configuration>
+                <OverrideableParameters>
+                    <OverrideableParameter ID="IntervalSeconds" Selector="$Config/IntervalSeconds$" ParameterType="int" />
+                </OverrideableParameters>
+                <ModuleImplementation Isolation="Any">
+                    <Composite>
+                        <MemberModules>
+                            <DataSource ID="BaseData" TypeID="Tenable.Nessus.DataSource.BaseData">
+                                <IntervalSeconds>$Config/IntervalSeconds$</IntervalSeconds>
+                                <ComputerPrincipalName>$Config/ComputerPrincipalName$</ComputerPrincipalName>
+                            </DataSource>
+                            <ConditionDetection ID="Mapper" TypeID="System!System.Discovery.ClassSnapshotDataMapper">
+                                <ClassId>$MPElement[Name="Tenable.Nessus.Class.Agent"]$</ClassId>
+                                <InstanceSettings>
+                                    <Settings>
+                                        <Setting>
+                                            <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                                            <Value>$Config/ComputerPrincipalName$</Value>
+                                        </Setting>
+                                        <Setting>
+                                            <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                                            <Value>$Config/ComputerPrincipalName$</Value>
+                                        </Setting>
+                                        <Setting>
+                                            <Name>$MPElement[Name="Tenable.Nessus.Class.Agent"]/Version$</Name>
+                                            <Value>$Data/Values/Version$</Value>
+                                        </Setting>
+                                    </Settings>
+                                </InstanceSettings>
+                            </ConditionDetection>
+                        </MemberModules>
+                        <Composition>
+                            <Node ID="Mapper">
+                                <Node ID="BaseData" />
+                            </Node>
+                        </Composition>
+                    </Composite>
+                </ModuleImplementation>
+                <OutputType>System!System.Discovery.Data</OutputType>
+            </DataSourceModuleType>
+            <ProbeActionModuleType ID="Tenable.Nessus.ProbeAction.SQLAccess" Accessibility="Public" RunAs="Tenable.Nessus.RunAsProfile.SQLAccess" Batching="false">
+                <Configuration />
+                <ModuleImplementation Isolation="Any">
+                    <Composite>
+                        <MemberModules>
+                            <ProbeAction ID="PassThrough" TypeID="System!System.PassThroughProbe" />
+                            <ProbeAction ID="Probe" TypeID="System!System.OleDbProbe">
+                                <ConnectionString>Provider=SQLOLEDB;Server=$Target/Property[Type="SQLCore!Microsoft.SQLServer.Core.DBEngine"]/ConnectionString$;Database=master;Integrated Security=SSPI</ConnectionString>
+                                <Query>
+                        select
+                        case
+                        when count([name]) = 2 then 'Instance configured'
+                        else 'Instance not configured'
+                        end as HasAccess
+                        FROM master.sys.server_principals 
+                        WHERE [name] LIKE 'LAB%\ADMIN_VULNSCN_DB_RO_GG' OR [name] = 'svr_role_db_scanning'
+                                </Query>
+                                <GetValue>true</GetValue>
+                                <QueryTimeout>60</QueryTimeout>
+                                <GetFetchTime>true</GetFetchTime>
+                            </ProbeAction>
+                        </MemberModules>
+                        <Composition>
+                            <Node ID="Probe">
+                                <Node ID="PassThrough" />
+                            </Node>
+                        </Composition>
+                    </Composite>
+                </ModuleImplementation>
+                <OutputType>System!System.OleDbData</OutputType>
+                <TriggerOnly>true</TriggerOnly>
+            </ProbeActionModuleType>
+            <ProbeActionModuleType ID="Tenable.Nessus.ProbeAction.AgentStatus" Accessibility="Internal" Batching="false">
+                <Configuration>
+                    <xsd:element minOccurs="0" type="xsd:string" name="SyncTime"
+                        xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+                </Configuration>
+                <OverrideableParameters>
+                    <OverrideableParameter ID="SyncTime" Selector="$Config/SyncTime$" ParameterType="string" />
+                </OverrideableParameters>
+                <ModuleImplementation Isolation="Any">
+                    <Composite>
+                        <MemberModules>
+                            <ProbeAction ID="PassThrough" TypeID="System!System.PassThroughProbe" />
+                            <ProbeAction ID="PA" TypeID="Windows!Microsoft.Windows.RegistryTriggerProbe">
+                                <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+                                <RegistryAttributeDefinitions>
+                                    <RegistryAttributeDefinition>
+                                        <AttributeName>TenableNessusAgentInstalled</AttributeName>
+                                        <!-- HKLM\SYSTEM\CurrentControlSet\Services\* doesn't work so using this key. -->
+                                        <Path>SOFTWARE\Tenable\Nessus Agent</Path>
+                                        <PathType>0</PathType>
+                                        <!-- 0=regKey 1=regValue -->
+                                        <AttributeType>0</AttributeType>
+                                        <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+                                    </RegistryAttributeDefinition>
+                                </RegistryAttributeDefinitions>
+                            </ProbeAction>
+                        </MemberModules>
+                        <Composition>
+                            <Node ID="PA">
+                                <Node ID="PassThrough" />
+                            </Node>
+                        </Composition>
+                    </Composite>
+                </ModuleImplementation>
+                <OutputType>Windows!Microsoft.Windows.RegistryData</OutputType>
+                <TriggerOnly>true</TriggerOnly>
+            </ProbeActionModuleType>
+        </ModuleTypes>
+        <MonitorTypes>
+            <UnitMonitorType ID="Tenable.Nessus.MonitorType.SQLAccess" Accessibility="Public">
+                <MonitorTypeStates>
+                    <MonitorTypeState ID="NoAccess" NoDetection="false" />
+                    <MonitorTypeState ID="HasAccess" NoDetection="false" />
+                </MonitorTypeStates>
+                <Configuration />
+                <MonitorImplementation>
+                    <MemberModules>
+                        <DataSource ID="DS" TypeID="Tenable.Nessus.DataSource.SQLAccess" />
+                        <ProbeAction ID="Probe" TypeID="Tenable.Nessus.ProbeAction.SQLAccess" />
+                        <ConditionDetection ID="CDNoAccess" TypeID="System!System.ExpressionFilter">
+                            <Expression>
+                                <SimpleExpression>
+                                    <ValueExpression>
+                                        <XPathQuery Type="String">Columns[1]/Column[1]</XPathQuery>
+                                    </ValueExpression>
+                                    <Operator>Equal</Operator>
+                                    <ValueExpression>
+                                        <Value Type="String">Instance not configured</Value>
+                                    </ValueExpression>
+                                </SimpleExpression>
+                            </Expression>
+                        </ConditionDetection>
+                        <ConditionDetection ID="CDHasAccess" TypeID="System!System.ExpressionFilter">
+                            <Expression>
+                                <SimpleExpression>
+                                    <ValueExpression>
+                                        <XPathQuery Type="String">Columns[1]/Column[1]</XPathQuery>
+                                    </ValueExpression>
+                                    <Operator>Equal</Operator>
+                                    <ValueExpression>
+                                        <Value Type="String">Instance configured</Value>
+                                    </ValueExpression>
+                                </SimpleExpression>
+                            </Expression>
+                        </ConditionDetection>
+                    </MemberModules>
+                    <RegularDetections>
+                        <RegularDetection MonitorTypeStateID="NoAccess">
+                            <Node ID="CDNoAccess">
+                                <Node ID="DS" />
+                            </Node>
+                        </RegularDetection>
+                        <RegularDetection MonitorTypeStateID="HasAccess">
+                            <Node ID="CDHasAccess">
+                                <Node ID="DS" />
+                            </Node>
+                        </RegularDetection>
+                    </RegularDetections>
+                    <OnDemandDetections>
+                        <OnDemandDetection MonitorTypeStateID="HasAccess">
+                            <Node ID="CDHasAccess">
+                                <Node ID="Probe" />
+                            </Node>
+                        </OnDemandDetection>
+                        <OnDemandDetection MonitorTypeStateID="NoAccess">
+                            <Node ID="CDNoAccess">
+                                <Node ID="Probe" />
+                            </Node>
+                        </OnDemandDetection>
+                    </OnDemandDetections>
+                </MonitorImplementation>
+            </UnitMonitorType>
+            <UnitMonitorType ID="Tenable.Nessus.MonitorType.AgentInstall" Accessibility="Public">
+                <MonitorTypeStates>
+                    <MonitorTypeState ID="RegKeyExists" NoDetection="false"/>
+                    <MonitorTypeState ID="RegKeyMissing" NoDetection="false"/>
+                </MonitorTypeStates>
+                <Configuration/>
+                <MonitorImplementation>
+                    <MemberModules>
+                        <DataSource ID="RegDS" TypeID="Windows!Microsoft.Windows.RegistryProvider">
+                            <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+                            <RegistryAttributeDefinitions>
+                                <RegistryAttributeDefinition>
+                                    <AttributeName>TenableNessusAgentInstalled</AttributeName>
+                                    <!-- HKLM\SYSTEM\CurrentControlSet\Services\* doesn't work so using this key. -->
+                                    <Path>SOFTWARE\Tenable\Nessus Agent</Path>
+                                    <PathType>0</PathType>
+                                    <!-- 0=regKey 1=regValue -->
+                                    <AttributeType>0</AttributeType>
+                                    <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+                                </RegistryAttributeDefinition>
+                            </RegistryAttributeDefinitions>
+                            <Frequency>86400</Frequency>
+                        </DataSource>
+                        <ProbeAction ID="Probe" TypeID="Tenable.Nessus.ProbeAction.AgentStatus">
+                        </ProbeAction>
+                        <ConditionDetection ID="CDExists" TypeID="System!System.ExpressionFilter">
+                            <Expression>
+                                <SimpleExpression>
+                                    <ValueExpression>
+                                        <XPathQuery Type="Boolean">Values/TenableNessusAgentInstalled</XPathQuery>
+                                    </ValueExpression>
+                                    <Operator>Equal</Operator>
+                                    <ValueExpression>
+                                        <Value Type="Boolean">true</Value>
+                                    </ValueExpression>
+                                </SimpleExpression>
+                            </Expression>
+                        </ConditionDetection>
+                        <ConditionDetection ID="CDMissing" TypeID="System!System.ExpressionFilter">
+                            <Expression>
+                                <SimpleExpression>
+                                    <ValueExpression>
+                                        <XPathQuery Type="Boolean">Values/TenableNessusAgentInstalled</XPathQuery>
+                                    </ValueExpression>
+                                    <Operator>Equal</Operator>
+                                    <ValueExpression>
+                                        <Value Type="Boolean">false</Value>
+                                    </ValueExpression>
+                                </SimpleExpression>
+                            </Expression>
+                        </ConditionDetection>
+                    </MemberModules>
+                    <RegularDetections>
+                        <RegularDetection MonitorTypeStateID="RegKeyExists">
+                            <Node ID="CDExists">
+                                <Node ID="RegDS"/>
+                            </Node>
+                        </RegularDetection>
+                        <RegularDetection MonitorTypeStateID="RegKeyMissing">
+                            <Node ID="CDMissing">
+                                <Node ID="RegDS"/>
+                            </Node>
+                        </RegularDetection>
+                    </RegularDetections>
+                    <OnDemandDetections>
+                        <OnDemandDetection MonitorTypeStateID="RegKeyExists">
+                            <Node ID="CDExists">
+                                <Node ID="Probe" />
+                            </Node>
+                        </OnDemandDetection>
+                        <OnDemandDetection MonitorTypeStateID="RegKeyMissing">
+                            <Node ID="CDMissing">
+                                <Node ID="Probe" />
+                            </Node>
+                        </OnDemandDetection>
+                    </OnDemandDetections>
+                </MonitorImplementation>
+            </UnitMonitorType>
+        </MonitorTypes>
+    </TypeDefinitions>
+    <Monitoring>
+        <Discoveries>
+            <!-- Agent discovery -->
+            <Discovery ID="Tenable.Nessus.Discovery.Agent" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+                <Category>Discovery</Category>
+                <DiscoveryTypes>
+                    <DiscoveryClass TypeID="Tenable.Nessus.Class.Agent">
+                        <Property TypeID="Tenable.Nessus.Class.Agent" PropertyID="Version" />
+                    </DiscoveryClass>
+                    <DiscoveryRelationship TypeID="Windows!Microsoft.Windows.ComputerHostsLocalApplication" />
+                </DiscoveryTypes>
+                <DataSource ID="DiscoveryDS" TypeID="Tenable.Nessus.DataSource.DiscoveryData">
+                    <IntervalSeconds>86400</IntervalSeconds>
+                    <ComputerPrincipalName>$Target/Host/Property[Type='Windows!Microsoft.Windows.Computer']/PrincipalName$</ComputerPrincipalName>
+                </DataSource>
+            </Discovery>
+        </Discoveries>
+        <Monitors>
+            <UnitMonitor ID="Tenable.Nessus.Monitor.SQLAccess" Accessibility="Public" Enabled="true" Target="SQLDiscovery!Microsoft.SQLServer.Windows.DBEngine" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" RunAs="Tenable.Nessus.RunAsProfile.SQLAccess" TypeID="Tenable.Nessus.MonitorType.SQLAccess" ConfirmDelivery="false">
+                <Category>Alert</Category>
+                <AlertSettings AlertMessage="Tenable.Nessus.Monitor.SQLAccess.AlertMessage">
+                    <AlertOnState>Warning</AlertOnState>
+                    <AutoResolve>true</AutoResolve>
+                    <AlertPriority>Normal</AlertPriority>
+                    <AlertSeverity>Warning</AlertSeverity>
+                    <AlertParameters>
+                        <AlertParameter1>$Target/Property[Type="SQLDiscovery!Microsoft.SQLServer.Windows.DBEngine"]/PrincipalName$</AlertParameter1>
+                        <AlertParameter2>$Target/Property[Type="System!System.Entity"]/DisplayName$</AlertParameter2>
+                        <AlertParameter3>$Data/Context/Columns[1]/Column[1]$</AlertParameter3>
+                    </AlertParameters>
+                </AlertSettings>
+                <OperationalStates>
+                    <OperationalState ID="OK" MonitorTypeStateID="HasAccess" HealthState="Success" />
+                    <OperationalState ID="Warning" MonitorTypeStateID="NoAccess" HealthState="Warning" />
+                </OperationalStates>
+                <Configuration />
+            </UnitMonitor>
+            <UnitMonitor ID="Tenable.Nessus.Monitor.AgentService" Accessibility="Public" Enabled="true" Target="Tenable.Nessus.Class.Agent" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+                <Category>Alert</Category>
+                <AlertSettings AlertMessage="Tenable.Nessus.Monitor.AgentService.AlertMessage">
+                    <AlertOnState>Error</AlertOnState>
+                    <AutoResolve>true</AutoResolve>
+                    <AlertPriority>Normal</AlertPriority>
+                    <AlertSeverity>Error</AlertSeverity>
+                    <AlertParameters>
+                        <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+                    </AlertParameters>
+                </AlertSettings>
+                <OperationalStates>
+                    <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+                    <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+                </OperationalStates>
+                <Configuration>
+                    <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+                    <ServiceName>Tenable Nessus Agent</ServiceName>
+                    <CheckStartupType>true</CheckStartupType>
+                </Configuration>
+            </UnitMonitor>
+            <UnitMonitor ID="Tenable.Nessus.Monitor.AgentInstall" Accessibility="Public" Enabled="true" Target="Tenable.Nessus.Class.Agent" ParentMonitorID="Health!System.Health.ConfigurationState" Remotable="true" Priority="Normal" TypeID="Tenable.Nessus.MonitorType.AgentInstall" ConfirmDelivery="true">
+                <Category>Alert</Category>
+                <AlertSettings AlertMessage="Tenable.Nessus.Monitor.AgentInstall.AlertMessage">
+                    <AlertOnState>Error</AlertOnState>
+                    <AutoResolve>true</AutoResolve>
+                    <AlertPriority>Normal</AlertPriority>
+                    <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+                    <AlertParameters>
+                        <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+                    </AlertParameters>
+                </AlertSettings>
+                <OperationalStates>
+                    <OperationalState ID="Success" MonitorTypeStateID="RegKeyExists" HealthState="Success"/>
+                    <OperationalState ID="Error" MonitorTypeStateID="RegKeyMissing" HealthState="Error"/>
+                </OperationalStates>
+                <Configuration/>
+            </UnitMonitor>
+        </Monitors>
+        <Recoveries>
+            <Recovery ID="Tenable.Nessus.Recovery.AgentService" Accessibility="Public" Enabled="true" Target="Tenable.Nessus.Class.Agent" Monitor="Tenable.Nessus.Monitor.AgentService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+                <Category>Maintenance</Category>
+                <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+                    <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+                    <WorkingDirectory/>
+                    <CommandLine>start "Tenable Nessus Agent"</CommandLine>
+                    <TimeoutSeconds>60</TimeoutSeconds>
+                    <RequireOutput>true</RequireOutput>
+                </WriteAction>
+            </Recovery>
+        </Recoveries>
+    </Monitoring>
+    <Presentation>
+        <StringResources>
+            <StringResource ID="Tenable.Nessus.Monitor.SQLAccess.AlertMessage" />
+            <StringResource ID="Tenable.Nessus.Monitor.AgentService.AlertMessage" />
+            <StringResource ID="Tenable.Nessus.Monitor.AgentInstall.AlertMessage" />
+        </StringResources>
+    </Presentation>
+    <LanguagePacks>
+        <LanguagePack ID="ENU" IsDefault="false">
+            <DisplayStrings>
+                <DisplayString ElementID="Tenable.Nessus.Monitoring">
+                    <Name>Tenable Nessus Monitoring</Name>
+                    <Description>Custom monitoring for Tenable Nessus.</Description>
+                </DisplayString>
+                <!-- Classes -->
+                <DisplayString ElementID="Tenable.Nessus.Class.Agent">
+                    <Name>Tenable Nessus Agent</Name>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Class.Agent" SubElementID="Version">
+                    <Name>Version</Name>
+                </DisplayString>
+                <!-- Discoveries -->
+                <DisplayString ElementID="Tenable.Nessus.Discovery.Agent">
+                    <Name>Tenable Nessus Agent Discovery</Name>
+                </DisplayString>
+                <!-- Monitors -->
+                <DisplayString ElementID="Tenable.Nessus.Monitor.SQLAccess">
+                    <Name>Tenable SQL Access</Name>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.SQLAccess.AlertMessage">
+                    <Name>Tenable SQL Access Not Configured</Name>
+                    <Description>The SQL instance {1} has not been configured for Tenable access.</Description>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.SQLAccess" SubElementID="OK">
+                    <Name>Has access</Name>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.SQLAccess" SubElementID="Warning">
+                    <Name>No Access</Name>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.AgentService">
+                    <Name>Tenable Nessus Agent Service Monitor</Name>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.AgentService.AlertMessage">
+                    <Name>Tenable Nessus Agent Service Not Running</Name>
+                    <Description>The 'Tenable Nessus Agent' service on {0} is not running.</Description>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.AgentService" SubElementID="Healthy">
+                    <Name>Running</Name>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.AgentService" SubElementID="Unhealthy">
+                    <Name>Not running</Name>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.AgentInstall">
+                    <Name>Tenable Nessus Agent Install</Name>
+                    <Description/>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.AgentInstall" SubElementID="Success">
+                    <Name>RegKeyExists</Name>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.AgentInstall" SubElementID="Error">
+                    <Name>RegKeyMissing</Name>
+                </DisplayString>
+                <DisplayString ElementID="Tenable.Nessus.Monitor.AgentInstall.AlertMessage">
+                    <Name>Tenable Nessus Agent Not Installed</Name>
+                    <Description>The Tenable Nessus Agent is not installed on {0}. See the knowledge section below for more information.</Description>
+                </DisplayString>
+                <!-- Recoveries -->
+                <DisplayString ElementID="Tenable.Nessus.Recovery.AgentService">
+                    <Name>Start Tenable Nessus Agent service</Name>
+                    <Description>Start Windows service</Description>
+                </DisplayString>
+            </DisplayStrings>
+            <KnowledgeArticles>
+                <KnowledgeArticle ElementID="Tenable.Nessus.Monitor.AgentInstall" Visible="true">
+                    <MamlContent>
+                        <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+                            <maml:title>Summary</maml:title>
+                            <maml:para>This monitor checks if the Tenable Nessus agent is installed.</maml:para>
+                        </maml:section>
+                        <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+                            <maml:title>Causes</maml:title>
+                            <maml:para>If the below registry key is not found, it's assumed the agent is not installed and an alert is generated.</maml:para>
+                            <maml:list>
+                                <maml:listItem>
+                                    <maml:para>HKLM\SOFTWARE\Tenable\Nessus Agent</maml:para>
+                                </maml:listItem>
+                            </maml:list>
+                        </maml:section>
+                        <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+                            <maml:title>Resolutions</maml:title>
+                            <maml:para>Install the agent software and the alert will automatically close.</maml:para>
+                        </maml:section>
+                    </MamlContent>
+                </KnowledgeArticle>
+            </KnowledgeArticles>
+        </LanguagePack>
+    </LanguagePacks>
+</ManagementPack>
