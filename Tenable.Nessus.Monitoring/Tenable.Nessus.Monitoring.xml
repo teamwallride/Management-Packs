@@ -1,4 +1,5 @@
 <!--
+    28/3/2024: Pretty much done. Do one final test then update blog pics.
     Change LAB% to correct domain name.
     Alerts go to server team.
     Update alert.management mp.
@@ -8,7 +9,7 @@
     <Manifest>
         <Identity>
             <ID>Tenable.Nessus.Monitoring</ID>
-            <Version>2024.3.27.2</Version>
+            <Version>2024.3.28.1</Version>
         </Identity>
         <Name>Tenable.Nessus.Monitoring</Name>
         <References>
@@ -597,6 +598,31 @@
                 </DisplayString>
             </DisplayStrings>
             <KnowledgeArticles>
+                <KnowledgeArticle ElementID="Tenable.Nessus.Monitor.SQLAccess" Visible="true">
+                    <MamlContent>
+                        <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+                            <maml:title>Summary</maml:title>
+                            <maml:para>This monitor checks if the SQL instance has been configured for Tenable access.
+                            </maml:para>
+                        </maml:section>
+                        <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+                            <maml:title>Causes</maml:title>
+                            <maml:para>If both of these server principals do not exist in the master.sys.server_principals table, an alert is generated.</maml:para>
+                            <maml:list>
+                                <maml:listItem>
+                                    <maml:para>%DOMAIN%\ADMIN_VULNSCN_DB_RO_GG</maml:para>
+                                </maml:listItem>
+                                <maml:listItem>
+                                    <maml:para>svr_role_db_scanning</maml:para>
+                                </maml:listItem>
+                            </maml:list>
+                        </maml:section>
+                        <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
+                            <maml:title>Resolutions</maml:title>
+                            <maml:para>Configure the SQL instance for Tenable access. The Recalculate Health button works with this monitor.</maml:para>
+                        </maml:section>
+                    </MamlContent>
+                </KnowledgeArticle>
                 <KnowledgeArticle ElementID="Tenable.Nessus.Monitor.AgentInstall" Visible="true">
                     <MamlContent>
                         <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
@@ -614,7 +640,7 @@
                         </maml:section>
                         <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
                             <maml:title>Resolutions</maml:title>
-                            <maml:para>Install the agent software and the alert will automatically close.</maml:para>
+                            <maml:para>Install the agent software. The Recalculate Health button works with this monitor.</maml:para>
                         </maml:section>
                     </MamlContent>
                 </KnowledgeArticle>
