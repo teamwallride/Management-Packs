@@ -1,15 +1,9 @@
-<!--
-    28/3/2024: Pretty much done. Do one final test then update blog pics.
-    Change LAB% to correct domain name.
-    Alerts go to server team.
-    Update alert.management mp.
--->
 <ManagementPack xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1">
     <Manifest>
         <Identity>
             <ID>Tenable.Nessus.Monitoring</ID>
-            <Version>2024.3.28.1</Version>
+            <Version>2024.5.4.0</Version>
         </Identity>
         <Name>Tenable.Nessus.Monitoring</Name>
         <References>
@@ -607,10 +601,10 @@
                         </maml:section>
                         <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
                             <maml:title>Causes</maml:title>
-                            <maml:para>If both of these server principals do not exist in the master.sys.server_principals table, an alert is generated.</maml:para>
+                            <maml:para>If both of these server principals do not exist in the master.sys.server_principals table an alert is generated.</maml:para>
                             <maml:list>
                                 <maml:listItem>
-                                    <maml:para>%DOMAIN%\ADMIN_VULNSCN_DB_RO_GG</maml:para>
+                                    <maml:para>%AD_DOMAIN%\ADMIN_VULNSCN_DB_RO_GG</maml:para>
                                 </maml:listItem>
                                 <maml:listItem>
                                     <maml:para>svr_role_db_scanning</maml:para>
@@ -631,7 +625,7 @@
                         </maml:section>
                         <maml:section xmlns:maml="http://schemas.microsoft.com/maml/2004/10">
                             <maml:title>Causes</maml:title>
-                            <maml:para>If the below registry key is not found, it's assumed the agent is not installed and an alert is generated.</maml:para>
+                            <maml:para>If the below registry key is not found an alert is generated.</maml:para>
                             <maml:list>
                                 <maml:listItem>
                                     <maml:para>HKLM\SOFTWARE\Tenable\Nessus Agent</maml:para>
