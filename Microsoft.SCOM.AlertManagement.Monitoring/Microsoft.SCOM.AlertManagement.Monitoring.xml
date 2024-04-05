@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.AlertManagement.Monitoring</ID>
-            <Version>2024.3.27.0</Version>
+            <Version>2024.4.5.0</Version>
         </Identity>
         <Name>Microsoft.SCOM.AlertManagement.Monitoring</Name>
         <References>
@@ -149,59 +149,59 @@ Function Set-AlertManagement {
                 # Assign alerts based on the management pack that generated it.
                 switch -wildcard ($MpName) {
                     # Active Directory
-                    "Microsoft.Windows.Server.AD.*" { $Category="Active Directory"; $Owner=$ADTeam; BREAK }
-                    "ActiveDirectory.Monitoring" { $Category="Active Directory"; $Owner=$ADTeam; BREAK }
+                    "Microsoft.Windows.Server.AD.*" {$Category="Active Directory"; $Owner=$ADTeam; BREAK}
+                    "ActiveDirectory.Monitoring" {$Category="Active Directory"; $Owner=$ADTeam; BREAK}
                     # ADFS
-                    "Microsoft.ActiveDirectoryFederationServices.2012.R2" { $Category="ADFS"; $Owner=$ServerTeam; BREAK }
+                    "Microsoft.ActiveDirectoryFederationServices.2012.R2" {$Category="ADFS"; $Owner=$ServerTeam; BREAK}
                     # Azure AD Connect
-                    "AADC.Monitoring" { $Category="Azure AD Connect"; $Owner=$ADTeam; BREAK }
+                    "AADC.Monitoring" {$Category="Azure AD Connect"; $Owner=$ADTeam; BREAK}
                     # Citrix
-                    "CitrixA.Monitoring" { $Category="Citrix"; $Owner=$CitrixTeam; BREAK }
+                    "CitrixA.Monitoring" {$Category="Citrix"; $Owner=$CitrixTeam; BREAK}
                     # Client
-                    "*Client*" { $Category="Client"; $Owner=$MonitoringTeam; BREAK }
+                    "*Client*" {$Category="Client"; $Owner=$MonitoringTeam; BREAK}
                     # Cmdb
-                    "SCOM.Cmdb" { $Category="Cmdb"; $Owner=$MonitoringTeam; BREAK }
+                    "SCOM.Cmdb" {$Category="Cmdb"; $Owner=$MonitoringTeam; BREAK}
                     # Commvault
-                    "Commvault.Monitoring" { $Category="Commvault"; $Owner=$BackupStorageTeam; BREAK }
+                    "Commvault.Monitoring" {$Category="Commvault"; $Owner=$BackupStorageTeam; BREAK}
                     # DHCP
-                    "Microsoft.Windows.DHCPServer.*" { $Category="DHCP"; $Owner=$ServerTeam; BREAK }
+                    "Microsoft.Windows.DHCPServer.*" {$Category="DHCP"; $Owner=$ServerTeam; BREAK}
                     # DNS
-                    "*.DNS*" { $Category="DNS"; $Owner=$ServerTeam; BREAK }
+                    "*.DNS*" {$Category="DNS"; $Owner=$ServerTeam; BREAK}
                     # Exchange
-                    "*Exchange.*" { $Category="Exchange"; $Owner=$ServerTeam; BREAK }
+                    "*Exchange.*" {$Category="Exchange"; $Owner=$ServerTeam; BREAK}
                     # IIS
-                    "Microsoft.Windows.InternetInformationServices.*" { $Category="IIS"; $Owner=$ServerTeam; BREAK }
+                    "Microsoft.Windows.InternetInformationServices.*" {$Category="IIS"; $Owner=$ServerTeam; BREAK}
                     # Network
-                    "System.NetworkManagement.Monitoring" { $Category="Network"; $Owner=$NetworkTeam; BREAK }
+                    "System.NetworkManagement.Monitoring" {$Category="Network"; $Owner=$NetworkTeam; BREAK}
                     # Passwordstate
-                    "Passwordstate.Monitoring" { $Category="Passwordstate"; $Owner=$SecurityTeam; BREAK }
+                    "Passwordstate.Monitoring" {$Category="Passwordstate"; $Owner=$SecurityTeam; BREAK}
                     # SCOM
-                    "Microsoft.SystemCenter.*" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
-                    "Microsoft.SCOM.UpdateRollup.Monitoring" { $Category="SCOM"; $Owner=$MonitoringTeam; BREAK }
+                    "Microsoft.SystemCenter.*" {$Category="SCOM"; $Owner=$MonitoringTeam; BREAK}
+                    "Microsoft.SCOM.UpdateRollup.Monitoring" {$Category="SCOM"; $Owner=$MonitoringTeam; BREAK}
                     # SCCM
-                    "*.ConfigurationManager.*" { $Category="Configuration Manager"; $Owner=$SccmTeam; BREAK }
+                    "*.ConfigurationManager.*" {$Category="Configuration Manager"; $Owner=$SccmTeam; BREAK}
                     # SharePoint
-                    "Microsoft.SharePoint.*" { $Category="SharePoint"; $Owner=$SharePointTeam; BREAK }
+                    "Microsoft.SharePoint.*" {$Category="SharePoint"; $Owner=$SharePointTeam; BREAK}
                     # SQL
-                    "Microsoft.SQLServer.*" { $Category="SQL"; $Owner=$ServerTeam; BREAK }
+                    "Microsoft.SQLServer.*" {$Category="SQL"; $Owner=$ServerTeam; BREAK}
                     # Trellix
-                    "Trellix.Monitoring" { $Category="Trellix"; $Owner=$EndpointSecurityTeam; BREAK }
+                    "Trellix.Monitoring" {$Category="Trellix"; $Owner=$EndpointSecurityTeam; BREAK}
                     # UNIX / Linux
-                    "Microsoft.Linux.*" { $Category="Linux Server"; $Owner=$ServerTeam; BREAK }
-                    "Microsoft.Unix.*" { $Category="UNIX Server"; $Owner=$ServerTeam; BREAK }
+                    "Microsoft.Linux.*" {$Category="Linux Server"; $Owner=$ServerTeam; BREAK}
+                    "Microsoft.Unix.*" {$Category="UNIX Server"; $Owner=$ServerTeam; BREAK}
                     # Tenable Nessus
-                    "Tenable.Nessus.Monitoring" { $Category="Tenable Nessus"; $Owner=$ServerTeam; BREAK }
+                    "Tenable.Nessus.Monitoring" {$Category="Tenable Nessus"; $Owner=$ServerTeam; BREAK}
                     # VMware Carbon Black
-                    "VMware.C*.Monitoring" { $Category="Carbon Black"; $Owner=$ServerTeam; BREAK }
+                    "VMware.C*.Monitoring" {$Category="Carbon Black"; $Owner=$ServerTeam; BREAK}
                     # VMware Workspace One
-                    "VMware.WorkspaceOne.Monitoring" { $Category="VMware Workspace ONE"; $Owner=$ServerTeam; BREAK }
+                    "VMware.WorkspaceOne.Monitoring" {$Category="VMware Workspace ONE"; $Owner=$ServerTeam; BREAK}
                     # Windows certificates
-                    "Certificate.Monitoring" { $Category="Certificate"; $Owner=$ServerTeam; BREAK }
+                    "Certificate.Monitoring" {$Category="Certificate"; $Owner=$ServerTeam; BREAK}
                     # Windows clusters
-                    "*.Cluster.*" { $Category="Windows Cluster"; $Owner=$ServerTeam; BREAK }
-                    "Microsoft.Windows.Server.ClusterSharedVolumeMonitoring" { $Category="Windows Cluster"; $Owner=$ServerTeam; BREAK }
+                    "*.Cluster.*" {$Category="Windows Cluster"; $Owner=$ServerTeam; BREAK}
+                    "Microsoft.Windows.Server.ClusterSharedVolumeMonitoring" {$Category="Windows Cluster"; $Owner=$ServerTeam; BREAK}
                     # Windows server
-                    "Microsoft.Windows.Server.*" { $Category="Windows Server"; $Owner=$ServerTeam; BREAK }
+                    "Microsoft.Windows.Server.*" {$Category="Windows Server"; $Owner=$ServerTeam; BREAK}
                     # If no match found, assign alert to monitoring team for follow up and set event to warning.
                     default {
                         $Message+="Mp name $MpName not in `switch statement for alert '$Alert'`n"
@@ -211,20 +211,20 @@ Function Set-AlertManagement {
                 }
                 # Assign alerts based on monitor or rule name.
                 switch -wildcard ($WorkflowName) {
-                    "Microsoft.SystemCenter.HealthService.ComputerDown" { $Owner=$ServerTeam; $Category="Windows Server"; BREAK } 
-                    "Microsoft.Windows.Server.*.LogicalDisk.FreeSpace" { $Source=$Alert.MonitoringObjectPath; BREAK } 
-                    "Microsoft.Unix.LogFileModuleErrors.Alert" { $Owner=$MonitoringTeam; $Category="SCOM"; BREAK } 
-                    "ActiveDirectory.Monitor.TimeDriftScriptError" { $Owner=$MonitoringTeam; $Category="SCOM"; BREAK }
-                    "Microsoft.ActiveDirectoryFederationServices2012R2.FederationServerTrustsHaveExpiredCertsWarningMonitor" { $Category="Certificate"; BREAK }
+                    "Microsoft.SystemCenter.HealthService.ComputerDown" {$Owner=$ServerTeam; $Category="Windows Server"; BREAK} 
+                    "Microsoft.Windows.Server.*.LogicalDisk.FreeSpace" {$Source=$Alert.MonitoringObjectPath; BREAK} 
+                    "Microsoft.Unix.LogFileModuleErrors.Alert" {$Owner=$MonitoringTeam; $Category="SCOM"; BREAK} 
+                    "ActiveDirectory.Monitor.TimeDriftScriptError" {$Owner=$MonitoringTeam; $Category="SCOM"; BREAK}
+                    "Microsoft.ActiveDirectoryFederationServices2012R2.FederationServerTrustsHaveExpiredCertsWarningMonitor" {$Category="Certificate"; BREAK}
                 }
                 # Assign alerts based on alert name.
                 switch -wildcard ($AlertName) {
-                    "Web Application Unavailable: Hitachi Management portal" { $Owner=$BackupStorageTeam; $Category="Hitachi"; BREAK } 
-                    "Web Application Unavailable: NetApp Management portal" { $Owner=$BackupStorageTeam; $Category="NetApp"; BREAK } 
-                    "Web Application Unavailable: L* Passwordstate portal" { $Owner=$SecurityTeam; $Category="Passwordstate"; BREAK } 
-                    "Web Application Unavailable: Carbon Black" { $Owner=$ServerTeam; $Category="Carbon Black"; BREAK } 
-                    "Web Application Unavailable: VMware Workspace ONE" { $Owner=$ServerTeam; $Category="VMware Workspace ONE"; BREAK } 
-                    "Web Application Unavailable: *PAC file*" { $Owner=$ServerTeam; $Category="Proxy PAC"; BREAK } 
+                    "Web Application Unavailable: Hitachi Management portal" {$Owner=$BackupStorageTeam; $Category="Hitachi"; BREAK} 
+                    "Web Application Unavailable: NetApp Management portal" {$Owner=$BackupStorageTeam; $Category="NetApp"; BREAK} 
+                    "Web Application Unavailable: L* Passwordstate portal" {$Owner=$SecurityTeam; $Category="Passwordstate"; BREAK} 
+                    "Web Application Unavailable: Carbon Black" {$Owner=$ServerTeam; $Category="Carbon Black"; BREAK} 
+                    "Web Application Unavailable: VMware Workspace ONE" {$Owner=$ServerTeam; $Category="VMware Workspace ONE"; BREAK} 
+                    "Web Application Unavailable: *PAC file*" {$Owner=$ServerTeam; $Category="Proxy PAC"; BREAK} 
                 }
                 # Update alert properties and process next alert.
                 Set-SCOMAlert -Alert $Alert -Owner $Owner -CustomField1 $Category -CustomField2 $Source -ResolutionState 1
@@ -244,7 +244,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="Microsoft.SCOM.AlertManagement.Monitoring"
-$MpVersion="2024.3.27.0"
+$MpVersion="2024.4.5.0"
 $MpWorkflow="Microsoft.SCOM.AlertManagement.Rule.AlertManagement"
 Set-AlertManagement
 ]]>
