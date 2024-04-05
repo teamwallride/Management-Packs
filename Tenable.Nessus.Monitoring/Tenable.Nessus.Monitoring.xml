@@ -3,7 +3,7 @@
     <Manifest>
         <Identity>
             <ID>Tenable.Nessus.Monitoring</ID>
-            <Version>2024.5.4.0</Version>
+            <Version>2024.4.5.0</Version>
         </Identity>
         <Name>Tenable.Nessus.Monitoring</Name>
         <References>
