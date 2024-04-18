@@ -1,0 +1,171 @@
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>TestA.Microsoft.AGPM.Monitoring</ID>
+      <Version>2024.4.18.0</Version>
+    </Identity>
+    <Name>TestA.Microsoft.AGPM.Monitoring</Name>
+    <References>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8433.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <EntityTypes>
+      <ClassTypes>
+        <ClassType ID="TestA.Microsoft.AGPM.Class.AGPMServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false"/>
+      </ClassTypes>
+    </EntityTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Discoveries>
+      <Discovery ID="TestA.Microsoft.AGPM.Discovery.AGPMServer" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+        <Category>Discovery</Category>
+        <DiscoveryTypes>
+          <DiscoveryClass TypeID="TestA.Microsoft.AGPM.Class.AGPMServer"/>
+        </DiscoveryTypes>
+        <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <RegistryAttributeDefinitions>
+            <RegistryAttributeDefinition>
+              <AttributeName>IsAGPMServer</AttributeName>
+              <Path>SOFTWARE\Microsoft\Agpm</Path>
+              <!-- 0=regKey 1=regValue -->
+              <PathType>0</PathType>
+              <!-- 0=CheckIfExists (Boolean) 1=treat data as (String) 2=treat data as (Integer) -->
+              <AttributeType>0</AttributeType>
+            </RegistryAttributeDefinition>
+          </RegistryAttributeDefinitions>
+          <Frequency>60</Frequency>
+          <ClassId>$MPElement[Name="TestA.Microsoft.AGPM.Class.AGPMServer"]$</ClassId>
+          <InstanceSettings>
+            <Settings>
+              <Setting>
+                <Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+                <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+              </Setting>
+              <Setting>
+                <Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+                <Value>$Target/Host/Property[Type="System!System.Entity"]/DisplayName$</Value>
+              </Setting>
+            </Settings>
+          </InstanceSettings>
+          <Expression>
+            <SimpleExpression>
+              <ValueExpression>
+                <XPathQuery Type="String">Values/IsAGPMServer</XPathQuery>
+              </ValueExpression>
+              <Operator>Equal</Operator>
+              <ValueExpression>
+                <Value Type="String">True</Value>
+              </ValueExpression>
+            </SimpleExpression>
+          </Expression>
+        </DataSource>
+      </Discovery>
+    </Discoveries>
+
+    <Monitors>
+      <UnitMonitor ID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+        <Category>Alert</Category>
+        <AlertSettings AlertMessage="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage">
+          <AlertOnState>Error</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>Error</AlertSeverity>
+          <AlertParameters>
+            <AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+          <OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <ServiceName>SMS_SITE_SQL_BACKUP</ServiceName>
+          <CheckStartupType>true</CheckStartupType>
+        </Configuration>
+      </UnitMonitor>
+
+</Monitors>
+
+    <Recoveries>
+      <!-- All recoveries are enabled by default. -->
+      <!-- SMS_SITE_SQL_BACKUP service. Only runs on site servers. -->
+      <Recovery ID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService" Accessibility="Public" Enabled="true" Target="Microsoft.Intune.ConfigurationManager.Class.SiteServer" Monitor="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" ResetMonitor="true" ExecuteOnState="Error" Remotable="true" Timeout="300">
+        <Category>Maintenance</Category>
+        <WriteAction ID="WA" TypeID="System!System.CommandExecuter">
+          <ApplicationName>%windir%\System32\net.exe</ApplicationName>
+          <WorkingDirectory/>
+          <CommandLine>start "SMS_SITE_SQL_BACKUP"</CommandLine>
+          <TimeoutSeconds>60</TimeoutSeconds>
+          <RequireOutput>true</RequireOutput>
+        </WriteAction>
+      </Recovery>
+</Recoveries>
+
+  </Monitoring>
+
+    <Presentation>
+    <StringResources>
+      <StringResource ID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage"/>
+    </StringResources>
+  </Presentation>
+
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="TestA.Microsoft.AGPM.Monitoring">
+          <Name>Microsoft Advanced Group Policy Management Monitoring</Name>
+          <Description></Description>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.AGPM.Class.AGPMServer">
+          <Name>AGPM Server</Name>
+        </DisplayString>
+        <DisplayString ElementID="TestA.Microsoft.AGPM.Discovery.AGPMServer">
+          <Name>AGPM Server Discovery</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService">
+          <Name>SMS_SITE_SQL_BACKUP Service Monitor</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService.AlertMessage">
+          <Name>SMS_SITE_SQL_BACKUP Service Not Running</Name>
+          <Description>The 'SMS_SITE_SQL_BACKUP' service on {0} is not running.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" SubElementID="Healthy">
+          <Name>Running</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Monitor.SmsSiteSqlBackupService" SubElementID="Unhealthy">
+          <Name>Not running</Name>
+        </DisplayString>
+
+        <DisplayString ElementID="Microsoft.Intune.ConfigurationManager.Recovery.SmsSiteSqlBackupService">
+          <Name>Start SMS_SITE_SQL_BACKUP service </Name>
+          <Description>Start Windows service</Description>
+        </DisplayString>
+
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
