@@ -1,14 +1,10 @@
-<!--
-  This is solid, you just need to add new version and import to lab.
--->
-
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
       <ID>Microsoft.AGPM.Monitoring</ID>
-      <Version>2024.4.19.0</Version>
+      <Version>2024.4.20.0</Version>
     </Identity>
     <Name>Microsoft.AGPM.Monitoring</Name>
     <References>
@@ -134,7 +130,7 @@
       <DisplayStrings>
         <DisplayString ElementID="Microsoft.AGPM.Monitoring">
           <Name>Microsoft Advanced Group Policy Management Monitoring</Name>
-          <Description></Description>
+          <Description>Custom monitoring for Microsoft Advanced Group Policy Management.</Description>
         </DisplayString>
         <DisplayString ElementID="Microsoft.AGPM.Class.AGPMServer">
           <Name>AGPM Server</Name>

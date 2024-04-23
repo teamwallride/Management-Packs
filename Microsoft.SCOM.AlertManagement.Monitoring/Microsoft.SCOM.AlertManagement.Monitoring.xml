@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.AlertManagement.Monitoring</ID>
-            <Version>2024.4.5.0</Version>
+            <Version>2024.4.22.0</Version>
         </Identity>
         <Name>Microsoft.SCOM.AlertManagement.Monitoring</Name>
         <References>
@@ -153,6 +153,8 @@ Function Set-AlertManagement {
                     "ActiveDirectory.Monitoring" {$Category="Active Directory"; $Owner=$ADTeam; BREAK}
                     # ADFS
                     "Microsoft.ActiveDirectoryFederationServices.2012.R2" {$Category="ADFS"; $Owner=$ServerTeam; BREAK}
+                    # AGPM
+                    "Microsoft.AGPM.Monitoring" {$Category="AGPM"; $Owner=$ADTeam; BREAK}
                     # Azure AD Connect
                     "AADC.Monitoring" {$Category="Azure AD Connect"; $Owner=$ADTeam; BREAK}
                     # Citrix
@@ -244,7 +246,7 @@ $MomApi=New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName="AlertManagement.ps1"
 $Account=[System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp="Microsoft.SCOM.AlertManagement.Monitoring"
-$MpVersion="2024.4.5.0"
+$MpVersion="2024.4.22.0"
 $MpWorkflow="Microsoft.SCOM.AlertManagement.Rule.AlertManagement"
 Set-AlertManagement
 ]]>
