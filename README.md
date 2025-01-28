@@ -1,2 +1,2 @@
 # Management-Packs
-Custom MPs developed by realscom. Use at your own risk.
+Custom SCOM management packs developed by teamwallride. Use at your own risk.
