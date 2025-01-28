@@ -9,7 +9,7 @@
       <Reference Alias="SCOM">
         <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
         <Version>2024.1.5.0</Version>
-        <PublicKeyToken>b9103d6ec5285c3a</PublicKeyToken>
+        <PublicKeyToken>9d007ae5044b0ce5</PublicKeyToken> <!-- Change if generating new key pair using sn.exe-->
       </Reference>
       <Reference Alias="OpsManager2007">
         <ID>Microsoft.SystemCenter.OperationsManager.2007</ID>
