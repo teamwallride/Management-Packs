@@ -539,10 +539,16 @@
                                             }
                                             <#
                                             REPORT SERVER. This section only applies to report servers.
+
+                                            *** This stuff is tricky to get. Best option is to have a section for each version. Don't
+                                            worry about repeated code, can fix later. ***
                                             #>
                                             $ReportServerRegKey = "HKLM:\SOFTWARE\Microsoft\System Center Operations Manager\12\Setup\Reporting"
                                             If ((Get-ItemProperty -Path $ReportServerRegKey -ErrorAction SilentlyContinue).InstallDirectory) {
                                                 $ReportServerInstallDirectory = (Get-ItemProperty -Path $ReportServerRegKey).InstallDirectory.TrimEnd("\")
+                                                
+                                                
+                                                
                                                 # 2016, 1801.
                                                 If (Test-Path "$ReportServerInstallDirectory\Microsoft.Mom.Common.dll") {
                                                     $ReportServerURFile = (Get-Item "$ReportServerInstallDirectory\Microsoft.Mom.Common.dll").VersionInfo.FileVersion
@@ -550,6 +556,13 @@
                                                         $ReportServerURFile = (Get-Item "C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.EnterpriseManagement.OperationsManager\v4.0_7.0.5000.0__31bf3856ad364e35\Microsoft.EnterpriseManagement.OperationsManager.dll").VersionInfo.FileVersion
                                                     }
                                                 }
+
+                                                # 2019.
+
+                                                
+
+
+
                                                 $ReportServerVersion = $ReportServerURFile
                                                 Switch ($ReportServerVersion) {
                                                     # SCOM 2012 R2

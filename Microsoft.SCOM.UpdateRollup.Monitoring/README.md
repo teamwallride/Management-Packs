@@ -9,9 +9,9 @@ Shows update rollup information for these SCOM versions:
   * 1801
   * 2019
 
-# Bugs
+# Improvements
 
-Only list current bugs and remove from here when fixed.
+# Bugs
 
 # Versions
 
