@@ -13,6 +13,10 @@ Shows update rollup information for these SCOM versions:
 
 # Bugs
 
+# Links
+
+[SCOM Build Versions](https://thesystemcenterblog.wordpress.com/scom-build-versions)
+
 # Versions
 
   * 2025.1.28.0 - Multiple fixes:

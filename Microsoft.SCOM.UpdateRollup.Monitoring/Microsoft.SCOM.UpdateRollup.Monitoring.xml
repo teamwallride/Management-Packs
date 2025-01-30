@@ -557,9 +557,25 @@
                                                     }
                                                 }
 
-                                                # 2019.
-
+                                                <# 2019.
                                                 
+                                                RTM.
+                                                These files exist and all are version 10.19.10050.0.
+                                                C:\Program Files\Microsoft System Center\Operations Manager\Reporting\Microsoft.Mom.Common.dll
+                                                C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.EnterpriseManagement.OperationsManager\v4.0_7.0.5000.0__31bf3856ad364e35\Microsoft.EnterpriseManagement.OperationsManager.dll
+                                                C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.EnterpriseManagement.Runtime\v4.0_7.0.5000.0__31bf3856ad364e35
+                                                
+
+                                                UR1.
+                                                These are the only patch files for reporting:
+                                                Microsoft.EnterpriseManagement.OperationsManager.dll
+                                                Microsoft.EnterpriseManagement.Runtime.dll
+
+                                                UR1Hotfix
+
+                                                C:\Windows\Microsoft.NET\assembly\GAC_MSIL\Microsoft.EnterpriseManagement.Core\v4.0_7.0.5000.0__31bf3856ad364e35\Microsoft.EnterpriseManagement.Core.dll
+
+                                                #>
 
 
 
