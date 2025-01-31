@@ -21,6 +21,8 @@ old [SCOM Build Versions](https://thesystemcenterblog.wordpress.com/scom-build-v
 
 new <a href="https://thesystemcenterblog.wordpress.com/scom-build-versions" target="_blank">SCOM Build Versions</a>
 
+Click [here](https://www.geeksforgeeks.org/){:target="_blank"} to visit GeeksForGeeks website.
+
 # Versions
 
   * 2025.1.28.0 - Multiple fixes:
