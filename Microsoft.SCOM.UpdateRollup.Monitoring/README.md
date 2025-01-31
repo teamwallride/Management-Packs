@@ -17,11 +17,7 @@ Should I track hotfixes/patches released in between URs? 2019 is a good example.
 
 # Links
 
-old [SCOM Build Versions](https://thesystemcenterblog.wordpress.com/scom-build-versions)
-
-new <a href="https://thesystemcenterblog.wordpress.com/scom-build-versions" target="_blank">SCOM Build Versions</a>
-
-Click [here](https://www.geeksforgeeks.org/){:target="_blank"} to visit GeeksForGeeks website.
+[SCOM Build Versions](https://thesystemcenterblog.wordpress.com/scom-build-versions)
 
 # Versions
 
