@@ -21,6 +21,7 @@ Should I track hotfixes/patches released in between URs? 2019 is a good example.
 
 # Versions
 
+  * 2025.1.31.0 - Redo 2019 reporting patch section to use a single file.
   * 2025.1.28.0 - Multiple fixes:
     * $ReportServerVersion returning blank for some versions, moved to line before switch statement.
     * Incorrect $ReportServerVersion version for 2019 RTM. Changed from 10.19.1032.0 to 10.19.10050.0.
