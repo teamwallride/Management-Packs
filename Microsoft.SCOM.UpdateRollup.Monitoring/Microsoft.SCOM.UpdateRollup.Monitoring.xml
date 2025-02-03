@@ -4,7 +4,7 @@
     <Manifest>
         <Identity>
             <ID>Microsoft.SCOM.UpdateRollup.Monitoring</ID>
-            <Version>2025.1.31.0</Version>
+            <Version>2025.2.3.4</Version>
         </Identity>
         <Name>Microsoft.SCOM.UpdateRollup.Monitoring</Name>
         <References>
@@ -221,39 +221,43 @@
                                                 $AgentVersion = (Get-Item "$AgentInstallDirectory\Tools\TMF\OMAgentTraceTMFVer.Dll").VersionInfo.FileVersion
                                                 Switch ($AgentVersion) {
                                                     # SCOM 2012 R2
-                                                    "7.1.10184.0" { $AgentVersion = "2012 R2 RTM"; BREAK }
-                                                    "7.1.10195.0" { $AgentVersion = "2012 R2 UR2"; BREAK }
-                                                    "7.1.10204.0" { $AgentVersion = "2012 R2 UR3"; BREAK }
-                                                    "7.1.10211.0" { $AgentVersion = "2012 R2 UR4"; BREAK }
-                                                    "7.1.10213.0" { $AgentVersion = "2012 R2 UR5"; BREAK }
-                                                    "7.1.10218.0" { $AgentVersion = "2012 R2 UR6"; BREAK }
-                                                    "7.1.10229.0" { $AgentVersion = "2012 R2 UR7"; BREAK }
-                                                    "7.1.10241.0" { $AgentVersion = "2012 R2 UR8"; BREAK }
-                                                    "7.1.10268.0" { $AgentVersion = "2012 R2 UR9"; BREAK }
-                                                    "7.1.10285.0" { $AgentVersion = "2012 R2 UR11"; BREAK }
-                                                    "7.1.10292.0" { $AgentVersion = "2012 R2 UR12"; BREAK }
-                                                    "7.1.10302.0" { $AgentVersion = "2012 R2 UR13"; BREAK }
-                                                    "7.1.10305.0" { $AgentVersion = "2012 R2 UR14"; BREAK }
+                                                    "7.1.10184.0" {$AgentVersion = "2012 R2 RTM"; BREAK }
+                                                    "7.1.10195.0" {$AgentVersion = "2012 R2 UR2"; BREAK }
+                                                    "7.1.10204.0" {$AgentVersion = "2012 R2 UR3"; BREAK }
+                                                    "7.1.10211.0" {$AgentVersion = "2012 R2 UR4"; BREAK }
+                                                    "7.1.10213.0" {$AgentVersion = "2012 R2 UR5"; BREAK }
+                                                    "7.1.10218.0" {$AgentVersion = "2012 R2 UR6"; BREAK }
+                                                    "7.1.10229.0" {$AgentVersion = "2012 R2 UR7"; BREAK }
+                                                    "7.1.10241.0" {$AgentVersion = "2012 R2 UR8"; BREAK }
+                                                    "7.1.10268.0" {$AgentVersion = "2012 R2 UR9"; BREAK }
+                                                    "7.1.10285.0" {$AgentVersion = "2012 R2 UR11"; BREAK }
+                                                    "7.1.10292.0" {$AgentVersion = "2012 R2 UR12"; BREAK }
+                                                    "7.1.10302.0" {$AgentVersion = "2012 R2 UR13"; BREAK }
+                                                    "7.1.10305.0" {$AgentVersion = "2012 R2 UR14"; BREAK }
                                                     # SCOM 2016
-                                                    "8.0.10918.0" { $AgentVersion = "2016 RTM"; BREAK }
-                                                    "8.0.10931.0" { $AgentVersion = "2016 UR1"; BREAK }
-                                                    "8.0.10949.0" { $AgentVersion = "2016 UR2"; BREAK }
-                                                    "8.0.10970.0" { $AgentVersion = "2016 UR3"; BREAK }
-                                                    "8.0.10977.0" { $AgentVersion = "2016 UR4"; BREAK }
-                                                    "8.0.10990.0" { $AgentVersion = "2016 UR5"; BREAK }
-                                                    "8.0.11004.0" { $AgentVersion = "2016 UR6"; BREAK }
-                                                    "8.0.11025.0" { $AgentVersion = "2016 UR7"; BREAK }
-                                                    "8.0.11037.0" { $AgentVersion = "2016 UR8"; BREAK }
-                                                    "8.0.11049.0" { $AgentVersion = "2016 UR9"; BREAK }
-                                                    "8.0.11057.0" { $AgentVersion = "2016 UR10"; BREAK }
+                                                    "8.0.10918.0" {$AgentVersion = "2016 RTM"; BREAK }
+                                                    "8.0.10931.0" {$AgentVersion = "2016 UR1"; BREAK }
+                                                    "8.0.10949.0" {$AgentVersion = "2016 UR2"; BREAK }
+                                                    "8.0.10970.0" {$AgentVersion = "2016 UR3"; BREAK }
+                                                    "8.0.10977.0" {$AgentVersion = "2016 UR4"; BREAK }
+                                                    "8.0.10990.0" {$AgentVersion = "2016 UR5"; BREAK }
+                                                    "8.0.11004.0" {$AgentVersion = "2016 UR6"; BREAK }
+                                                    "8.0.11025.0" {$AgentVersion = "2016 UR7"; BREAK }
+                                                    "8.0.11037.0" {$AgentVersion = "2016 UR8"; BREAK }
+                                                    "8.0.11049.0" {$AgentVersion = "2016 UR9"; BREAK }
+                                                    "8.0.11057.0" {$AgentVersion = "2016 UR10"; BREAK }
                                                     # SCOM 1801
-                                                    "8.0.13053.0" { $AgentVersion = "1801"; BREAK }
-                                                    "8.0.13067.0" { $AgentVersion = "1807"; BREAK }
+                                                    "8.0.13053.0" {$AgentVersion = "1801"; BREAK }
+                                                    "8.0.13067.0" {$AgentVersion = "1807"; BREAK }
                                                     # SCOM 2019
-                                                    "10.19.10014.0" { $AgentVersion = "2019 RTM"; BREAK }
-                                                    "10.19.10140.0" { $AgentVersion = "2019 UR1"; BREAK }
-                                                    "10.19.10153.0" { $AgentVersion = "2019 UR2"; BREAK }
-                                                }
+                                                    "10.19.10050.0" {$AgentVersion = "2019 RTM"; BREAK }
+                                                    "10.19.10311.0" {$AgentVersion = "2019 UR1"; BREAK }
+                                                    "10.19.10407.0" {$AgentVersion = "2019 UR2"; BREAK }
+                                                    "10.19.10177.0" {$AgentVersion = "2019 UR3"; BREAK }
+                                                    "10.19.10200.0" {$AgentVersion = "2019 UR4"; BREAK }
+                                                    "10.19.10211.0" {$AgentVersion = "2019 UR5"; BREAK }
+                                                    "10.19.10253.0" {$AgentVersion = "2019 UR6"; BREAK }
+                                                    }
                                             }
                                             Else {
                                                 $AgentInstallDirectory = "n/a"
@@ -267,40 +271,43 @@
                                                 $ManagementServerVersion = (Get-Item "$ManagementServerInstallDirectory\Tools\TMF\OMTraceTMFVer.Dll").VersionInfo.FileVersion
                                                 Switch ($ManagementServerVersion) {
                                                     # SCOM 2012 R2
-                                                    "7.1.10226.0" { $ManagementServerVersion = "2012 R2 RTM"; BREAK }
-                                                    "7.1.10226.1009" { $ManagementServerVersion = "2012 R2 UR1"; BREAK }
-                                                    "7.1.10226.1015" { $ManagementServerVersion = "2012 R2 UR2"; BREAK }
-                                                    "7.1.10226.1037" { $ManagementServerVersion = "2012 R2 UR3"; BREAK }
-                                                    "7.1.10226.1046" { $ManagementServerVersion = "2012 R2 UR4"; BREAK }
-                                                    "7.1.10226.1052" { $ManagementServerVersion = "2012 R2 UR5"; BREAK }
-                                                    "7.1.10226.1064" { $ManagementServerVersion = "2012 R2 UR6"; BREAK }
-                                                    "7.1.10226.1090" { $ManagementServerVersion = "2012 R2 UR7"; BREAK }
-                                                    "7.1.10226.1118" { $ManagementServerVersion = "2012 R2 UR8"; BREAK }
-                                                    "7.1.10226.1177" { $ManagementServerVersion = "2012 R2 UR9"; BREAK }
-                                                    "7.1.10226.1239" { $ManagementServerVersion = "2012 R2 UR11"; BREAK }
-                                                    "7.1.10226.1304" { $ManagementServerVersion = "2012 R2 UR12"; BREAK }
-                                                    "7.1.10226.1360" { $ManagementServerVersion = "2012 R2 UR13"; BREAK }
-                                                    "7.1.10226.1387" { $ManagementServerVersion = "2012 R2 UR14"; BREAK }
+                                                    "7.1.10226.0" {$ManagementServerVersion = "2012 R2 RTM"; BREAK }
+                                                    "7.1.10226.1009" {$ManagementServerVersion = "2012 R2 UR1"; BREAK }
+                                                    "7.1.10226.1015" {$ManagementServerVersion = "2012 R2 UR2"; BREAK }
+                                                    "7.1.10226.1037" {$ManagementServerVersion = "2012 R2 UR3"; BREAK }
+                                                    "7.1.10226.1046" {$ManagementServerVersion = "2012 R2 UR4"; BREAK }
+                                                    "7.1.10226.1052" {$ManagementServerVersion = "2012 R2 UR5"; BREAK }
+                                                    "7.1.10226.1064" {$ManagementServerVersion = "2012 R2 UR6"; BREAK }
+                                                    "7.1.10226.1090" {$ManagementServerVersion = "2012 R2 UR7"; BREAK }
+                                                    "7.1.10226.1118" {$ManagementServerVersion = "2012 R2 UR8"; BREAK }
+                                                    "7.1.10226.1177" {$ManagementServerVersion = "2012 R2 UR9"; BREAK }
+                                                    "7.1.10226.1239" {$ManagementServerVersion = "2012 R2 UR11"; BREAK }
+                                                    "7.1.10226.1304" {$ManagementServerVersion = "2012 R2 UR12"; BREAK }
+                                                    "7.1.10226.1360" {$ManagementServerVersion = "2012 R2 UR13"; BREAK }
+                                                    "7.1.10226.1387" {$ManagementServerVersion = "2012 R2 UR14"; BREAK }
                                                     # SCOM 2016
-                                                    "7.2.11719.0" { $ManagementServerVersion = "2016 RTM"; BREAK }
-                                                    "7.2.11759.0" { $ManagementServerVersion = "2016 UR1"; BREAK }
-                                                    "7.2.11822.0" { $ManagementServerVersion = "2016 UR2"; BREAK }
-                                                    "7.2.11878.0" { $ManagementServerVersion = "2016 UR3"; BREAK }
-                                                    "7.2.11938.0" { $ManagementServerVersion = "2016 UR4"; BREAK }
-                                                    "7.2.12016.0" { $ManagementServerVersion = "2016 UR5"; BREAK }
-                                                    "7.2.12066.0" { $ManagementServerVersion = "2016 UR6"; BREAK }
-                                                    "7.2.12150.0" { $ManagementServerVersion = "2016 UR7"; BREAK }
-                                                    "7.2.12213.0" { $ManagementServerVersion = "2016 UR8"; BREAK }
-                                                    "7.2.12265.0" { $ManagementServerVersion = "2016 UR9"; BREAK }
-                                                    "7.2.12324.0" { $ManagementServerVersion = "2016 UR10"; BREAK }
+                                                    "7.2.11719.0" {$ManagementServerVersion = "2016 RTM"; BREAK }
+                                                    "7.2.11759.0" {$ManagementServerVersion = "2016 UR1"; BREAK }
+                                                    "7.2.11822.0" {$ManagementServerVersion = "2016 UR2"; BREAK }
+                                                    "7.2.11878.0" {$ManagementServerVersion = "2016 UR3"; BREAK }
+                                                    "7.2.11938.0" {$ManagementServerVersion = "2016 UR4"; BREAK }
+                                                    "7.2.12016.0" {$ManagementServerVersion = "2016 UR5"; BREAK }
+                                                    "7.2.12066.0" {$ManagementServerVersion = "2016 UR6"; BREAK }
+                                                    "7.2.12150.0" {$ManagementServerVersion = "2016 UR7"; BREAK }
+                                                    "7.2.12213.0" {$ManagementServerVersion = "2016 UR8"; BREAK }
+                                                    "7.2.12265.0" {$ManagementServerVersion = "2016 UR9"; BREAK }
+                                                    "7.2.12324.0" {$ManagementServerVersion = "2016 UR10"; BREAK }
                                                     # SCOM 1801
-                                                    "7.3.13142.0" { $ManagementServerVersion = "1801"; BREAK }
-                                                    "7.3.13261.0" { $ManagementServerVersion = "1807"; BREAK }
+                                                    "7.3.13142.0" {$ManagementServerVersion = "1801"; BREAK }
+                                                    "7.3.13261.0" {$ManagementServerVersion = "1807"; BREAK }
                                                     # SCOM 2019
-                                                    "10.19.10050.0" { $ManagementServerVersion = "2019 RTM"; BREAK }
-                                                    "10.19.10311.0" { $ManagementServerVersion = "2019 UR1"; BREAK }
-                                                    "10.19.10349.0" { $ManagementServerVersion = "2019 UR1 Hotfix"; BREAK }
-                                                    "10.19.10407.0" { $ManagementServerVersion = "2019 UR2"; BREAK }
+                                                    "10.19.10050.0" {$ManagementServerVersion = "2019 RTM"; BREAK }
+                                                    "10.19.10311.0" {$ManagementServerVersion = "2019 UR1"; BREAK }
+                                                    "10.19.10407.0" {$ManagementServerVersion = "2019 UR2"; BREAK }
+                                                    "10.19.10505.0" {$ManagementServerVersion = "2019 UR3"; BREAK }
+                                                    "10.19.10569.0" {$ManagementServerVersion = "2019 UR4"; BREAK }
+                                                    "10.19.10606.0" {$ManagementServerVersion = "2019 UR5"; BREAK }
+                                                    "10.19.10649.0" {$ManagementServerVersion = "2019 UR6"; BREAK }
                                                 }
                                                 # Get CSHostService account.
                                                 $ConfigServiceAccount = (Get-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Services\cshost").ObjectName
@@ -354,26 +361,27 @@
                                                 $ACSCollectorVersion = (Get-Item "$WinDir\System32\Security\AdtServer\OmacAdmn.dll").VersionInfo.FileVersion
                                                 Switch ($ACSCollectorVersion) {
                                                     # SCOM 2012 R2
-                                                    "7.1.10226.0" { $ACSCollectorVersion = "2012 R2 RTM"; BREAK }
-                                                    "7.1.10226.1239" { $ACSCollectorVersion = "2012 R2 UR11"; BREAK }
-                                                    "7.1.10226.1304" { $ACSCollectorVersion = "2012 R2 UR12"; BREAK }
-                                                    "7.1.10226.1360" { $ACSCollectorVersion = "2012 R2 UR13"; BREAK }
-                                                    "7.1.10226.1387" { $ACSCollectorVersion = "2012 R2 UR14"; BREAK }
+                                                    "7.1.10226.0" {$ACSCollectorVersion = "2012 R2 RTM"; BREAK }
+                                                    "7.1.10226.1239" {$ACSCollectorVersion = "2012 R2 UR11"; BREAK }
+                                                    "7.1.10226.1304" {$ACSCollectorVersion = "2012 R2 UR12"; BREAK }
+                                                    "7.1.10226.1360" {$ACSCollectorVersion = "2012 R2 UR13"; BREAK }
+                                                    "7.1.10226.1387" {$ACSCollectorVersion = "2012 R2 UR14"; BREAK }
                                                     # SCOM 2016
-                                                    "7.2.11719.0" { $ACSCollectorVersion = "2016 RTM"; BREAK }		
-                                                    "7.2.11938.0" { $ACSCollectorVersion = "2016 UR4"; BREAK }		
-                                                    "7.2.12016.0" { $ACSCollectorVersion = "2016 UR5"; BREAK }
-                                                    "7.2.12066.0" { $ACSCollectorVersion = "2016 UR6"; BREAK }
-                                                    "7.2.12150.0" { $ACSCollectorVersion = "2016 UR7"; BREAK }
-                                                    "7.2.12213.0" { $ACSCollectorVersion = "2016 UR8"; BREAK }		
-                                                    "7.2.12265.0" { $ACSCollectorVersion = "2016 UR9"; BREAK }		
-                                                    "7.2.12324.0" { $ACSCollectorVersion = "2016 UR10"; BREAK }
+                                                    "7.2.11719.0" {$ACSCollectorVersion = "2016 RTM"; BREAK }		
+                                                    "7.2.11938.0" {$ACSCollectorVersion = "2016 UR4"; BREAK }		
+                                                    "7.2.12016.0" {$ACSCollectorVersion = "2016 UR5"; BREAK }
+                                                    "7.2.12066.0" {$ACSCollectorVersion = "2016 UR6"; BREAK }
+                                                    "7.2.12150.0" {$ACSCollectorVersion = "2016 UR7"; BREAK }
+                                                    "7.2.12213.0" {$ACSCollectorVersion = "2016 UR8"; BREAK }		
+                                                    "7.2.12265.0" {$ACSCollectorVersion = "2016 UR9"; BREAK }		
+                                                    "7.2.12324.0" {$ACSCollectorVersion = "2016 UR10"; BREAK }
                                                     # SCOM 1801
-                                                    "7.3.13142.0" { $ACSCollectorVersion = "1801"; BREAK }		
-                                                    "7.3.13261.0" { $ACSCollectorVersion = "1807"; BREAK }	
-                                                    # SCOM 2019
-                                                    "10.19.10050.0" { $ACSCollectorVersion = "2019 RTM"; BREAK }
-                                                    "10.19.10140.0" { $ACSCollectorVersion = "2019 UR1"; BREAK }
+                                                    "7.3.13142.0" {$ACSCollectorVersion = "1801"; BREAK }		
+                                                    "7.3.13261.0" {$ACSCollectorVersion = "1807"; BREAK }	
+                                                    <# SCOM 2019
+                                                    It's only possible to detect the RTM version. There's an ACS patch for UR4, 5, 6 but they are .sql files and don't contain any identifiers.
+                                                    #>
+                                                    "10.19.10050.0" {$ACSCollectorVersion = "2019 RTM"; BREAK }
                                                 }
                                                 # Get ACS Collector account.
                                                 $ACSCollectorServiceAccount = (Get-ItemProperty -Path $ACSCollectorServiceRegKey).ObjectName
@@ -399,38 +407,42 @@
                                                 }
                                                 Switch ($GatewayServerVersion) {
                                                     # SCOM 2012 R2
-                                                    "7.1.10184.0" { $GatewayServerVersion = "2012 R2 RTM"; BREAK }
-                                                    "7.1.10188.0" { $GatewayServerVersion = "2012 R2 UR1"; BREAK }
-                                                    "7.1.10195.0" { $GatewayServerVersion = "2012 R2 UR2"; BREAK }
-                                                    "7.1.10204.0" { $GatewayServerVersion = "2012 R2 UR3"; BREAK }
-                                                    "7.1.10211.0" { $GatewayServerVersion = "2012 R2 UR4"; BREAK }
-                                                    "7.1.10213.0" { $GatewayServerVersion = "2012 R2 UR5"; BREAK }
-                                                    "7.1.10218.0" { $GatewayServerVersion = "2012 R2 UR6"; BREAK }
-                                                    "7.1.10229.0" { $GatewayServerVersion = "2012 R2 UR7"; BREAK }
-                                                    "7.1.10241.0" { $GatewayServerVersion = "2012 R2 UR8"; BREAK }
-                                                    "7.1.10268.0" { $GatewayServerVersion = "2012 R2 UR9"; BREAK }
-                                                    "7.1.10285.0" { $GatewayServerVersion = "2012 R2 UR11"; BREAK }
-                                                    "7.1.10292.0" { $GatewayServerVersion = "2012 R2 UR12"; BREAK }
-                                                    "7.1.10302.0" { $GatewayServerVersion = "2012 R2 UR13"; BREAK }
-                                                    "7.1.10305.0" { $GatewayServerVersion = "2012 R2 UR14"; BREAK }
+                                                    "7.1.10184.0" {$GatewayServerVersion = "2012 R2 RTM"; BREAK }
+                                                    "7.1.10188.0" {$GatewayServerVersion = "2012 R2 UR1"; BREAK }
+                                                    "7.1.10195.0" {$GatewayServerVersion = "2012 R2 UR2"; BREAK }
+                                                    "7.1.10204.0" {$GatewayServerVersion = "2012 R2 UR3"; BREAK }
+                                                    "7.1.10211.0" {$GatewayServerVersion = "2012 R2 UR4"; BREAK }
+                                                    "7.1.10213.0" {$GatewayServerVersion = "2012 R2 UR5"; BREAK }
+                                                    "7.1.10218.0" {$GatewayServerVersion = "2012 R2 UR6"; BREAK }
+                                                    "7.1.10229.0" {$GatewayServerVersion = "2012 R2 UR7"; BREAK }
+                                                    "7.1.10241.0" {$GatewayServerVersion = "2012 R2 UR8"; BREAK }
+                                                    "7.1.10268.0" {$GatewayServerVersion = "2012 R2 UR9"; BREAK }
+                                                    "7.1.10285.0" {$GatewayServerVersion = "2012 R2 UR11"; BREAK }
+                                                    "7.1.10292.0" {$GatewayServerVersion = "2012 R2 UR12"; BREAK }
+                                                    "7.1.10302.0" {$GatewayServerVersion = "2012 R2 UR13"; BREAK }
+                                                    "7.1.10305.0" {$GatewayServerVersion = "2012 R2 UR14"; BREAK }
                                                     # SCOM 2016
-                                                    "8.0.10918.0" { $GatewayServerVersion = "2016 RTM"; BREAK }
-                                                    "8.0.10949.0" { $GatewayServerVersion = "2016 UR2"; BREAK }
-                                                    "8.0.10970.0" { $GatewayServerVersion = "2016 UR3"; BREAK }
-                                                    "8.0.10977.0" { $GatewayServerVersion = "2016 UR4"; BREAK }		
-                                                    "8.0.10990.0" { $GatewayServerVersion = "2016 UR5"; BREAK }
-                                                    "8.0.11004.0" { $GatewayServerVersion = "2016 UR6"; BREAK }
-                                                    "8.0.11025.0" { $GatewayServerVersion = "2016 UR7"; BREAK }
-                                                    "8.0.11037.0" { $GatewayServerVersion = "2016 UR8"; BREAK }		
-                                                    "8.0.11049.0" { $GatewayServerVersion = "2016 UR9"; BREAK }		
-                                                    "8.0.11057.0" { $GatewayServerVersion = "2016 UR10"; BREAK }
+                                                    "8.0.10918.0" {$GatewayServerVersion = "2016 RTM"; BREAK }
+                                                    "8.0.10949.0" {$GatewayServerVersion = "2016 UR2"; BREAK }
+                                                    "8.0.10970.0" {$GatewayServerVersion = "2016 UR3"; BREAK }
+                                                    "8.0.10977.0" {$GatewayServerVersion = "2016 UR4"; BREAK }		
+                                                    "8.0.10990.0" {$GatewayServerVersion = "2016 UR5"; BREAK }
+                                                    "8.0.11004.0" {$GatewayServerVersion = "2016 UR6"; BREAK }
+                                                    "8.0.11025.0" {$GatewayServerVersion = "2016 UR7"; BREAK }
+                                                    "8.0.11037.0" {$GatewayServerVersion = "2016 UR8"; BREAK }		
+                                                    "8.0.11049.0" {$GatewayServerVersion = "2016 UR9"; BREAK }		
+                                                    "8.0.11057.0" {$GatewayServerVersion = "2016 UR10"; BREAK }
                                                     # SCOM 1801
-                                                    "8.0.13053.0" { $GatewayServerVersion = "1801"; BREAK }		
-                                                    "7.3.13261.0" { $GatewayServerVersion = "1807"; BREAK } # This is the correct version even though the number is older.
+                                                    "8.0.13053.0" {$GatewayServerVersion = "1801"; BREAK }		
+                                                    "7.3.13261.0" {$GatewayServerVersion = "1807"; BREAK } # This is the correct version even though the number is older.
                                                     # SCOM 2019
-                                                    "10.19.10014.0" { $GatewayServerVersion = "2019 RTM"; BREAK }
-                                                    "10.19.10140.0" { $GatewayServerVersion = "2019 UR1"; BREAK }
-                                                    "10.19.10153.0" { $GatewayServerVersion = "2019 UR2"; BREAK }
+                                                    "10.19.10050.0" {$GatewayServerVersion = "2019 RTM"; BREAK }
+                                                    "10.19.10311.0" {$GatewayServerVersion = "2019 UR1"; BREAK }
+                                                    "10.19.10407.0" {$GatewayServerVersion = "2019 UR2"; BREAK }
+                                                    "10.19.10177.0" {$GatewayServerVersion = "2019 UR3"; BREAK }
+                                                    "10.19.10200.0" {$GatewayServerVersion = "2019 UR4"; BREAK }
+                                                    "10.19.10211.0" {$GatewayServerVersion = "2019 UR5"; BREAK }
+                                                    "10.19.10253.0" {$GatewayServerVersion = "2019 UR6"; BREAK }
                                                 }
                                             }
                                             Else {
@@ -475,47 +487,50 @@
                                                 }
                                                 # Best UR file for 2019.
                                                 If (Test-Path "$WebConsoleInstallDirectory\Dashboard\bin\Microsoft.EnterpriseManagement.OMDataService.dll") {
-                                                    $WebConsoleURFile = (Get-Item "$WebConsoleInstallDirectory\Dashboard\bin\Microsoft.EnterpriseManagement.OMDataService.dll").VersionInfo.FileVersion
-                                                    If ($WebConsoleURFile -match "10.19") {
+                                                    $WebConsoleVersion = (Get-Item "$WebConsoleInstallDirectory\Dashboard\bin\Microsoft.EnterpriseManagement.OMDataService.dll").VersionInfo.FileVersion
+                                                    <#If ($WebConsoleURFile -match "10.19") {
                                                         $WebConsoleVersion = $WebConsoleURFile
-                                                    }
+                                                    }#>
                                                 }
                                                 Switch ($WebConsoleVersion) {
                                                     # SCOM 2012 R2
-                                                    "7.1.10226.0" { $WebConsoleVersion = "2012 R2 RTM"; BREAK }
-                                                    "7.1.10226.1009" { $WebConsoleVersion = "2012 R2 UR1"; BREAK }
-                                                    "7.1.10226.1015" { $WebConsoleVersion = "2012 R2 UR2"; BREAK }
-                                                    "7.1.10226.1037" { $WebConsoleVersion = "2012 R2 UR3"; BREAK }
-                                                    "7.1.10226.1046" { $WebConsoleVersion = "2012 R2 UR4"; BREAK }
-                                                    "7.1.10226.1052" { $WebConsoleVersion = "2012 R2 UR5"; BREAK }
-                                                    "7.1.10226.1064" { $WebConsoleVersion = "2012 R2 UR6"; BREAK }
-                                                    "7.1.10226.1090" { $WebConsoleVersion = "2012 R2 UR7"; BREAK }
-                                                    "7.1.10226.1118" { $WebConsoleVersion = "2012 R2 UR8"; BREAK }
-                                                    "7.1.10226.1177" { $WebConsoleVersion = "2012 R2 UR9"; BREAK }
-                                                    "7.1.10226.1239" { $WebConsoleVersion = "2012 R2 UR11"; BREAK }
-                                                    "7.1.10226.1304" { $WebConsoleVersion = "2012 R2 UR12"; BREAK }
-                                                    "7.1.10226.1360" { $WebConsoleVersion = "2012 R2 UR13"; BREAK }
-                                                    "7.1.10226.1387" { $WebConsoleVersion = "2012 R2 UR14"; BREAK }
+                                                    "7.1.10226.0" {$WebConsoleVersion = "2012 R2 RTM"; BREAK }
+                                                    "7.1.10226.1009" {$WebConsoleVersion = "2012 R2 UR1"; BREAK }
+                                                    "7.1.10226.1015" {$WebConsoleVersion = "2012 R2 UR2"; BREAK }
+                                                    "7.1.10226.1037" {$WebConsoleVersion = "2012 R2 UR3"; BREAK }
+                                                    "7.1.10226.1046" {$WebConsoleVersion = "2012 R2 UR4"; BREAK }
+                                                    "7.1.10226.1052" {$WebConsoleVersion = "2012 R2 UR5"; BREAK }
+                                                    "7.1.10226.1064" {$WebConsoleVersion = "2012 R2 UR6"; BREAK }
+                                                    "7.1.10226.1090" {$WebConsoleVersion = "2012 R2 UR7"; BREAK }
+                                                    "7.1.10226.1118" {$WebConsoleVersion = "2012 R2 UR8"; BREAK }
+                                                    "7.1.10226.1177" {$WebConsoleVersion = "2012 R2 UR9"; BREAK }
+                                                    "7.1.10226.1239" {$WebConsoleVersion = "2012 R2 UR11"; BREAK }
+                                                    "7.1.10226.1304" {$WebConsoleVersion = "2012 R2 UR12"; BREAK }
+                                                    "7.1.10226.1360" {$WebConsoleVersion = "2012 R2 UR13"; BREAK }
+                                                    "7.1.10226.1387" {$WebConsoleVersion = "2012 R2 UR14"; BREAK }
                                                     # SCOM 2016
-                                                    "7.2.11719.0" { $WebConsoleVersion = "2016 RTM $WebConsoleHotFixInstalled"; BREAK }
-                                                    "7.2.11759.0" { $WebConsoleVersion = "2016 UR1 $WebConsoleHotFixInstalled"; BREAK }
-                                                    "7.2.11822.0" { $WebConsoleVersion = "2016 UR2 $WebConsoleHotFixInstalled"; BREAK }
-                                                    "7.2.11878.0" { $WebConsoleVersion = "2016 UR3 $WebConsoleHotFixInstalled"; BREAK }
-                                                    "7.2.11938.0" { $WebConsoleVersion = "2016 UR4 $WebConsoleHotFixInstalled"; BREAK }		
-                                                    "7.2.12016.0" { $WebConsoleVersion = "2016 UR5 $WebConsoleHotFixInstalled"; BREAK }
-                                                    "7.2.12066.0" { $WebConsoleVersion = "2016 UR6 $WebConsoleHotFixInstalled"; BREAK }
-                                                    "7.2.12150.0" { $WebConsoleVersion = "2016 UR7 $WebConsoleHotFixInstalled"; BREAK }
-                                                    "7.2.12213.0" { $WebConsoleVersion = "2016 UR8 $WebConsoleHotFixInstalled"; BREAK }		
-                                                    "7.2.12265.0" { $WebConsoleVersion = "2016 UR9 $WebConsoleHotFixInstalled"; BREAK }		
-                                                    "7.2.12324.0" { $WebConsoleVersion = "2016 UR10 $WebConsoleHotFixInstalled"; BREAK }
+                                                    "7.2.11719.0" {$WebConsoleVersion = "2016 RTM $WebConsoleHotFixInstalled"; BREAK }
+                                                    "7.2.11759.0" {$WebConsoleVersion = "2016 UR1 $WebConsoleHotFixInstalled"; BREAK }
+                                                    "7.2.11822.0" {$WebConsoleVersion = "2016 UR2 $WebConsoleHotFixInstalled"; BREAK }
+                                                    "7.2.11878.0" {$WebConsoleVersion = "2016 UR3 $WebConsoleHotFixInstalled"; BREAK }
+                                                    "7.2.11938.0" {$WebConsoleVersion = "2016 UR4 $WebConsoleHotFixInstalled"; BREAK }		
+                                                    "7.2.12016.0" {$WebConsoleVersion = "2016 UR5 $WebConsoleHotFixInstalled"; BREAK }
+                                                    "7.2.12066.0" {$WebConsoleVersion = "2016 UR6 $WebConsoleHotFixInstalled"; BREAK }
+                                                    "7.2.12150.0" {$WebConsoleVersion = "2016 UR7 $WebConsoleHotFixInstalled"; BREAK }
+                                                    "7.2.12213.0" {$WebConsoleVersion = "2016 UR8 $WebConsoleHotFixInstalled"; BREAK }		
+                                                    "7.2.12265.0" {$WebConsoleVersion = "2016 UR9 $WebConsoleHotFixInstalled"; BREAK }		
+                                                    "7.2.12324.0" {$WebConsoleVersion = "2016 UR10 $WebConsoleHotFixInstalled"; BREAK }
                                                     # SCOM 1801
-                                                    "7.3.13142.0" { $WebConsoleVersion = "1801"; BREAK }		
-                                                    "7.3.13261.0" { $WebConsoleVersion = "7.3.13261.0 (1807"; BREAK } # this is how we id the 1807 patch on a web server.
+                                                    "7.3.13142.0" {$WebConsoleVersion = "1801"; BREAK }		
+                                                    "7.3.13261.0" {$WebConsoleVersion = "7.3.13261.0 (1807"; BREAK } # this is how we id the 1807 patch on a web server.
                                                     # SCOM 2019
-                                                    "10.19.10050.0" { $WebConsoleVersion = "2019 RTM"; BREAK }
-                                                    "10.19.10311.0" { $WebConsoleVersion = "2019 UR1"; BREAK }
-                                                    "10.19.10349.0" { $WebConsoleVersion = "2019 UR1 Hotfix"; BREAK }
-                                                    "10.19.10407.0" { $WebConsoleVersion = "2019 UR2"; BREAK }
+                                                    "10.19.10050.0" {$WebConsoleVersion = "2019 RTM"; BREAK }
+                                                    "10.19.10311.0" {$WebConsoleVersion = "2019 UR1"; BREAK }
+                                                    "10.19.10407.0" {$WebConsoleVersion = "2019 UR2"; BREAK }
+                                                    "10.19.10505.0" {$WebConsoleVersion = "2019 UR3"; BREAK }
+                                                    "10.19.10569.0" {$WebConsoleVersion = "2019 UR4"; BREAK }
+                                                    "10.19.10606.0" {$WebConsoleVersion = "2019 UR5"; BREAK }
+                                                    "10.19.10649.0" {$WebConsoleVersion = "2019 UR6"; BREAK }
                                                 }
                                                 # Get Authentication Mode.
                                                 $AuthenticationMode = (Get-ItemProperty -Path $WebConsoleRegKey).AUTHENTICATION_MODE
@@ -553,30 +568,30 @@
                                             $ReportServerVersion = $ReportServerVersion
                                             Switch ($ReportServerVersion) {
                                                 # SCOM 2012 R2
-                                                "7.1.10226.0" { $ReportServerVersion = "2012 R2 RTM"; BREAK }
-                                                "7.1.10226.1304" { $ReportServerVersion = "2012 R2 UR12"; BREAK }
-                                                "7.1.10226.1360" { $ReportServerVersion = "2012 R2 UR13"; BREAK }
-                                                "7.1.10226.1387" { $ReportServerVersion = "2012 R2 UR14"; BREAK }
+                                                "7.1.10226.0" {$ReportServerVersion = "2012 R2 RTM"; BREAK }
+                                                "7.1.10226.1304" {$ReportServerVersion = "2012 R2 UR12"; BREAK }
+                                                "7.1.10226.1360" {$ReportServerVersion = "2012 R2 UR13"; BREAK }
+                                                "7.1.10226.1387" {$ReportServerVersion = "2012 R2 UR14"; BREAK }
                                                 # SCOM 2016
-                                                "7.2.11719.0" { $ReportServerVersion = "2016 RTM"; BREAK }
-                                                "7.2.12016.0" { $ReportServerVersion = "2016 UR5"; BREAK }
-                                                "7.2.12066.0" { $ReportServerVersion = "2016 UR6"; BREAK }
-                                                "7.2.12150.0" { $ReportServerVersion = "2016 UR7"; BREAK }
-                                                "7.2.12213.0" { $ReportServerVersion = "2016 UR8"; BREAK }		
-                                                "7.2.12265.0" { $ReportServerVersion = "2016 UR9"; BREAK }		
-                                                "7.2.12324.0" { $ReportServerVersion = "2016 UR10"; BREAK }
+                                                "7.2.11719.0" {$ReportServerVersion = "2016 RTM"; BREAK }
+                                                "7.2.12016.0" {$ReportServerVersion = "2016 UR5"; BREAK }
+                                                "7.2.12066.0" {$ReportServerVersion = "2016 UR6"; BREAK }
+                                                "7.2.12150.0" {$ReportServerVersion = "2016 UR7"; BREAK }
+                                                "7.2.12213.0" {$ReportServerVersion = "2016 UR8"; BREAK }		
+                                                "7.2.12265.0" {$ReportServerVersion = "2016 UR9"; BREAK }		
+                                                "7.2.12324.0" {$ReportServerVersion = "2016 UR10"; BREAK }
                                                 # SCOM 1801
-                                                "7.3.13142.0" { $ReportServerVersion = "1801"; BREAK }		
-                                                "7.3.13261.0" { $ReportServerVersion = "1807"; BREAK }	
+                                                "7.3.13142.0" {$ReportServerVersion = "1801"; BREAK }		
+                                                "7.3.13261.0" {$ReportServerVersion = "1807"; BREAK }	
                                                 # SCOM 2019
-                                                "10.19.10050.0" { $ReportServerVersion = "2019 RTM"; BREAK }
-                                                "10.19.10311.0" { $ReportServerVersion = "2019 UR1"; BREAK }
-                                                "10.19.10407.0" { $ReportServerVersion = "2019 UR2"; BREAK }
-                                                "10.19.10505.0" { $ReportServerVersion = "2019 UR3"; BREAK }
-                                                "10.19.10569.0" { $ReportServerVersion = "2019 UR4"; BREAK }
-                                                "10.19.10606.0" { $ReportServerVersion = "2019 UR5"; BREAK }
-                                                "10.19.10649.0" { $ReportServerVersion = "2019 UR6"; BREAK }
-                                            }
+                                                "10.19.10050.0" {$ReportServerVersion = "2019 RTM"; BREAK }
+                                                "10.19.10311.0" {$ReportServerVersion = "2019 UR1"; BREAK }
+                                                "10.19.10407.0" {$ReportServerVersion = "2019 UR2"; BREAK }
+                                                "10.19.10505.0" {$ReportServerVersion = "2019 UR3"; BREAK }
+                                                "10.19.10569.0" {$ReportServerVersion = "2019 UR4"; BREAK }
+                                                "10.19.10606.0" {$ReportServerVersion = "2019 UR5"; BREAK }
+                                                "10.19.10649.0" {$ReportServerVersion = "2019 UR6"; BREAK }
+                                        }
                                             
                                             
 <# Old code.
@@ -644,42 +659,45 @@ Switch ($ReportServerVersion) {
                                                 $ConsoleVersion = (Get-Item "$ConsoleInstallDirectory\Tools\TMF\OMTraceTMFVer.Dll").VersionInfo.FileVersion
                                                 Switch ($ConsoleVersion) {
                                                     # SCOM 2012
-                                                    "7.0.9538.0" { $ConsoleVersion = "2012 SP1"; BREAK }
+                                                    "7.0.9538.0" {$ConsoleVersion = "2012 SP1"; BREAK }
                                                     # SCOM 2012 R2
-                                                    "7.1.10226.0" { $ConsoleVersion = "2012 R2 RTM"; BREAK }
-                                                    "7.1.10226.1009" { $ConsoleVersion = "2012 R2 UR1"; BREAK }
-                                                    "7.1.10226.1015" { $ConsoleVersion = "2012 R2 UR2"; BREAK }
-                                                    "7.1.10226.1037" { $ConsoleVersion = "2012 R2 UR3"; BREAK }
-                                                    "7.1.10226.1046" { $ConsoleVersion = "2012 R2 UR4"; BREAK }
-                                                    "7.1.10226.1064" { $ConsoleVersion = "2012 R2 UR6"; BREAK }
-                                                    "7.1.10226.1090" { $ConsoleVersion = "2012 R2 UR7"; BREAK }
-                                                    "7.1.10226.1118" { $ConsoleVersion = "2012 R2 UR8"; BREAK }
-                                                    "7.1.10226.1177" { $ConsoleVersion = "2012 R2 UR9"; BREAK }
-                                                    "7.1.10226.1239" { $ConsoleVersion = "2012 R2 UR11"; BREAK }
-                                                    "7.1.10226.1304" { $ConsoleVersion = "2012 R2 UR12"; BREAK }
-                                                    "7.1.10226.1360" { $ConsoleVersion = "2012 R2 UR13"; BREAK }
-                                                    "7.1.10226.1387" { $ConsoleVersion = "2012 R2 UR14"; BREAK }
+                                                    "7.1.10226.0" {$ConsoleVersion = "2012 R2 RTM"; BREAK }
+                                                    "7.1.10226.1009" {$ConsoleVersion = "2012 R2 UR1"; BREAK }
+                                                    "7.1.10226.1015" {$ConsoleVersion = "2012 R2 UR2"; BREAK }
+                                                    "7.1.10226.1037" {$ConsoleVersion = "2012 R2 UR3"; BREAK }
+                                                    "7.1.10226.1046" {$ConsoleVersion = "2012 R2 UR4"; BREAK }
+                                                    "7.1.10226.1064" {$ConsoleVersion = "2012 R2 UR6"; BREAK }
+                                                    "7.1.10226.1090" {$ConsoleVersion = "2012 R2 UR7"; BREAK }
+                                                    "7.1.10226.1118" {$ConsoleVersion = "2012 R2 UR8"; BREAK }
+                                                    "7.1.10226.1177" {$ConsoleVersion = "2012 R2 UR9"; BREAK }
+                                                    "7.1.10226.1239" {$ConsoleVersion = "2012 R2 UR11"; BREAK }
+                                                    "7.1.10226.1304" {$ConsoleVersion = "2012 R2 UR12"; BREAK }
+                                                    "7.1.10226.1360" {$ConsoleVersion = "2012 R2 UR13"; BREAK }
+                                                    "7.1.10226.1387" {$ConsoleVersion = "2012 R2 UR14"; BREAK }
                                                     # SCOM 2016
-                                                    "7.2.11719.0" { $ConsoleVersion = "2016 RTM"; BREAK }
-                                                    "7.2.11759.0" { $ConsoleVersion = "2016 UR1"; BREAK }
-                                                    "7.2.11822.0" { $ConsoleVersion = "2016 UR2"; BREAK }
-                                                    "7.2.11878.0" { $ConsoleVersion = "2016 UR3"; BREAK }
-                                                    "7.2.11938.0" { $ConsoleVersion = "2016 UR4"; BREAK }		
-                                                    "7.2.12016.0" { $ConsoleVersion = "2016 UR5"; BREAK }
-                                                    "7.2.12066.0" { $ConsoleVersion = "2016 UR6"; BREAK }
-                                                    "7.2.12150.0" { $ConsoleVersion = "2016 UR7"; BREAK }
-                                                    "7.2.12213.0" { $ConsoleVersion = "2016 UR8"; BREAK }		
-                                                    "7.2.12265.0" { $ConsoleVersion = "2016 UR9"; BREAK }		
-                                                    "7.2.12324.0" { $ConsoleVersion = "2016 UR10"; BREAK }
+                                                    "7.2.11719.0" {$ConsoleVersion = "2016 RTM"; BREAK }
+                                                    "7.2.11759.0" {$ConsoleVersion = "2016 UR1"; BREAK }
+                                                    "7.2.11822.0" {$ConsoleVersion = "2016 UR2"; BREAK }
+                                                    "7.2.11878.0" {$ConsoleVersion = "2016 UR3"; BREAK }
+                                                    "7.2.11938.0" {$ConsoleVersion = "2016 UR4"; BREAK }		
+                                                    "7.2.12016.0" {$ConsoleVersion = "2016 UR5"; BREAK }
+                                                    "7.2.12066.0" {$ConsoleVersion = "2016 UR6"; BREAK }
+                                                    "7.2.12150.0" {$ConsoleVersion = "2016 UR7"; BREAK }
+                                                    "7.2.12213.0" {$ConsoleVersion = "2016 UR8"; BREAK }		
+                                                    "7.2.12265.0" {$ConsoleVersion = "2016 UR9"; BREAK }		
+                                                    "7.2.12324.0" {$ConsoleVersion = "2016 UR10"; BREAK }
                                                     # SCOM 1801
-                                                    "7.3.13142.0" { $ConsoleVersion = "1801"; BREAK }		
-                                                    "7.3.13261.0" { $ConsoleVersion = "1807"; BREAK }	
+                                                    "7.3.13142.0" {$ConsoleVersion = "1801"; BREAK }		
+                                                    "7.3.13261.0" {$ConsoleVersion = "1807"; BREAK }	
                                                     # SCOM 2019
-                                                    "10.19.10050.0" { $ConsoleVersion = "2019 RTM"; BREAK }
-                                                    "10.19.10311.0" { $ConsoleVersion = "2019 UR1"; BREAK }
-                                                    "10.19.10349.0" { $ConsoleVersion = "2019 UR1 Hotfix"; BREAK }
-                                                    "10.19.10407.0" { $ConsoleVersion = "2019 UR2"; BREAK }
-                                                }
+                                                    "10.19.10050.0" {$ConsoleVersion = "2019 RTM"; BREAK }
+                                                    "10.19.10311.0" {$ConsoleVersion = "2019 UR1"; BREAK }
+                                                    "10.19.10407.0" {$ConsoleVersion = "2019 UR2"; BREAK }
+                                                    "10.19.10505.0" {$ConsoleVersion = "2019 UR3"; BREAK }
+                                                    "10.19.10569.0" {$ConsoleVersion = "2019 UR4"; BREAK }
+                                                    "10.19.10606.0" {$ConsoleVersion = "2019 UR5"; BREAK }
+                                                    "10.19.10649.0" {$ConsoleVersion = "2019 UR6"; BREAK }
+                                                    }
                                             }
                                             Else {
                                                 $ConsoleInstallDirectory = "n/a"
@@ -797,7 +815,7 @@ Switch ($ReportServerVersion) {
                                     $ScriptName = "GetWindowsURInfo.ps1"
                                     $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
                                     $Mp = "Microsoft.SCOM.UpdateRollup.Monitoring"
-                                    $MpVersion = "2025.1.31.0"
+                                    $MpVersion = "2025.2.3.4"
                                     $MpWorkflow = "Microsoft.SCOM.UpdateRollup.Discovery.WindowsComputer"
                                     Get-URInfo -SourceId $SourceId -ManagedEntityId $ManagedEntityId -ComputerName $ComputerName
                                 ]]>
@@ -1118,7 +1136,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2025.1.31.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.DailyReport.ps1", $EventId, $EventLevel, "Daily report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.DailyReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2025.2.3.4)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: TerminatingError ****************************************#>
 Function TerminatingError {
@@ -1549,7 +1567,7 @@ $MomApi = New-Object -comObject 'MOM.ScriptAPI'
 $ScriptName = "UnsealedMpBackup.ps1"
 $Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
 $Mp = "Microsoft.SCOM.UpdateRollup.Monitoring"
-$MpVersion = "2025.1.31.0"
+$MpVersion = "2025.2.3.4"
 $MpWorkflow = "Microsoft.SCOM.UpdateRollup.Rule.UnsealedMpBackup"
 Get-ManagementPacks -BackupFolder $BackupFolder # Need this to pass params in properly.
 ]]>
@@ -1607,7 +1625,7 @@ Function LogAndQuit {
         $EventLevel = 0
     }
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2025.1.31.0)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
+    $ObjMomApi.LogScriptEvent("SCOM.MgReport.ps1", $EventId, $EventLevel, "Management group report script executed.`nWorkflow Name: Microsoft.SCOM.UpdateRollup.Rule.MgReport`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2025.2.3.4)`nPowerShell Version: $PSVersion`nIssues Detected: $Script:CountError`n$Script:Message") # $Error dumps errors into the event.
 }
 <#**************************************** FUNCTION: CheckNull ****************************************#>
 Function CheckNull ($PassedInParam) {
@@ -2349,7 +2367,7 @@ try {
     $EventId = 17616
     $EventLevel = 0 # 0=Information, 1=Error, 2=Warning
     # Use MOMScriptAPI.LogScriptEvent method to log events because Write-EventLog doesn't work on new OSs.
-    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2025.1.31.0)")
+    $ObjMomApi.LogScriptEvent("LogWindowsTestEvent.ps1", $EventId, $EventLevel, "This is a test alert to check agent functionality. It is generated by running the 'Log Test Event' SCOM task.`nManagement Pack: Microsoft.SCOM.UpdateRollup.Monitoring (2025.2.3.4)")
     Write-Host Information event ID 17616 successfully written to the Operations Manager log.
     Write-Host
 }

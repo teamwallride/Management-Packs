@@ -11,7 +11,8 @@ Shows update rollup information for these SCOM versions:
 
 # Improvements
 
-Should I track hotfixes/patches released in between URs? 2019 is a good example.
+  * Track hotfixes/patches released in between URs? 2019 is a good example.
+  * Need a way to identify SCOM 2019 ACS URs as they are .sql files.
 
 # Bugs
 
@@ -21,6 +22,7 @@ Should I track hotfixes/patches released in between URs? 2019 is a good example.
 
 # Versions
 
+  * 2025.2.3.4 - 2019 update rollups completed.
   * 2025.1.31.0 - Redo 2019 reporting patch section to use a single file.
   * 2025.1.28.0 - Multiple fixes:
     * $ReportServerVersion returning blank for some versions, moved to line before switch statement.
