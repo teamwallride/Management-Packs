@@ -9,7 +9,7 @@
   <Manifest>
     <Identity>
       <ID>TestC.LRS.VPSX.Monitoring</ID>
-      <Version>2026.2.6.12</Version>
+      <Version>2026.2.6.14</Version>
     </Identity>
     <Name>TestC.LRS.VPSX.Monitoring</Name>
     <References>
@@ -333,7 +333,8 @@
           <Samples>1</Samples>
         </Configuration>
       </UnitMonitor>
-      <DependencyMonitor ID="TestC.LRS.VPSX.DependancyMonitor.ServiceHealth" Accessibility="Public" Enabled="false" Target="TestC.LRS.VPSX.Class.PrintServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RelationshipType="System!System.Hosting" MemberMonitor="Health!System.Health.AvailabilityState">
+	  <!-- Enable to rollup health to Print Server > Windows Computer. If disabled Print Server will show not monitored and Windows Computer won't change if service is down. -->
+      <DependencyMonitor ID="TestC.LRS.VPSX.DependancyMonitor.ServiceHealth" Accessibility="Public" Enabled="true" Target="TestC.LRS.VPSX.Class.PrintServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RelationshipType="System!System.Hosting" MemberMonitor="Health!System.Health.AvailabilityState">
         <Category>Custom</Category>
         <Algorithm>WorstOf</Algorithm>
         <MemberUnAvailable>Error</MemberUnAvailable>
@@ -356,7 +357,7 @@
           <Name>TestC.LRS VPSX Print Server</Name>
         </DisplayString>
         <DisplayString ElementID="TestC.LRS.VPSX.Class.PrintService">
-          <Name>TestC.LRS.VPSX.Class.PrintService</Name>
+          <Name>TestC.LRS VPSX Print Service</Name>
         </DisplayString>
         <DisplayString ElementID="TestC.LRS.VPSX.Class.PrintService" SubElementID="ServiceName">
           <Name>Service Name</Name>
