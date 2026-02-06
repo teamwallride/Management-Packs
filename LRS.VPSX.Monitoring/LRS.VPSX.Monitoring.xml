@@ -8,10 +8,10 @@
 <ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <Manifest>
     <Identity>
-      <ID>TestB.LRS.VPSX.Monitoring</ID>
-      <Version>2026.2.6.8</Version>
+      <ID>TestC.LRS.VPSX.Monitoring</ID>
+      <Version>2026.2.6.12</Version>
     </Identity>
-    <Name>TestB.LRS.VPSX.Monitoring</Name>
+    <Name>TestC.LRS.VPSX.Monitoring</Name>
     <References>
       <Reference Alias="Windows">
         <ID>Microsoft.Windows.Library</ID>
@@ -38,25 +38,25 @@
   <TypeDefinitions>
     <EntityTypes>
       <ClassTypes>
-        <ClassType ID="TestB.LRS.VPSX.Class.PrintServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false" />
-        <ClassType ID="TestB.LRS.VPSX.Class.PrintService" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.ApplicationComponent" Hosted="true" Singleton="false" Extension="false">
+        <ClassType ID="TestC.LRS.VPSX.Class.PrintServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false" />
+        <ClassType ID="TestC.LRS.VPSX.Class.PrintService" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.ApplicationComponent" Hosted="true" Singleton="false" Extension="false">
           <Property ID="ServiceName" Type="string" AutoIncrement="false" Key="true" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
           <Property ID="ServiceDisplayName" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
           <Property ID="StartMode" Type="string" AutoIncrement="false" Key="false" CaseSensitive="false" MaxLength="256" MinLength="0" Required="false" Scale="0" />
         </ClassType>
       </ClassTypes>
       <RelationshipTypes>
-        <RelationshipType ID="PhostsP" Accessibility="Public" Abstract="false" Base="System!System.Hosting">
-          <Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.LRS.VPSX.Class.PrintServer" />
-          <Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="TestB.LRS.VPSX.Class.PrintService" />
+        <RelationshipType ID="TestC.LRS.VPSX.Relationship.PrintServerContainsPrintService" Accessibility="Public" Abstract="false" Base="System!System.Hosting">
+          <Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="TestC.LRS.VPSX.Class.PrintServer" />
+          <Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="TestC.LRS.VPSX.Class.PrintService" />
         </RelationshipType>
       </RelationshipTypes>
     </EntityTypes>
     <MonitorTypes>
-      <UnitMonitorType ID="TestB.LRS.VPSX.UnitMonitorType.ServiceHealth" Accessibility="Internal">
+      <UnitMonitorType ID="TestC.LRS.VPSX.UnitMonitorType.ServiceHealth" Accessibility="Internal">
         <MonitorTypeStates>
           <MonitorTypeState ID="Running" NoDetection="false" />
-          <MonitorTypeState ID="NotRunning" NoDetection="false" />
+          <MonitorTypeState ID="Stopped" NoDetection="false" />
         </MonitorTypeStates>
         <Configuration>
           <xsd:element name="ComputerName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
@@ -111,7 +111,7 @@
                 </And>
               </Expression>
             </ConditionDetection>
-            <ConditionDetection ID="ServiceNotRunning" TypeID="System!System.ExpressionFilter">
+            <ConditionDetection ID="ServiceStopped" TypeID="System!System.ExpressionFilter">
               <Expression>
                 <And>
                   <Expression>
@@ -151,8 +151,8 @@
                 <Node ID="DS" />
               </Node>
             </RegularDetection>
-            <RegularDetection MonitorTypeStateID="NotRunning">
-              <Node ID="ServiceNotRunning">
+            <RegularDetection MonitorTypeStateID="Stopped">
+              <Node ID="ServiceStopped">
                 <Node ID="DS" />
               </Node>
             </RegularDetection>
@@ -163,8 +163,8 @@
                 <Node ID="Probe" />
               </Node>
             </OnDemandDetection>
-            <OnDemandDetection MonitorTypeStateID="NotRunning">
-              <Node ID="ServiceNotRunning">
+            <OnDemandDetection MonitorTypeStateID="Stopped">
+              <Node ID="ServiceStopped">
                 <Node ID="Probe" />
               </Node>
             </OnDemandDetection>
@@ -175,10 +175,10 @@
   </TypeDefinitions>
   <Monitoring>
     <Discoveries>
-      <Discovery ID="TestB.LRS.VPSX.Discovery.PrintServer" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="TestC.LRS.VPSX.Discovery.PrintServer" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.HealthService" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="TestB.LRS.VPSX.Class.PrintServer" />
+          <DiscoveryClass TypeID="TestC.LRS.VPSX.Class.PrintServer" />
         </DiscoveryTypes>
         <DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
           <ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
@@ -206,7 +206,7 @@
             </RegistryAttributeDefinition>
           </RegistryAttributeDefinitions>
           <Frequency>60</Frequency>
-          <ClassId>$MPElement[Name="TestB.LRS.VPSX.Class.PrintServer"]$</ClassId>
+          <ClassId>$MPElement[Name="TestC.LRS.VPSX.Class.PrintServer"]$</ClassId>
           <InstanceSettings>
             <Settings>
               <Setting>
@@ -261,10 +261,10 @@
           </Expression>
         </DataSource>
       </Discovery>
-      <Discovery ID="TestB.LRS.VPSX.Discovery.PrintService" Enabled="true" Target="TestB.LRS.VPSX.Class.PrintServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+      <Discovery ID="TestC.LRS.VPSX.Discovery.PrintService" Enabled="true" Target="TestC.LRS.VPSX.Class.PrintServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
         <Category>Discovery</Category>
         <DiscoveryTypes>
-          <DiscoveryClass TypeID="TestB.LRS.VPSX.Class.PrintService">
+          <DiscoveryClass TypeID="TestC.LRS.VPSX.Class.PrintService">
             <Property PropertyID="ServiceName" />
             <Property PropertyID="ServiceDisplayName" />
             <Property PropertyID="StartMode" />
@@ -274,7 +274,7 @@
           <NameSpace>root\cimv2</NameSpace>
           <Query>SELECT * FROM Win32_Service WHERE (Name like 'LRS%' OR Name = 'MFPSecure' or Name = 'AD-Authenticator' or Name = 'spooler') and startmode='auto'</Query>
           <Frequency>60</Frequency>
-          <ClassId>$MPElement[Name="TestB.LRS.VPSX.Class.PrintService"]$</ClassId>
+          <ClassId>$MPElement[Name="TestC.LRS.VPSX.Class.PrintService"]$</ClassId>
           <InstanceSettings>
             <Settings>
               <Setting>
@@ -286,15 +286,15 @@
                 <Value>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestB.LRS.VPSX.Class.PrintService"]/ServiceName$</Name>
+                <Name>$MPElement[Name="TestC.LRS.VPSX.Class.PrintService"]/ServiceName$</Name>
                 <Value>$Data/Property[@Name='Name']$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestB.LRS.VPSX.Class.PrintService"]/ServiceDisplayName$</Name>
+                <Name>$MPElement[Name="TestC.LRS.VPSX.Class.PrintService"]/ServiceDisplayName$</Name>
                 <Value>$Data/Property[@Name='DisplayName']$</Value>
               </Setting>
               <Setting>
-                <Name>$MPElement[Name="TestB.LRS.VPSX.Class.PrintService"]/StartMode$</Name>
+                <Name>$MPElement[Name="TestC.LRS.VPSX.Class.PrintService"]/StartMode$</Name>
                 <Value>$Data/Property[@Name='StartMode']$</Value>
               </Setting>
               <!-- If you have additional class properties you want to provide values from WMI add them here as additional instance settings. -->
@@ -304,9 +304,9 @@
       </Discovery>
     </Discoveries>
     <Monitors>
-      <UnitMonitor ID="TestB.LRS.VPSX.Monitor.ServiceHealth" Accessibility="Public" Enabled="true" Target="TestB.LRS.VPSX.Class.PrintService" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="TestB.LRS.VPSX.UnitMonitorType.ServiceHealth" ConfirmDelivery="false">
+      <UnitMonitor ID="TestC.LRS.VPSX.Monitor.ServiceHealth" Accessibility="Public" Enabled="true" Target="TestC.LRS.VPSX.Class.PrintService" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="TestC.LRS.VPSX.UnitMonitorType.ServiceHealth" ConfirmDelivery="false">
         <Category>Alert</Category>
-        <AlertSettings AlertMessage="TestB.LRS.VPSX.Monitor.ServiceHealth.AlertMessage">
+        <AlertSettings AlertMessage="TestC.LRS.VPSX.Monitor.ServiceHealth.AlertMessage">
           <AlertOnState>Error</AlertOnState>
           <AutoResolve>true</AutoResolve>
           <AlertPriority>Normal</AlertPriority>
@@ -324,16 +324,16 @@
         </AlertSettings>
         <OperationalStates>
           <OperationalState ID="Running" MonitorTypeStateID="Running" HealthState="Success" />
-          <OperationalState ID="NotRunning" MonitorTypeStateID="NotRunning" HealthState="Error" />
+          <OperationalState ID="Stopped" MonitorTypeStateID="Stopped" HealthState="Error" />
         </OperationalStates>
         <Configuration>
           <ComputerName />
-          <ServiceName>$Target/Property[Type="TestB.LRS.VPSX.Class.PrintService"]/ServiceName$</ServiceName>
+          <ServiceName>$Target/Property[Type="TestC.LRS.VPSX.Class.PrintService"]/ServiceName$</ServiceName>
           <IntervalSeconds>60</IntervalSeconds>
           <Samples>1</Samples>
         </Configuration>
       </UnitMonitor>
-      <DependencyMonitor ID="TestB.LRS.VPSX.DependancyMonitor.ServiceHealth" Accessibility="Public" Enabled="false" Target="TestB.LRS.VPSX.Class.PrintServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RelationshipType="System!System.Hosting" MemberMonitor="Health!System.Health.AvailabilityState">
+      <DependencyMonitor ID="TestC.LRS.VPSX.DependancyMonitor.ServiceHealth" Accessibility="Public" Enabled="false" Target="TestC.LRS.VPSX.Class.PrintServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" RelationshipType="System!System.Hosting" MemberMonitor="Health!System.Health.AvailabilityState">
         <Category>Custom</Category>
         <Algorithm>WorstOf</Algorithm>
         <MemberUnAvailable>Error</MemberUnAvailable>
@@ -342,51 +342,51 @@
   </Monitoring>
   <Presentation>
     <StringResources>
-      <StringResource ID="TestB.LRS.VPSX.Monitor.ServiceHealth.AlertMessage" />
+      <StringResource ID="TestC.LRS.VPSX.Monitor.ServiceHealth.AlertMessage" />
     </StringResources>
   </Presentation>
   <LanguagePacks>
     <LanguagePack ID="ENU" IsDefault="false">
       <DisplayStrings>
-        <DisplayString ElementID="TestB.LRS.VPSX.Monitoring">
-          <Name>TestB.LRS VPSX Monitoring</Name>
+        <DisplayString ElementID="TestC.LRS.VPSX.Monitoring">
+          <Name>TestC.LRS VPSX Monitoring</Name>
           <Description>Custom monitoring for LRS VPSX Printing.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Class.PrintServer">
-          <Name>TestB.LRS VPSX Print Server</Name>
+        <DisplayString ElementID="TestC.LRS.VPSX.Class.PrintServer">
+          <Name>TestC.LRS VPSX Print Server</Name>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Class.PrintService">
-          <Name>TestB.LRS.VPSX.Class.PrintService</Name>
+        <DisplayString ElementID="TestC.LRS.VPSX.Class.PrintService">
+          <Name>TestC.LRS.VPSX.Class.PrintService</Name>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Class.PrintService" SubElementID="ServiceName">
+        <DisplayString ElementID="TestC.LRS.VPSX.Class.PrintService" SubElementID="ServiceName">
           <Name>Service Name</Name>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Class.PrintService" SubElementID="ServiceDisplayName">
+        <DisplayString ElementID="TestC.LRS.VPSX.Class.PrintService" SubElementID="ServiceDisplayName">
           <Name>Service Display Name</Name>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Class.PrintService" SubElementID="StartMode">
+        <DisplayString ElementID="TestC.LRS.VPSX.Class.PrintService" SubElementID="StartMode">
           <Name>Start Mode</Name>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Discovery.PrintServer">
-          <Name>TestB.LRS VPSX Print Server Discovery</Name>
+        <DisplayString ElementID="TestC.LRS.VPSX.Discovery.PrintServer">
+          <Name>TestC.LRS VPSX Print Server Discovery</Name>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Discovery.PrintService">
-          <Name>TestB.LRS VPSX Print Service Discovery</Name>
+        <DisplayString ElementID="TestC.LRS.VPSX.Discovery.PrintService">
+          <Name>TestC.LRS VPSX Print Service Discovery</Name>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Monitor.ServiceHealth">
+        <DisplayString ElementID="TestC.LRS.VPSX.Monitor.ServiceHealth">
           <Name>LRS VPSX Service Health</Name>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Monitor.ServiceHealth" SubElementID="Running">
+        <DisplayString ElementID="TestC.LRS.VPSX.Monitor.ServiceHealth" SubElementID="Running">
           <Name>Running</Name>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Monitor.ServiceHealth" SubElementID="NotRunning">
+        <DisplayString ElementID="TestC.LRS.VPSX.Monitor.ServiceHealth" SubElementID="Stopped">
           <Name>Stopped</Name>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.Monitor.ServiceHealth.AlertMessage">
+        <DisplayString ElementID="TestC.LRS.VPSX.Monitor.ServiceHealth.AlertMessage">
           <Name>{1} Service Stopped</Name>
           <Description>The '{1}' service on {2} has stopped.</Description>
         </DisplayString>
-        <DisplayString ElementID="TestB.LRS.VPSX.DependancyMonitor.ServiceHealth">
+        <DisplayString ElementID="TestC.LRS.VPSX.DependancyMonitor.ServiceHealth">
           <Name>LRS VPSX Service Health Rollup</Name>
           <Description />
         </DisplayString>
