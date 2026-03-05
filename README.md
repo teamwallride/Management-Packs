@@ -1,2 +1,1 @@
-# Management-Packs
-Custom SCOM management packs developed by teamwallride. Use at your own risk.
+Custom SCOM management packs. Use at your own risk.

@@ -1,0 +1,477 @@
+<!--
+Service names:
+
+1. AD-Authenticator
+2. LRSADX
+3. LRSALRTX
+4. LRSAPROC
+5. LRS-AWPS
+6. LRSSRVX
+7. LRSJobAcctSvc
+8. LRSKonicaJobLogSvc
+9. LRSKonicaWebAuthSvc
+10. LRSKonicaWebPullPrintSvc
+11. LRSNETX
+12. LRSPULL
+13. LRSVPSX
+14. LRSVSVX
+15. MFPsecure
+
+Create reg keys:
+
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\AD-Authenticator
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSADX
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSALRTX
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSAPROC
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRS-AWPS
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSSRVX
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSJobAcctSvc
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSKonicaJobLogSvc
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSKonicaWebAuthSvc
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSKonicaWebPullPrintSvc
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSNETX
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSPULL
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSVPSX
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSVSVX
+New-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\MFPsecure
+
+Delete reg keys:
+
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\AD-Authenticator
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSADX
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSALRTX
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSAPROC
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRS-AWPS
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSSRVX
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSJobAcctSvc
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSKonicaJobLogSvc
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSKonicaWebAuthSvc
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSKonicaWebPullPrintSvc
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSNETX
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSPULL
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSVPSX
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\LRSVSVX
+Remove-Item -path HKLM:\SYSTEM\CurrentControlSet\Services\MFPsecure
+
+
+Install a service
+SrvAny.exe -install AD-Authenticator 1 c:\windows\notepad.exe
+
+Remove a service
+SrvAny.exe -remove AD-Authenticator
+
+-->
+
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>TestRegDiscovery</ID>
+      <Version>1.0.0.0</Version>
+    </Identity>
+    <Name>TestRegDiscovery</Name>
+    <References>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>7.0.8443.6</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+	<Reference Alias="Windows">
+		<ID>Microsoft.Windows.Library</ID>
+		<Version>7.5.8501.0</Version>
+		<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+	</Reference>
+	<Reference Alias="System">
+		<ID>System.Library</ID>
+		<Version>7.5.8501.0</Version>
+		<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+	</Reference>
+		<Reference Alias="Health">
+			<ID>System.Health.Library</ID>
+			<Version>7.0.8433.0</Version>
+			<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+		</Reference>
+    </References>
+  </Manifest>
+<TypeDefinitions>
+	<EntityTypes>
+		<ClassTypes>
+			<ClassType ID="TestA.Class.LRSPrintServer" Accessibility="Public" Abstract="false" Base="Windows!Microsoft.Windows.LocalApplication" Hosted="true" Singleton="false" Extension="false"/>
+		</ClassTypes>
+	</EntityTypes>
+</TypeDefinitions>
+	<Monitoring>
+		<Discoveries>
+			<Discovery ID="TestA.Discovery.LRSPrintServer" Enabled="true" Target="Windows!Microsoft.Windows.Computer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="TestA.Class.LRSPrintServer"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.FilteredRegistryDiscoveryProvider">
+					<ComputerName>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<RegistryAttributeDefinitions>
+						<!-- 1 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>AD-AuthenticatorExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\AD-Authenticator</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 2 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSADXExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSADX</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 3 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSALRTXExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSALRTX</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 4 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSAPROCExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSAPROC</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 5 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRS-AWPSExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRS-AWPS</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 6 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSSRVXExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSSRVX</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 7 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSJobAcctSvcExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSJobAcctSvc</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 8 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSKonicaJobLogSvcExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSKonicaJobLogSvc</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 9 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSKonicaWebAuthSvcExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSKonicaWebAuthSvc</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 10 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSKonicaWebPullPrintSvcExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSKonicaWebPullPrintSvc</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 11 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSNETXExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSNETX</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 12 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSPULLExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSPULL</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 13 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSVPSXExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSVPSX</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 14 -->
+						<RegistryAttributeDefinition>
+							<AttributeName>LRSVSVXExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\LRSVSVX</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+						<!-- 15-->
+						<RegistryAttributeDefinition>
+							<AttributeName>MFPsecureExists</AttributeName>
+							<Path>SYSTEM\CurrentControlSet\Services\MFPsecure</Path>
+							<PathType>0</PathType>
+							<AttributeType>0</AttributeType>
+						</RegistryAttributeDefinition>
+					</RegistryAttributeDefinitions>
+					<Frequency>60</Frequency>
+					<ClassId>$MPElement[Name="TestA.Class.LRSPrintServer"]$</ClassId>
+					<InstanceSettings>
+						<Settings>
+							<Setting>
+								<Name>$MPElement[Name="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Name>
+								<Value>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</Value>
+							</Setting>
+							<Setting>
+								<Name>$MPElement[Name="System!System.Entity"]/DisplayName$</Name>
+								<Value>$Target/Property[Type="System!System.Entity"]/DisplayName$</Value>
+							</Setting>
+						</Settings>
+					</InstanceSettings>
+					<Expression>
+						<Or>
+							<!-- 1 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/AD-AuthenticatorExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 2 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSADXExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 3 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSALRTXExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 4 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSAPROCExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 5 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRS-AWPSExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 6 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSSRVXExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 7 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSJobAcctSvcExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 8 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSKonicaJobLogSvcExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 9 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSKonicaWebAuthSvcExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 10 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSKonicaWebPullPrintSvcExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 11 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSNETXExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 12 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSPULLExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 13 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSVPSXExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 14 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/LRSVSVXExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+							<!-- 15 -->
+							<Expression>
+								<SimpleExpression>
+								<ValueExpression>
+								<XPathQuery Type="String">Values/MFPsecureExists</XPathQuery>
+								</ValueExpression>
+								<Operator>Equal</Operator>
+								<ValueExpression>
+								<Value Type="String">True</Value>
+								</ValueExpression>
+								</SimpleExpression>
+							</Expression>
+						</Or>
+					</Expression>
+				</DataSource>
+			</Discovery>
+		</Discoveries>
+		<Monitors>
+			<UnitMonitor ID="TestA.Monitor.ADAuthenticator" Accessibility="Public" Enabled="true" Target="TestA.Class.LRSPrintServer" ParentMonitorID="Health!System.Health.AvailabilityState" Remotable="true" Priority="Normal" TypeID="Windows!Microsoft.Windows.CheckNTServiceStateMonitorType" ConfirmDelivery="false">
+				<Category>Alert</Category>
+				<AlertSettings AlertMessage="TestA.Monitor.ADAuthenticator.AlertMessage">
+					<AlertOnState>Error</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>Error</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter1>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="Healthy" MonitorTypeStateID="Running" HealthState="Success"/>
+					<OperationalState ID="Unhealthy" MonitorTypeStateID="NotRunning" HealthState="Error"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Host/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+					<ServiceName>AD-Authenticator</ServiceName>
+					<CheckStartupType>true</CheckStartupType>
+				</Configuration>
+			</UnitMonitor>
+		</Monitors>
+	</Monitoring>
+	<Presentation>
+		<StringResources>
+			<StringResource ID="TestA.Monitor.ADAuthenticator.AlertMessage"/>
+		</StringResources>
+	</Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="TestRegDiscovery">
+          <Name>TestRegDiscovery</Name>
+          <Description />
+        </DisplayString>
+		<DisplayString ElementID="TestA.Discovery.LRSPrintServer">
+			<Name>TestA LRS Print Server</Name>
+		</DisplayString>
+		<DisplayString ElementID="TestA.Class.LRSPrintServer">
+			<Name>TestA LRS Print Server</Name>
+		</DisplayString>
+		<DisplayString ElementID="TestA.Monitor.ADAuthenticator">
+			<Name></Name>
+		</DisplayString>
+		<DisplayString ElementID="TestA.Monitor.ADAuthenticator.AlertMessage">
+			<Name>AD-Authenticator Service Not Running</Name>
+			<Description>The 'AD-Authenticator' service on {0} is not running.</Description>
+		</DisplayString>
+		<DisplayString ElementID="TestA.Monitor.ADAuthenticator" SubElementID="Healthy">
+			<Name>Service running</Name>
+		</DisplayString>
+		<DisplayString ElementID="TestA.Monitor.ADAuthenticator" SubElementID="Unhealthy">
+			<Name>Service not running</Name>
+		</DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
