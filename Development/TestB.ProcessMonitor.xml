@@ -1,0 +1,114 @@
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<Manifest>
+		<Identity>
+			<ID>TestB.ProcessMonitor</ID>
+			<Version>2026.3.5.1</Version>
+		</Identity>
+		<Name>TestB.ProcessMonitor</Name>
+		<References>
+			<Reference Alias="Windows">
+				<ID>Microsoft.Windows.Library</ID>
+				<Version>7.5.8501.1</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<!-- remove.
+			<Reference Alias="Perf">
+				<ID>System.Performance.Library</ID>
+				<Version>7.0.8447.6</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			-->
+			<Reference Alias="MSPL">
+				<ID>Microsoft.SystemCenter.ProcessMonitoring.Library</ID>
+				<Version>10.25.10132.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="System">
+				<ID>System.Library</ID>
+				<Version>7.5.8501.1</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="SystemCenter">
+				<ID>Microsoft.SystemCenter.Library</ID>
+				<Version>10.25.10132.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Health">
+				<ID>System.Health.Library</ID>
+				<Version>7.0.8447.6</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+		</References>
+	</Manifest>
+	<Monitoring>
+		<Monitors>
+			<UnitMonitor ID="CompanyID.AppName.UniqueID.Process.Perf.Monitor" Accessibility="Public" Enabled="false" Target="Windows!Microsoft.Windows.Computer" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="MSPL!Microsoft.SystemCenter.Process.ConsecutiveSamplesThreshold.ErrorOnTooHigh" ConfirmDelivery="false">
+				<Category>PerformanceHealth</Category>
+				<AlertSettings AlertMessage="CompanyID.AppName.UniqueID.Process.Perf.Monitor.AlertMessage">
+					<AlertOnState>Warning</AlertOnState>
+					<AutoResolve>true</AutoResolve>
+					<AlertPriority>Normal</AlertPriority>
+					<AlertSeverity>MatchMonitorHealth</AlertSeverity>
+					<AlertParameters>
+						<AlertParameter1>$Data/Context/ObjectName$</AlertParameter1>
+						<AlertParameter2>$Data/Context/CounterName$</AlertParameter2>
+						<AlertParameter3>$Data/Context/InstanceName$</AlertParameter3>
+						<AlertParameter4>$Data/Context/SampleValue$</AlertParameter4>
+						<AlertParameter5>$Data/Context/TimeSampled$</AlertParameter5>
+					</AlertParameters>
+				</AlertSettings>
+				<OperationalStates>
+					<OperationalState ID="ThresholdNotBreached" MonitorTypeStateID="SampleCountNormal" HealthState="Success"/>
+					<OperationalState ID="ThresholdBreached" MonitorTypeStateID="SampleCountTooHigh" HealthState="Warning"/>
+				</OperationalStates>
+				<Configuration>
+					<ComputerName>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/NetworkName$</ComputerName>
+					<CounterName>Private Bytes</CounterName>
+					<ObjectName>Process</ObjectName>
+					<InstanceName>Testlimit</InstanceName>
+					<Frequency>60</Frequency>
+					<Threshold>4000000</Threshold>
+					<NumSamples>5</NumSamples>
+				</Configuration>
+			</UnitMonitor>
+		</Monitors>
+		<Overrides>
+			<MonitorPropertyOverride ID="Aliasd550b9bbd33d4dcc955d590bfbd05138OverrideForMonitorCompanyIDAppNameUniqueIDProcessPerfMonitorForContextMicrosoftWindowsComputer" Context="Windows!Microsoft.Windows.Computer" ContextInstance="e5109764-4a13-a296-0905-da9976d4ae10" Enforced="false" Monitor="CompanyID.AppName.UniqueID.Process.Perf.Monitor" Property="Enabled">
+				<Value>true</Value>
+			</MonitorPropertyOverride>
+		</Overrides>
+	</Monitoring>
+	<Presentation>
+		<StringResources>
+			<StringResource ID="CompanyID.AppName.UniqueID.Process.Perf.Monitor.AlertMessage"/>
+		</StringResources>
+	</Presentation>
+	<LanguagePacks>
+		<LanguagePack ID="ENU" IsDefault="false">
+			<DisplayStrings>
+				<DisplayString ElementID="TestB.ProcessMonitor">
+					<Name>TestB.ProcessMonitor</Name>
+				</DisplayString>
+				<DisplayString ElementID="CompanyID.AppName.UniqueID.Process.Perf.Monitor">
+					<Name>CompanyID AppName Testlimit Private Bytes Perf Monitor</Name>
+				</DisplayString>
+				<DisplayString ElementID="CompanyID.AppName.UniqueID.Process.Perf.Monitor" SubElementID="ThresholdNotBreached">
+					<Name>ThresholdNotBreached</Name>
+				</DisplayString>
+				<DisplayString ElementID="CompanyID.AppName.UniqueID.Process.Perf.Monitor" SubElementID="ThresholdBreached">
+					<Name>ThresholdBreached</Name>
+				</DisplayString>
+				<DisplayString ElementID="CompanyID.AppName.UniqueID.Process.Perf.Monitor.AlertMessage">
+					<Name>CompanyID AppName Testlimit Private Bytes has breached a threshold</Name>
+					<Description>MP Version: 2026.3.5.1
+Object: {0}
+Counter {1}
+Instance {2}
+Has a value {3} 
+At time {4}
+          </Description>
+				</DisplayString>
+			</DisplayStrings>
+		</LanguagePack>
+	</LanguagePacks>
+</ManagementPack>
