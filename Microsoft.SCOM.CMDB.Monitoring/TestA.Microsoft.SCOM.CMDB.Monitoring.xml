@@ -1,0 +1,312 @@
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+	<Manifest>
+		<Identity>
+			<ID>TestA.Microsoft.SCOM.CMDB.Monitoring</ID>
+			<Version>2025.8.28.4</Version>
+		</Identity>
+		<Name>TestA.Microsoft.SCOM.CMDB.Monitoring</Name>
+		<References>
+			<Reference Alias="Windows">
+				<ID>Microsoft.Windows.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="MSIGL">
+				<ID>Microsoft.SystemCenter.InstanceGroup.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="System">
+				<ID>System.Library</ID>
+				<Version>7.5.8501.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="SystemCenter">
+				<ID>Microsoft.SystemCenter.Library</ID>
+				<Version>7.0.8437.17</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="Health">
+				<ID>System.Health.Library</ID>
+				<Version>7.0.8437.0</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+			<Reference Alias="IISLIBr">
+				<ID>Microsoft.Windows.InternetInformationServices.CommonLibrary</ID>
+				<Version>10.1.0.1</Version>
+				<PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+			</Reference>
+		</References>
+	</Manifest>
+	<TypeDefinitions>
+		<EntityTypes>
+			<ClassTypes>
+				<!--WindowsServer-->
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.WindowsServerCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<!--HealthServiceWatcher-->
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+				<!--IIS-->
+				<ClassType ID="Microsoft.SCOM.CMDB.Group.IISComputers" Accessibility="Public" Abstract="false" Base="MSIGL!Microsoft.SystemCenter.InstanceGroup" Hosted="false" Singleton="true" Extension="false"/>
+			</ClassTypes>
+			<RelationshipTypes>
+				<!--WindowsServer-->
+				<RelationshipType ID="Microsoft.SCOM.CMDB.Relationship.WindowsServerCatAContainsWindowsComputers" Accessibility="Internal" Abstract="false" Base="System!System.Containment">
+					<Source ID="Source" MinCardinality="0" MaxCardinality="2147483647" Type="Microsoft.SCOM.CMDB.Group.WindowsServerCatA"/>
+					<Target ID="Target" MinCardinality="0" MaxCardinality="2147483647" Type="Windows!Microsoft.Windows.Computer"/>
+				</RelationshipType>
+			</RelationshipTypes>
+		</EntityTypes>
+	</TypeDefinitions>
+	<Monitoring>
+		<Discoveries>
+			<!--WindowsServerCatA-->
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.WindowsServerCatA" Enabled="true" Target="SystemCenter!Microsoft.SystemCenter.RootManagementServer" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryClass TypeID="Microsoft.SCOM.CMDB.Group.WindowsServerCatA"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="Windows!Microsoft.Windows.TimedPowerShell.DiscoveryProvider">
+					<IntervalSeconds>60</IntervalSeconds>
+					<SyncTime/>
+					<ScriptName>WindowsServerCatA.ps1</ScriptName>
+					<ScriptBody><![CDATA[
+Param ($SourceID, $ManagedEntityID)
+Function Write-Log {
+    Param($ScriptState)
+    if ($ScriptState -eq "Information") {
+        $EventId = 17609
+        $EventLevel = 0 # 0=Info
+    }
+    else {
+        $EventId = 17610
+        $EventLevel = 2 # 2=Warning
+    }
+    $End = Get-Date
+    $TimeCount = (New-TimeSpan -Start $StartTime -End $End)
+    $Minutes = $TimeCount.Minutes
+    $Seconds = $TimeCount.Seconds
+    $Milliseconds = $TimeCount.Milliseconds
+    $MomApi.LogScriptEvent("$ScriptName executed and ran for $Minutes`m $Seconds`s $Milliseconds`ms", $EventId, $EventLevel, "`nRunning As: $Account`nWorkflow Name: $MpWorkflow`nManagement Pack: $Mp ($MpVersion)`nPowerShell Version: $PSVersion`n$Message")
+    Break
+}
+Function Get-SQLTable {
+    param($OpsDbServer, $OpsDbName, $DbQuery)
+    $Connection = New-Object System.Data.SQLClient.SQLConnection
+    $Connection.ConnectionString = "Data Source=$OpsDbServer;Database=$OpsDbName;Trusted_Connection=True;"
+    $Connection.Open()
+    $Command = New-Object System.Data.SQLClient.SQLCommand
+    $Command.Connection = $Connection
+    $Command.CommandText = $DbQuery
+    $Reader = $Command.ExecuteReader()
+    $SQLTable = New-Object System.Data.DataTable
+    $SQLTable.Load($Reader)
+    $Connection.Close()
+    Return $SQLTable
+}
+Function Get-Count {
+    param ($Count)
+    If ($Count -eq 0) {
+        $ScriptState = "Warning"
+        Write-Log -ScriptState $ScriptState
+    }
+}
+Function Set-GroupMembers {
+    # This logs terminating and non-terminating events.
+    $ErrorActionPreference = "Stop"
+    Try {
+        $ScriptState = "Information"
+        <# FOR TESTING
+        $SQLTable = ""
+        $SourceId = "{00000000-0000-0000-0000-000000000000}"
+        $ManagedEntityId = "{00000000-0000-0000-0000-000000000000}"
+        #>
+        $DiscoveryData = $MomApi.CreateDiscoveryData(0, $SourceId, $ManagedEntityId)
+        # Get PowerShell version.
+        $PSVersion = $PSVersionTable.PSVersion
+        [string]$PSMajor = $PSVersion.Major
+        [string]$PSMinor = $PSVersion.Minor
+        $PSVersion = $PSMajor + "." + $PSMinor
+        # Common variables.
+        $SetupRegKey = "HKLM:\SOFTWARE\Microsoft\Microsoft Operations Manager\3.0\Setup"
+        $OpsDbServer = (Get-ItemProperty $SetupRegKey).DatabaseServerName
+        $OpsDbName = (Get-ItemProperty $SetupRegKey).DatabaseName
+        $SCOMGroupInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Group.WindowsServerCatA']$")
+        $SCOMQuery = "SELECT DisplayName AS [Name] from [$OpsDbName].[dbo].[MT_HealthService]" # THis gets all agents, gateways, management servers.
+        <# FOR TESTING
+        #$OpsDbServer="bad_error"
+        #$OpsDbName="bad_db"
+        #>
+        # Get CMDB list.
+        $CSV = Import-Csv -Path "C:\MP\CMDB\cmdb_ci_win_server.csv"
+        $CMDB = $CSV | Where-Object {$_.install_status -eq 'In Use'}
+        $Count = $CMDB.count
+        $Message += "CMDB records: $Count`r"
+        Get-Count $Count
+        # Get SCOM list.
+        $SCOM = Get-SQLTable -OpsDbServer $OpsDbServer -OpsDbName $OpsDbName -DbQuery $SCOMQuery
+        $Count = $SCOM.count
+        <# FOR TESTING
+		$Count = 0
+		#>
+        $Message += "SCOM records: $Count`r"
+        Get-Count $Count
+        <# FOR TESTING
+        Write-Host -foregroundcolor yellow "CMDB count:" $CMDB.count
+        Write-Host -foregroundcolor yellow "SCOM count:" $SCOM.count
+        #>
+        ForEach ($Item In $SCOM) {
+            $Object = $Item.Name
+            # Compare SCOM list to CMDB list, if match found add to discovery.
+            $Match = select-string -inputobject $CMDB.Name "\b$Object\b" -quiet
+            If ($Match -eq $true) {
+                <# FOR TESTING
+                Write-Host -foregroundcolor green "$Object will be added to group"
+                #>
+                $ObjectInstance = $DiscoveryData.CreateClassInstance("$MPElement[Name='Windows!Microsoft.Windows.Computer']$")
+                $ObjectInstance.AddProperty("$MPElement[Name='Windows!Microsoft.Windows.Computer']/PrincipalName$", $Object)
+                $RelationshipInstance = $DiscoveryData.CreateRelationshipInstance("$MPElement[Name='Microsoft.SCOM.CMDB.Relationship.WindowsServerCatAContainsWindowsComputers']$")
+                $RelationshipInstance.Source = $SCOMGroupInstance
+                $RelationshipInstance.Target = $ObjectInstance
+                $DiscoveryData.AddInstance($RelationshipInstance)   
+            }
+            <# FOR TESTING
+            else {
+                Write-Host -foregroundcolor red "$Object will NOT be added to group"
+            }
+            #>
+        }
+        # Submit discovery data back to Operations Manager and complete the script.
+        $DiscoveryData
+        <# FOR TESTING
+        $MomApi.Return($DiscoveryData)
+        #>
+        Write-Log -ScriptState $ScriptState
+    }
+    Catch {
+        $ScriptState = "Warning"
+        $Message += $_.Exception.Message
+        Write-Log -ScriptState $ScriptState 
+    }
+}
+# All scripts should have this preamble.
+[datetime]$StartTime = Get-Date
+$MomApi = New-Object -comObject 'MOM.ScriptAPI'
+$ScriptName = "WindowsServerCatA.ps1"
+$Account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$Mp = "TestA.Microsoft.SCOM.CMDB.Monitoring"
+$MpVersion = "2025.8.28.4"
+$MpWorkflow = "Microsoft.SCOM.Discovery.WindowsServerCatA"
+# Run script.
+Set-GroupMembers -SourceId $SourceId -ManagedEntityId $ManagedEntityId
+          ]]></ScriptBody>
+					<Parameters>
+						<Parameter>
+							<Name>SourceId</Name>
+							<Value>$MPElement$</Value>
+						</Parameter>
+						<Parameter>
+							<Name>ManagedEntityId</Name>
+							<Value>$Target/Id$</Value>
+						</Parameter>
+					</Parameters>
+					<TimeoutSeconds>60</TimeoutSeconds>
+				</DataSource>
+			</Discovery>
+			<!--HealthServiceWatcherCatA-->
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatA" Enabled="true" Target="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+					<RuleId>$MPElement$</RuleId>
+					<GroupInstanceId>$MPElement[Name="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA"]$</GroupInstanceId>
+					<MembershipRules>
+						<MembershipRule>
+							<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthServiceWatcher"]$</MonitoringClass>
+							<RelationshipClass>$MPElement[Name='MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities']$</RelationshipClass>
+							<Expression>
+								<Contains>
+									<MonitoringClass>$MPElement[Name="SystemCenter!Microsoft.SystemCenter.HealthService"]$</MonitoringClass>
+									<Expression>
+										<Contained>
+											<MonitoringClass>$MPElement[Name="Microsoft.SCOM.CMDB.Group.WindowsServerCatA"]$</MonitoringClass>
+										</Contained>
+									</Expression>
+								</Contains>
+							</Expression>
+						</MembershipRule>
+					</MembershipRules>
+				</DataSource>
+			</Discovery>
+			<!--IIS-->
+			<Discovery ID="Microsoft.SCOM.CMDB.Discovery.IISComputers" Enabled="true" Target="Microsoft.SCOM.CMDB.Group.IISComputers" ConfirmDelivery="false" Remotable="true" Priority="Normal">
+				<Category>Discovery</Category>
+				<DiscoveryTypes>
+					<DiscoveryRelationship TypeID="MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities"/>
+				</DiscoveryTypes>
+				<DataSource ID="DS" TypeID="SystemCenter!Microsoft.SystemCenter.GroupPopulator">
+					<RuleId>$MPElement$</RuleId>
+					<GroupInstanceId>$MPElement[Name="Microsoft.SCOM.CMDB.Group.IISComputers"]$</GroupInstanceId>
+					<MembershipRules>
+						<MembershipRule>
+							<MonitoringClass>$MPElement[Name="Windows!Microsoft.Windows.Computer"]$</MonitoringClass>
+							<RelationshipClass>$MPElement[Name='MSIGL!Microsoft.SystemCenter.InstanceGroupContainsEntities']$</RelationshipClass>
+							<Expression>
+                                <And>
+                                    <Expression>
+                                        <Contained>
+                                            <MonitoringClass>$MPElement[Name="Microsoft.SCOM.CMDB.Group.WindowsServerCatA"]$</MonitoringClass>
+                                        </Contained>
+                                    </Expression>
+                                    <Expression>
+                                        <Contained>
+                                            <MonitoringClass>$MPElement[Name="IISLIBr!Microsoft.Windows.InternetInformationServices.ComputerGroup"]$</MonitoringClass>
+                                        </Contained>
+                                    </Expression>
+                                </And>
+							</Expression>
+						</MembershipRule>
+					</MembershipRules>
+				</DataSource>
+			</Discovery>
+		</Discoveries>
+	</Monitoring>
+	<LanguagePacks>
+		<LanguagePack ID="ENU" IsDefault="false">
+			<DisplayStrings>
+				<DisplayString ElementID="TestA.Microsoft.SCOM.CMDB.Monitoring">
+					<Name>Microsoft SCOM CMDB Monitoring</Name>
+					<Description></Description>
+				</DisplayString>
+				<!--WindowsServer-->
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.WindowsServerCatA">
+					<Name>CMDB Windows Computers</Name>
+					<Description></Description>
+				</DisplayString>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.WindowsServerCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.WindowsServerCatA</Name>
+					<Description></Description>
+				</DisplayString>
+				<!--Health Service Watcher-->
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA">
+					<Name>CMDB Health Service Watcher</Name>
+					<Description></Description>
+				</DisplayString>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.HealthServiceWatcherCatA">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.HealthServiceWatcherCatA</Name>
+					<Description></Description>
+				</DisplayString>
+				<!--IIS-->
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Group.IISComputers">
+					<Name>CMDB IIS Computers</Name>
+					<Description></Description>
+				</DisplayString>
+				<DisplayString ElementID="Microsoft.SCOM.CMDB.Discovery.IISComputers">
+					<Name>Populate Microsoft.SCOM.CMDB.Group.IISComputers</Name>
+					<Description></Description>
+				</DisplayString>
+			</DisplayStrings>
+		</LanguagePack>
+	</LanguagePacks>
+</ManagementPack>
