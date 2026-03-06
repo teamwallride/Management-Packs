@@ -2,7 +2,7 @@
 	<Manifest>
 		<Identity>
 			<ID>TestC.ProcessMonitor</ID>
-			<Version>2026.3.5.2</Version>
+			<Version>2026.3.6.0</Version>
 		</Identity>
 		<Name>TestC.ProcessMonitor</Name>
 		<References>
