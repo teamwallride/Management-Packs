@@ -1,0 +1,281 @@
+<ManagementPack ContentReadable="true" SchemaVersion="2.0" OriginalSchemaVersion="1.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+  <Manifest>
+    <Identity>
+      <ID>Microsoft.Exchange.Monitoring</ID>
+      <Version>2026.3.12.0</Version>
+    </Identity>
+    <Name>Microsoft.Exchange.Monitoring</Name>
+    <References>
+      <Reference Alias="Windows">
+        <ID>Microsoft.Windows.Library</ID>
+        <Version>7.5.8501.1</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Performance">
+        <ID>System.Performance.Library</ID>
+        <Version>7.0.8447.6</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="MSPL">
+        <ID>Microsoft.SystemCenter.ProcessMonitoring.Library</ID>
+        <Version>10.25.10132.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="System">
+        <ID>System.Library</ID>
+        <Version>7.5.8501.1</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="SystemCenter">
+        <ID>Microsoft.SystemCenter.Library</ID>
+        <Version>10.25.10132.0</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+      <Reference Alias="Health">
+        <ID>System.Health.Library</ID>
+        <Version>7.0.8447.6</Version>
+        <PublicKeyToken>31bf3856ad364e35</PublicKeyToken>
+      </Reference>
+    </References>
+  </Manifest>
+  <TypeDefinitions>
+    <MonitorTypes>
+      <UnitMonitorType ID="Microsoft.Exchange.UnitMonitorType.ProcessConsecutiveSamples" Accessibility="Public">
+        <MonitorTypeStates>
+          <MonitorTypeState ID="SampleCountTooHigh" NoDetection="false" />
+          <MonitorTypeState ID="SampleCountNormal" NoDetection="false" />
+        </MonitorTypeStates>
+        <Configuration>
+          <xsd:element name="ComputerName" type="xsd:string" minOccurs="0" maxOccurs="1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="CounterName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="ObjectName" type="xsd:string" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="InstanceName" type="xsd:string" minOccurs="0" maxOccurs="1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Frequency" type="xsd:unsignedInt" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="ScaleBy" type="xsd:double" minOccurs="0" maxOccurs="1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="Threshold" type="xsd:double" minOccurs="1" maxOccurs="1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+          <xsd:element name="NumSamples" type="xsd:unsignedInt" minOccurs="1" maxOccurs="1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" />
+        </Configuration>
+        <OverrideableParameters>
+          <OverrideableParameter ID="Frequency" Selector="$Config/Frequency$" ParameterType="int" />
+          <OverrideableParameter ID="Threshold" Selector="$Config/Threshold$" ParameterType="double" />
+          <OverrideableParameter ID="NumSamples" Selector="$Config/NumSamples$" ParameterType="int" />
+        </OverrideableParameters>
+        <MonitorImplementation>
+          <MemberModules>
+            <DataSource ID="DS" TypeID="Performance!System.Performance.DataProvider">
+              <ComputerName>$Config/ComputerName$</ComputerName>
+              <CounterName>$Config/CounterName$</CounterName>
+              <ObjectName>$Config/ObjectName$</ObjectName>
+              <InstanceName>$Config/InstanceName$</InstanceName>
+              <AllInstances>false</AllInstances>
+              <Frequency>$Config/Frequency$</Frequency>
+              <ScaleBy>$Config/ScaleBy$</ScaleBy>
+            </DataSource>
+            <ConditionDetection ID="CD" TypeID="Performance!System.Performance.ConsecutiveSamplesCondition">
+              <Threshold>$Config/Threshold$</Threshold>
+              <Direction>greater</Direction>
+            </ConditionDetection>
+            <ConditionDetection ID="ExpressionNormalSamples" TypeID="System!System.LogicalSet.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Double">Value</XPathQuery>
+                  </ValueExpression>
+                  <Operator>Less</Operator>
+                  <ValueExpression>
+                    <Value Type="Double">$Config/NumSamples$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <EmptySet>Passthrough</EmptySet>
+              <SetEvaluation>All</SetEvaluation><!-- All=all instances must be below threshold for monitor to be healthy. Any=any instance can be below threshold for monitor to be healthy. -->
+            </ConditionDetection>
+            <ConditionDetection ID="ExpressionTooHighSamples" TypeID="System!System.LogicalSet.ExpressionFilter">
+              <Expression>
+                <SimpleExpression>
+                  <ValueExpression>
+                    <XPathQuery Type="Double">Value</XPathQuery>
+                  </ValueExpression>
+                  <Operator>GreaterEqual</Operator>
+                  <ValueExpression>
+                    <Value Type="Double">$Config/NumSamples$</Value>
+                  </ValueExpression>
+                </SimpleExpression>
+              </Expression>
+              <EmptySet>Block</EmptySet>
+              <SetEvaluation>Any</SetEvaluation><!-- All=all instances must be above threshold for monitor to be unhealthy. Any=any instance can be above threshold for monitor to be unhealthy. -->
+            </ConditionDetection>
+          </MemberModules>
+          <RegularDetections>
+            <RegularDetection MonitorTypeStateID="SampleCountTooHigh">
+              <Node ID="ExpressionTooHighSamples">
+                <Node ID="CD">
+                  <Node ID="DS" />
+                </Node>
+              </Node>
+            </RegularDetection>
+            <RegularDetection MonitorTypeStateID="SampleCountNormal">
+              <Node ID="ExpressionNormalSamples">
+                <Node ID="CD">
+                  <Node ID="DS" />
+                </Node>
+              </Node>
+            </RegularDetection>
+          </RegularDetections>
+        </MonitorImplementation>
+      </UnitMonitorType>
+    </MonitorTypes>
+  </TypeDefinitions>
+  <Monitoring>
+    <Monitors>
+    <!-- Change target to Exchange server. -->
+      <UnitMonitor ID="Microsoft.Exchange.Monitor.W3WPProcessMemoryUsage" Accessibility="Public" Enabled="true" Target="Windows!Microsoft.Windows.Computer" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Microsoft.Exchange.UnitMonitorType.ProcessConsecutiveSamples" ConfirmDelivery="false">
+        <Category>PerformanceHealth</Category>
+        <AlertSettings AlertMessage="Microsoft.Exchange.Monitor.W3WPProcessMemoryUsage.AlertMessage">
+          <AlertOnState>Warning</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+          <!-- To use these in alerts:
+          {0}=AlertParameter1
+          {1}=AlertParameter2
+          {2}=AlertParameter3
+          -->
+            <AlertParameter1>$Data/Context/ObjectName$</AlertParameter1>
+            <AlertParameter2>$Data/Context/CounterName$</AlertParameter2>
+            <AlertParameter3>$Data/Context/InstanceName$</AlertParameter3>
+            <AlertParameter4>$Data/Context/SampleValue$</AlertParameter4>
+            <AlertParameter5>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter5>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="ThresholdNotBreached" MonitorTypeStateID="SampleCountNormal" HealthState="Success" />
+          <OperationalState ID="ThresholdBreached" MonitorTypeStateID="SampleCountTooHigh" HealthState="Warning" />
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <CounterName>Private Bytes</CounterName>
+          <ObjectName>Process</ObjectName>
+          <InstanceName>w3wp</InstanceName>
+          <Frequency>60</Frequency>
+          <Threshold>10485760</Threshold><!-- 10 MB -->
+          <NumSamples>2</NumSamples>
+        </Configuration>
+      </UnitMonitor>
+    <!-- Change target to Exchange server. -->
+      <UnitMonitor ID="Microsoft.Exchange.Monitor.LSASSProcessMemoryUsage" Accessibility="Public" Enabled="true" Target="Windows!Microsoft.Windows.Computer" ParentMonitorID="Health!System.Health.PerformanceState" Remotable="true" Priority="Normal" TypeID="Microsoft.Exchange.UnitMonitorType.ProcessConsecutiveSamples" ConfirmDelivery="false">
+        <Category>PerformanceHealth</Category>
+        <AlertSettings AlertMessage="Microsoft.Exchange.Monitor.LSASSProcessMemoryUsage.AlertMessage">
+          <AlertOnState>Warning</AlertOnState>
+          <AutoResolve>true</AutoResolve>
+          <AlertPriority>Normal</AlertPriority>
+          <AlertSeverity>MatchMonitorHealth</AlertSeverity>
+          <AlertParameters>
+          <!-- To use these in alerts:
+          {0}=AlertParameter1
+          {1}=AlertParameter2
+          {2}=AlertParameter3
+          -->
+            <AlertParameter1>$Data/Context/ObjectName$</AlertParameter1>
+            <AlertParameter2>$Data/Context/CounterName$</AlertParameter2>
+            <AlertParameter3>$Data/Context/InstanceName$</AlertParameter3>
+            <AlertParameter4>$Data/Context/SampleValue$</AlertParameter4>
+            <AlertParameter5>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</AlertParameter5>
+          </AlertParameters>
+        </AlertSettings>
+        <OperationalStates>
+          <OperationalState ID="ThresholdNotBreached" MonitorTypeStateID="SampleCountNormal" HealthState="Success" />
+          <OperationalState ID="ThresholdBreached" MonitorTypeStateID="SampleCountTooHigh" HealthState="Warning" />
+        </OperationalStates>
+        <Configuration>
+          <ComputerName>$Target/Property[Type="Windows!Microsoft.Windows.Computer"]/PrincipalName$</ComputerName>
+          <CounterName>Private Bytes</CounterName>
+          <ObjectName>Process</ObjectName>
+          <InstanceName>lsass</InstanceName>
+          <Frequency>60</Frequency>
+          <Threshold>10485760</Threshold><!-- 10 MB -->
+          <NumSamples>2</NumSamples>
+        </Configuration>
+      </UnitMonitor>
+    </Monitors>
+    <Diagnostics>
+        <!-- Change target to Exchange server. Should match monitor. -->
+      <Diagnostic ID="Microsoft.Exchange.Diagnostic.W3WPProcessMemoryUsage" Accessibility="Public" Enabled="true" Target="Windows!Microsoft.Windows.Computer" Monitor="Microsoft.Exchange.Monitor.W3WPProcessMemoryUsage" ExecuteOnState="Warning" Remotable="true" Timeout="300">
+        <Category>Custom</Category>
+        <ProbeAction ID="MomUIGenaratedModuleb7a2eb1cb04f42aa9f1c81adede04dfa" TypeID="Windows!Microsoft.Windows.ScriptProbeAction">
+          <ScriptName>W3WPProcess.vbs</ScriptName>
+          <Arguments />
+          <ScriptBody><![CDATA[
+Set objShell = WScript.CreateObject("WScript.Shell")
+Set objWMIService = GetObject("winmgmts:\\.\root\cimv2")
+Set colItems = objWMIService.ExecQuery ("Select * From Win32_PerfFormattedData_PerfProc_Process Where Name like 'w3wp%'")
+For Each objItem in colItems
+    PROCESS_NAME = objItem.Name
+    PROCESS_ID = objItem.IDProcess
+    SIZE_MB = FormatNumber(objItem.PrivateBytes / 1024 / 1024, 2)
+    If SIZE_MB > 100 Then
+    Set objExecObject = objShell.Exec("%comspec% /c %windir%\System32\inetsrv\appcmd.exe list wp " & PROCESS_ID)
+    Do Until objExecObject.StdOut.AtEndOfStream
+        strLine = objExecObject.StdOut.ReadLine()
+        b = InStr(strLine, ":")+1
+        c = InStr(strLine, ")")
+        d = c-b
+        APP_POOL_NAME = mid(strLine, b, d)
+    Loop
+    Wscript.Echo "The " & APP_POOL_NAME & " application pool with process name " & PROCESS_NAME & " and process ID " & PROCESS_ID & " is using " & SIZE_MB & " MB of memory."
+End If
+Next
+]]></ScriptBody>
+          <TimeoutSeconds>60</TimeoutSeconds>
+        </ProbeAction>
+      </Diagnostic>
+    </Diagnostics>
+  </Monitoring>
+  <Presentation>
+    <StringResources>
+      <StringResource ID="Microsoft.Exchange.Monitor.W3WPProcessMemoryUsage.AlertMessage" />
+      <StringResource ID="Microsoft.Exchange.Monitor.LSASSProcessMemoryUsage.AlertMessage" />
+    </StringResources>
+  </Presentation>
+  <LanguagePacks>
+    <LanguagePack ID="ENU" IsDefault="false">
+      <DisplayStrings>
+        <DisplayString ElementID="Microsoft.Exchange.Monitoring">
+          <Name>Microsoft Exchange (Monitoring)</Name>
+          <Description>Custom monitoring for Microsoft Exchange.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Exchange.Monitor.W3WPProcessMemoryUsage">
+          <Name>IIS Worker Process Memory Usage</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Exchange.Monitor.W3WPProcessMemoryUsage" SubElementID="ThresholdNotBreached">
+          <Name>ThresholdNotBreached</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Exchange.Monitor.W3WPProcessMemoryUsage" SubElementID="ThresholdBreached">
+          <Name>ThresholdBreached</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Exchange.Monitor.W3WPProcessMemoryUsage.AlertMessage">
+          <Name>IIS Worker Process Private Bytes Exceeded</Name>
+          <Description>The private bytes of process {2} on {4} is {3} bytes and has exceeded the threshold of 6 GB. To see the application pool this process maps to, open Health Explorer and view the diagnostic output.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Exchange.Monitor.LSASSProcessMemoryUsage">
+          <Name>LSASS Process Memory Usage</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Exchange.Monitor.LSASSProcessMemoryUsage" SubElementID="ThresholdNotBreached">
+          <Name>ThresholdNotBreached</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Exchange.Monitor.LSASSProcessMemoryUsage" SubElementID="ThresholdBreached">
+          <Name>ThresholdBreached</Name>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Exchange.Monitor.LSASSProcessMemoryUsage.AlertMessage">
+          <Name>LSASS Process Private Bytes Exceeded</Name>
+          <Description>The private bytes of process {2} on {4} is {3} bytes and has exceeded the threshold of 6 GB.</Description>
+        </DisplayString>
+        <DisplayString ElementID="Microsoft.Exchange.Diagnostic.W3WPProcessMemoryUsage">
+          <Name>VBScript</Name>
+          <Description />
+        </DisplayString>
+      </DisplayStrings>
+    </LanguagePack>
+  </LanguagePacks>
+</ManagementPack>
